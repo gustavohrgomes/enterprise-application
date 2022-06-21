@@ -1,25 +1,31 @@
+using NSE.Identidade.API.Configurations;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var services = builder.Services;
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    services.AddIdentityconfiguration(builder.Configuration);
+
+    services.AddControllers();
+
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
 }
 
-app.UseHttpsRedirection();
+var app = builder.Build();
+{
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-app.UseAuthorization();
+    app.UseHttpsRedirection();
 
-app.MapControllers();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-app.Run();
+    app.MapControllers();
+
+    app.Run();
+}
