@@ -4,8 +4,8 @@ using NSE.Identidade.API.Models;
 
 namespace NSE.Identidade.API.Controllers;
 
-[Route("api/identidade")]
 [ApiController]
+[Route("api/identidade")]
 public class AuthController : Controller
 {
     private readonly SignInManager<IdentityUser> _signInManager;
