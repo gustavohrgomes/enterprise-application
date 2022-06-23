@@ -22,7 +22,6 @@ public static class IdentityConfig
             .AddDefaultTokenProviders();
 
         // JWT
-
         services.AddAuthentication(opt =>
         {
             opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,6 +42,14 @@ public static class IdentityConfig
         });
 
         return services;
+    }
+
+    public static WebApplication UseIdentityConfiguration(this WebApplication app)
+    {
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        return app;
     }
 }
 

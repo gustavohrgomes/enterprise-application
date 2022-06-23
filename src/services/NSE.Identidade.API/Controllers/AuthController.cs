@@ -78,20 +78,17 @@ public class AuthController : MainController
     {
         var user = await _userManager.FindByEmailAsync(email);
         var claims = await _userManager.GetClaimsAsync(user);
-        var roles = await _userManager.GetRolesAsync(user);
 
-        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
-        claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-        claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-        claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
-        claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+        var identityClaims = await ObterClaimsUsuario(user, claims);
+        var encodedToken = CodificarToken(identityClaims);
+        
+        return ObterRespostaToken(user, claims, encodedToken);
+    }
 
-        foreach (var role in roles)
-            claims.Add(new Claim("role", role));
+   
 
-        var identityClaims = new ClaimsIdentity();
-        identityClaims.AddClaims(claims);
-
+    private string CodificarToken(ClaimsIdentity identityClaims)
+    {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("AppSettings:Secret"));
 
@@ -107,7 +104,30 @@ public class AuthController : MainController
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         var encodedToken = tokenHandler.WriteToken(token);
+        return encodedToken;
+    }
 
+    private async Task<ClaimsIdentity> ObterClaimsUsuario(IdentityUser user, IList<Claim> claims)
+    {
+        var roles = await _userManager.GetRolesAsync(user);
+
+        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+
+        foreach (var role in roles)
+            claims.Add(new Claim("role", role));
+
+        var identityClaims = new ClaimsIdentity();
+        identityClaims.AddClaims(claims);
+
+        return identityClaims;
+    }
+
+    private UsuarioRespostaLogin ObterRespostaToken(IdentityUser user, IList<Claim> claims, string encodedToken)
+    {
         return new UsuarioRespostaLogin
         {
             AccessToken = encodedToken,
