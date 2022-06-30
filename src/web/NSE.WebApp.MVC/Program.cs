@@ -5,6 +5,7 @@ var services = builder.Services;
 
 services.AddIdentityConfiguration();
 services.AddWebAppConfiguration();
+services.RegisterServices();
 
 var app = builder.Build();
 
