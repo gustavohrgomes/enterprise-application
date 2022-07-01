@@ -30,37 +30,46 @@ public class IdentidadeController : Controller
     {
         if (!ModelState.IsValid) return View(usuarioRegistro);
 
-        if (false) return View(usuarioRegistro);
+        var resposta = await _autenticacaoService.Registrar(usuarioRegistro);
+
+        if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioRegistro);
+
+        await RealizarLogin(resposta);
 
         return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
     [Route("login")]
-    public IActionResult Login()
+    public IActionResult Login(string returnUrl = null)
     {
+        ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
     [HttpPost]
     [Route("login")]
-    public async Task<IActionResult> Login(UsuarioLogin usuarioLogin)
+    public async Task<IActionResult> Login(UsuarioLogin usuarioLogin, string returnUrl = null)
     {
+        ViewData["ReturnUrl"] = returnUrl;
         if (!ModelState.IsValid) return View(usuarioLogin);
 
         var response = await _autenticacaoService.Login(usuarioLogin);
 
-        //if (false) return View(usuarioLogin);
+        if (ResponsePossuiErros(response.ResponseResult)) return View(usuarioLogin);
 
         await RealizarLogin(response);
 
-        return RedirectToAction("Index", "Home");
+        if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
+
+        return LocalRedirect(returnUrl);
     }
 
     [HttpGet]
     [Route("sair")]
     public async Task<IActionResult> Logout()
     {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Home");
     }
 
@@ -86,6 +95,19 @@ public class IdentidadeController : Controller
             autoProperties);
     }
 
-    public static JwtSecurityToken ObterTokenFormatado(string token)
+    private static JwtSecurityToken ObterTokenFormatado(string token)
         => new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+    private bool ResponsePossuiErros(ResponseResult response)
+    {
+        if (response != null && response.Errors.Mensagens.Any())
+        {
+            foreach (var mensagem in response.Errors.Mensagens)
+                ModelState.AddModelError(string.Empty, mensagem);
+
+            return true;
+        }
+
+        return false;
+    }
 }

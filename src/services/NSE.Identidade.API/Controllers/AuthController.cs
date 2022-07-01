@@ -85,8 +85,6 @@ public class AuthController : MainController
         return ObterRespostaToken(user, claims, encodedToken);
     }
 
-   
-
     private string CodificarToken(ClaimsIdentity identityClaims)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

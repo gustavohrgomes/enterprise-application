@@ -1,4 +1,5 @@
-﻿using NSE.WebApp.MVC.Models;
+﻿using NSE.WebApp.MVC.Exceptions;
+using NSE.WebApp.MVC.Models;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
@@ -25,6 +26,14 @@ public class AutenticacaoService : IAutenticacaoService
             PropertyNameCaseInsensitive = true
         };
 
+        if (!TratarErrosResponse(response))
+        {
+            return new UsuarioRespostaLogin
+            {
+                ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStreamAsync(), options)
+            };
+        }
+
         return JsonSerializer.Deserialize<UsuarioRespostaLogin>(await response.Content.ReadAsStreamAsync(), options);
     }
 
@@ -34,6 +43,33 @@ public class AutenticacaoService : IAutenticacaoService
 
         var response = await _httpClient.PostAsync("http://localhost:5267/api/identidade/nova-conta", registroContent);
 
+        if (!TratarErrosResponse(response))
+        {
+            return new UsuarioRespostaLogin
+            {
+                ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStreamAsync())
+            };
+        }
+
         return JsonSerializer.Deserialize<UsuarioRespostaLogin>(await response.Content.ReadAsStreamAsync());
     }
+
+    private static bool TratarErrosResponse(HttpResponseMessage response)
+    {
+        switch ((int)response.StatusCode)
+        {
+            case 400:
+                return false;
+            case 401:
+            case 403:
+            case 404:
+            case 500:
+                throw new CustomHttpRequestException(response.StatusCode);
+        }
+
+        response.EnsureSuccessStatusCode();
+        return true;
+    }
+
+
 }
