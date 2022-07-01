@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSE.WebApp.MVC.Models;
-using System.Diagnostics;
 
 namespace NSE.WebApp.MVC.Controllers
 {

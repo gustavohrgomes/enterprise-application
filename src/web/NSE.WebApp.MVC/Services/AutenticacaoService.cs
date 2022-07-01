@@ -1,12 +1,8 @@
-﻿using NSE.WebApp.MVC.Exceptions;
-using NSE.WebApp.MVC.Models;
-using System.Net.Mime;
-using System.Text;
-using System.Text.Json;
+﻿using NSE.WebApp.MVC.Models;
 
 namespace NSE.WebApp.MVC.Services;
 
-public class AutenticacaoService : IAutenticacaoService
+public class AutenticacaoService : Service, IAutenticacaoService
 {
     private readonly HttpClient _httpClient;
 
@@ -17,59 +13,35 @@ public class AutenticacaoService : IAutenticacaoService
 
     public async Task<UsuarioRespostaLogin> Login(UsuarioLogin usuarioLogin)
     {
-        var loginContent = new StringContent(JsonSerializer.Serialize(usuarioLogin), Encoding.UTF8, MediaTypeNames.Application.Json);
+        var loginContent = ObterConteudo(usuarioLogin);
 
-        var response = await _httpClient.PostAsync("http://localhost:5267/api/identidade/login", loginContent);
-
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
+        var response = await _httpClient.PostAsync("/api/identidade/login", loginContent);
 
         if (!TratarErrosResponse(response))
         {
             return new UsuarioRespostaLogin
             {
-                ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStreamAsync(), options)
+                ResponseResult = await DeserializarObjetoResponse<ResponseResult>(response)
             };
         }
 
-        return JsonSerializer.Deserialize<UsuarioRespostaLogin>(await response.Content.ReadAsStreamAsync(), options);
+        return await DeserializarObjetoResponse<UsuarioRespostaLogin>(response);
     }
 
     public async Task<UsuarioRespostaLogin> Registrar(UsuarioRegistro usuarioRegistro)
     {
-        var registroContent = new StringContent(JsonSerializer.Serialize(usuarioRegistro), Encoding.UTF8, MediaTypeNames.Application.Json);
+        var registroContent = ObterConteudo(usuarioRegistro);
 
-        var response = await _httpClient.PostAsync("http://localhost:5267/api/identidade/nova-conta", registroContent);
+        var response = await _httpClient.PostAsync("/api/identidade/nova-conta", registroContent);
 
         if (!TratarErrosResponse(response))
         {
             return new UsuarioRespostaLogin
             {
-                ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStreamAsync())
+                ResponseResult = await DeserializarObjetoResponse<ResponseResult>(response)
             };
         }
 
-        return JsonSerializer.Deserialize<UsuarioRespostaLogin>(await response.Content.ReadAsStreamAsync());
+        return await DeserializarObjetoResponse<UsuarioRespostaLogin>(response);
     }
-
-    private static bool TratarErrosResponse(HttpResponseMessage response)
-    {
-        switch ((int)response.StatusCode)
-        {
-            case 400:
-                return false;
-            case 401:
-            case 403:
-            case 404:
-            case 500:
-                throw new CustomHttpRequestException(response.StatusCode);
-        }
-
-        response.EnsureSuccessStatusCode();
-        return true;
-    }
-
-
 }

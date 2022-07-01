@@ -2,10 +2,22 @@ using NSE.WebApp.MVC.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+var hostEnvironment = builder.Environment;
+
+builder.Configuration
+    .SetBasePath(hostEnvironment.ContentRootPath)
+    .AddJsonFile("appsettings.json", true, true)
+    .AddJsonFile($"appsetting.{hostEnvironment.EnvironmentName}.json", true, true)
+    .AddEnvironmentVariables();
+
+if (hostEnvironment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 services.AddIdentityConfiguration();
 services.AddWebAppConfiguration();
-services.RegisterServices();
+services.RegisterServices(builder.Configuration);
 
 var app = builder.Build();
 
