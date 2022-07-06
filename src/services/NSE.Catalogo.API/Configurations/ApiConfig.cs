@@ -1,0 +1,47 @@
+﻿using Microsoft.EntityFrameworkCore;
+using NSE.Catalogo.API.Data;
+
+namespace NSE.Catalogo.API.Configurations;
+
+public static class ApiConfig
+{
+    public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<CatalogContext>(options
+            => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddControllers();
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("Total",
+                builder =>
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+        });
+    }
+
+    public static void UseApiConfiguration(this WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        
+        //app.UseHttpsRedirection();
+
+        app.UseRouting();
+
+        app.UseCors("Total");
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+        
+    }
+}
