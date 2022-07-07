@@ -4,14 +4,12 @@ namespace NSE.WebApp.MVC.Configuration;
 
 public static class WebAppConfig
 {
-    public static IServiceCollection AddWebAppConfiguration(this IServiceCollection services)
+    public static void AddWebAppConfiguration(this IServiceCollection services)
     {
         services.AddControllersWithViews();
-
-        return services;
     }
 
-    public static WebApplication UseWebAppConfiguration(this WebApplication app)
+    public static void UseWebAppConfiguration(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
@@ -38,7 +36,5 @@ public static class WebAppConfig
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         });
-
-        return app;
     }
 }

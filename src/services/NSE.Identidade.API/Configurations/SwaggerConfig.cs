@@ -4,7 +4,7 @@ namespace NSE.Identidade.API.Configurations;
 
 public static class SwaggerConfig
 {
-    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
+    public static void AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
@@ -15,16 +15,12 @@ public static class SwaggerConfig
                 Contact = new OpenApiContact() { Name = "Gustavo Gomes", Email = "dev.gustavogomes@gmail.com" },
                 License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             }));
-
-        return services;
     }
 
-    public static WebApplication UseSwaggerDocumentation(this WebApplication app)
+    public static void UseSwaggerDocumentation(this WebApplication app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(c
             => c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"));
-
-        return app;
     }
 }

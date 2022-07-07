@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NSE.Catalogo.API.Data;
+using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Catalogo.API.Configurations;
 
@@ -36,7 +37,7 @@ public static class ApiConfig
 
         app.UseCors("Total");
 
-        app.UseAuthorization();
+        app.UseAuthConfiguration();
 
         app.UseEndpoints(endpoints =>
         {

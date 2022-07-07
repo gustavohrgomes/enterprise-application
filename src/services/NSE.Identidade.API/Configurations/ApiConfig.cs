@@ -1,25 +1,23 @@
-﻿namespace NSE.Identidade.API.Configurations;
+﻿using NSE.WebAPI.Core.Identidade;
+
+namespace NSE.Identidade.API.Configurations;
 
 public static class ApiConfig
 {
-    public static IServiceCollection AddApiConfiguration(this IServiceCollection services)
+    public static void AddApiConfiguration(this IServiceCollection services)
     {
         services.AddControllers();
-
-        return services;
     }
 
-    public static WebApplication UseApiConfiguration(this WebApplication app)
+    public static void UseApiConfiguration(this WebApplication app)
     {
         app.UseRouting();
 
-        app.UseIdentityConfiguration();
+        app.UseAuthConfiguration();
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
         });
-
-        return app;
     }
 }
