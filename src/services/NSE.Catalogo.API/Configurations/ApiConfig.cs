@@ -22,6 +22,8 @@ public static class ApiConfig
                         .AllowAnyHeader()
                         .AllowAnyMethod());
         });
+
+        services.AddJwtConfiguration(configuration);
     }
 
     public static void UseApiConfiguration(this WebApplication app)
