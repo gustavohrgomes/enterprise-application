@@ -7,10 +7,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient<IAutenticacaoService, AutenticacaoService>(config =>
-        {
-            config.BaseAddress = new Uri(configuration.GetValue<string>("AutenticacaoUrl"));
-        });
+        services.AddHttpClient<IAutenticacaoService, AutenticacaoService>(config => 
+            config.BaseAddress = new Uri(configuration.GetValue<string>("AutenticacaoUrl")));
+
+        services.AddHttpClient<ICatalogoService, CatalogService>(config => 
+            config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")));
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

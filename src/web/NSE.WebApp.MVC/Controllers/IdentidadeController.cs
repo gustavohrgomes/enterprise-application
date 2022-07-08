@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace NSE.WebApp.MVC.Controllers;
 
-public class IdentidadeController : Controller
+public class IdentidadeController : MainController
 {
     private readonly IAutenticacaoService _autenticacaoService;
 
@@ -17,15 +17,13 @@ public class IdentidadeController : Controller
         _autenticacaoService = autenticacaoService ?? throw new ArgumentNullException(nameof(autenticacaoService));
     }
 
-    [HttpGet]
-    [Route("nova-conta")]
+    [HttpGet("nova-conta")]
     public IActionResult Registro()
     {
         return View();
     }
 
-    [HttpPost]
-    [Route("nova-conta")]
+    [HttpPost("nova-conta")]
     public async Task<IActionResult> Registro(UsuarioRegistro usuarioRegistro)
     {
         if (!ModelState.IsValid) return View(usuarioRegistro);
@@ -39,16 +37,14 @@ public class IdentidadeController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpGet]
-    [Route("login")]
+    [HttpGet("login")]
     public IActionResult Login(string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
-    [HttpPost]
-    [Route("login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login(UsuarioLogin usuarioLogin, string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
@@ -65,8 +61,7 @@ public class IdentidadeController : Controller
         return LocalRedirect(returnUrl);
     }
 
-    [HttpGet]
-    [Route("sair")]
+    [HttpGet("sair")]
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -97,17 +92,4 @@ public class IdentidadeController : Controller
 
     private static JwtSecurityToken ObterTokenFormatado(string token)
         => new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
-
-    private bool ResponsePossuiErros(ResponseResult response)
-    {
-        if (response != null && response.Errors.Mensagens.Any())
-        {
-            foreach (var mensagem in response.Errors.Mensagens)
-                ModelState.AddModelError(string.Empty, mensagem);
-
-            return true;
-        }
-
-        return false;
-    }
 }
