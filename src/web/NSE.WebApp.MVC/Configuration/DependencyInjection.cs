@@ -18,7 +18,8 @@ public static class DependencyInjection
         services.AddHttpClient<ICatalogoService, CatalogService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-            .AddPolicyHandler(GetRetryPolicy());
+            .AddPolicyHandler(GetRetryPolicy())
+            .AddPolicyHandler(GetCircuitBreakerPolicy());
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -54,5 +55,12 @@ public static class DependencyInjection
                         Console.WriteLine($"Tentando pela {retryCount} vez!");
                         Console.ForegroundColor = ConsoleColor.White;
                     });
+    }
+
+    private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+    {
+        return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .CircuitBreakerAsync(handledEventsAllowedBeforeBreaking: 5, durationOfBreak: TimeSpan.FromSeconds(30));
     }
 }
