@@ -13,9 +13,14 @@ public static class DependencyInjection
         services.AddHttpClient<IAutenticacaoService, AutenticacaoService>(config => 
             config.BaseAddress = new Uri(configuration.GetValue<string>("AutenticacaoUrl")));
 
-        services.AddHttpClient<ICatalogoService, CatalogService>(config => 
+        services.AddHttpClient<ICatalogoService, CatalogService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+
+        //services.AddHttpClient("Refit", config =>
+        //    config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")))
+        //    .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+        //    .AddTypedClient(Refit.RestService.For<ICatalogoServiceRefit>);
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
