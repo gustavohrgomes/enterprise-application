@@ -13,7 +13,7 @@ public class CatalogService : Service, ICatalogoService
 
     public async Task<ProdutoViewModel> ObterPorId(Guid id)
     {
-        var response = await _client.GetAsync("/api/catalogo/produtos/{id}");
+        var response = await _client.GetAsync($"/api/catalogo/produtos/{id}");
 
         TratarErrosResponse(response);
 
