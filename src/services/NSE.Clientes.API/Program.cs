@@ -1,4 +1,5 @@
-using NSE.Catalogo.API.Configurations;
+using MediatR;
+using NSE.Clientes.API.Configurations;
 using NSE.WebAPI.Core.Identidade;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,9 +17,10 @@ if (hostEnvironment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
-services.AddApiConfiguration(builder.Configuration);
+services.AddApiconfiguration(builder.Configuration);
 services.AddJwtConfiguration(builder.Configuration);
 services.AddSwaggerConfiguration();
+services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 services.RegisterServices();
 
 var app = builder.Build();
