@@ -34,7 +34,7 @@ public class IdentidadeController : MainController
 
         await RealizarLogin(resposta);
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Catalogo");
     }
 
     [HttpGet("login")]
@@ -65,7 +65,7 @@ public class IdentidadeController : MainController
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Catalogo");
     }
 
     private async Task RealizarLogin(UsuarioRespostaLogin resposta)

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EasyNetQ;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using NSE.Core.Messages.IntegrationEvents;
 using NSE.Identidade.API.Models;
+using NSE.MessageBus;
 using NSE.WebAPI.Core.Controllers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,14 +18,17 @@ public class AuthController : MainController
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IConfiguration _configuration;
+    private readonly IMessageBus _bus;
 
     public AuthController(SignInManager<IdentityUser> signInManager,
-                          UserManager<IdentityUser> userManager, 
-                          IConfiguration configuration)
+                          UserManager<IdentityUser> userManager,
+                          IConfiguration configuration,
+                          IMessageBus bus)
     {
         _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration)); ;
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
     }
 
     [HttpPost("nova-conta")]
@@ -40,7 +46,17 @@ public class AuthController : MainController
         var result = await _userManager.CreateAsync(user, usuarioRegistro.Senha);
 
         if (result.Succeeded)
+        {
+            var clienteResult = await RegistrarCliente(usuarioRegistro);
+            
+            if (!clienteResult.ValidationResult.IsValid)
+            {
+                await _userManager.DeleteAsync(user);
+                return CustomResponse(clienteResult.ValidationResult);
+            }
+            
             return CustomResponse(await GerarJwtToken(usuarioRegistro.Email));
+        }
 
         foreach (var error in result.Errors)
             AdicionarErroProcessamento(error.Description);
@@ -142,5 +158,22 @@ public class AuthController : MainController
 
     private static long ToUnixEpochDate(DateTime date)
         => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+    private async Task<ResponseMessage> RegistrarCliente(UsuarioRegistro usuarioRegistro)
+    {
+        var usuario = await _userManager.FindByEmailAsync(usuarioRegistro.Email);
+
+        var usuarioRegistrado = new UsuarioRegistradoIntegrationEvent(Guid.Parse(usuario.Id), usuarioRegistro.Nome, usuarioRegistro.Email, usuarioRegistro.Cpf);
+
+        try
+        {
+            return await _bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(usuarioRegistrado);
+        }
+        catch
+        {
+            await _userManager.DeleteAsync(usuario);
+            throw;
+        }
+    }
 }
 

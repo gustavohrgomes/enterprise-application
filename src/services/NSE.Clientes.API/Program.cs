@@ -21,7 +21,8 @@ services.AddApiconfiguration(builder.Configuration);
 services.AddJwtConfiguration(builder.Configuration);
 services.AddSwaggerConfiguration();
 services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
-services.RegisterServices();
+services.RegisterServices(builder.Configuration);
+services.AddMessageBusConfiguration(builder.Configuration);
 
 var app = builder.Build();
 

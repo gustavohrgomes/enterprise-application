@@ -19,7 +19,7 @@ if (hostEnvironment.IsDevelopment())
 services.AddApiConfiguration();
 services.AddIdentityconfiguration(builder.Configuration);
 services.AddSwaggerConfiguration();
-
+services.AddMessageBusConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
