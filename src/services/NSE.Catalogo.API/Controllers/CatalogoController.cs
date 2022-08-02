@@ -20,8 +20,7 @@ public class CatalogoController : MainController
     [AllowAnonymous]
     [HttpGet("produtos")]
     public async Task<IEnumerable<Produto>> Index() => await _produtoRepository.ObterTodos();
-
-    [ClaimsAuthorize("Catalogo", "Ler")]
+        
     [HttpGet("produtos/{id}")]
     public async Task<Produto> ProdutoDetalhe(Guid id) => await _produtoRepository.ObterPorId(id);
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using NSE.WebAPI.Core.Usuario;
 using NSE.WebApp.MVC.Extensions;
 using NSE.WebApp.MVC.Services;
 using NSE.WebApp.MVC.Services.DelegatingHandlers;
@@ -12,11 +13,17 @@ public static class DependencyInjection
     public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IValidationAttributeAdapterProvider, CpfValidationAttributeAdapterProvider>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddScoped<IAspNetUser, AspNetUser>();
+
+        #region HttpServices
 
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
-        services.AddHttpClient<IAutenticacaoService, AutenticacaoService>(config => 
+        services.AddHttpClient<IAutenticacaoService, AutenticacaoService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("AutenticacaoUrl")));
+            //.AddPolicyHandler(GetRetryPolicy())
+            //.AddPolicyHandler(GetCircuitBreakerPolicy());
 
         services.AddHttpClient<ICatalogoService, CatalogService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")))
@@ -24,17 +31,14 @@ public static class DependencyInjection
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(GetCircuitBreakerPolicy());
 
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddHttpClient<ICarrinhoService, CarrinhoService>(config =>
+            config.BaseAddress = new Uri(configuration.GetValue<string>("CarrinhoUrl")))
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(GetRetryPolicy())
+            .AddPolicyHandler(GetCircuitBreakerPolicy());
 
-        services.AddScoped<IUser, AspNetUser>();
-
-        #region Refit
-        //services.AddHttpClient("Refit", config =>
-        //    config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")))
-        //    .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-        //    .AddTypedClient(Refit.RestService.For<ICatalogoServiceRefit>);
-        #endregion Refit
-
+        #endregion
+                
         return services;
     }
 
