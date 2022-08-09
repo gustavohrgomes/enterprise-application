@@ -11,15 +11,6 @@ public class CatalogService : Service, ICatalogoService
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async Task<ProdutoViewModel> ObterPorId(Guid id)
-    {
-        var response = await _client.GetAsync($"/api/catalogo/produtos/{id}");
-
-        TratarErrosResponse(response);
-
-        return await DeserializarObjetoResponse<ProdutoViewModel>(response);
-    }
-
     public async Task<IEnumerable<ProdutoViewModel>> ObterTodos()
     {
         var response = await _client.GetAsync("/api/catalogo/produtos");
