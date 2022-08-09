@@ -21,9 +21,9 @@ public static class DependencyInjection
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
         services.AddHttpClient<IAutenticacaoService, AutenticacaoService>(config =>
-            config.BaseAddress = new Uri(configuration.GetValue<string>("AutenticacaoUrl")));
-            //.AddPolicyHandler(GetRetryPolicy())
-            //.AddPolicyHandler(GetCircuitBreakerPolicy());
+            config.BaseAddress = new Uri(configuration.GetValue<string>("AutenticacaoUrl")))
+            .AddPolicyHandler(GetRetryPolicy())
+            .AddPolicyHandler(GetCircuitBreakerPolicy());
 
         services.AddHttpClient<ICatalogoService, CatalogService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")))
