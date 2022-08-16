@@ -1,4 +1,5 @@
-﻿using NSE.WebApp.MVC.Exceptions;
+﻿using NSE.Core.Communication;
+using NSE.WebApp.MVC.Exceptions;
 using NSE.WebApp.MVC.Models;
 using System.Net.Mime;
 using System.Text;
@@ -38,5 +39,5 @@ public abstract class Service
         return true;
     }
 
-    protected ResponseResult ReturnOk() => new();
+    protected ResponseResult RetornoOk() => new();
 }

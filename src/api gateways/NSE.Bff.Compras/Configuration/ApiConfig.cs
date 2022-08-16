@@ -1,4 +1,5 @@
-﻿using NSE.Bff.Compras.Extensions;
+﻿using Microsoft.AspNetCore.Mvc;
+using NSE.Bff.Compras.Extensions;
 using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Bff.Compras.Configuration;
@@ -10,6 +11,11 @@ public static class ApiConfig
         services.AddControllers();
 
         services.Configure<AppServicesSettings>(configuration);
+
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
 
         services.AddCors(options =>
         {

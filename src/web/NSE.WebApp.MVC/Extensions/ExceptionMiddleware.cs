@@ -49,5 +49,15 @@ public class ExceptionMiddleware
         context.Response.StatusCode = (int)statusCode;
     }
 
-    private static void HandleBrokenCircuitExceptionAsync(HttpContext context) => context.Response.Redirect("/sistema-indisponível");
+    private static void HandleBrokenCircuitExceptionAsync(HttpContext context)
+    {
+        try
+        {
+            context.Response.Redirect("/sistema-indisponivel");
+        }
+        catch
+        {
+            throw;
+        }
+    }
 }

@@ -31,8 +31,8 @@ public static class DependencyInjection
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(GetCircuitBreakerPolicy());
 
-        services.AddHttpClient<ICarrinhoService, CarrinhoService>(config =>
-            config.BaseAddress = new Uri(configuration.GetValue<string>("CarrinhoUrl")))
+        services.AddHttpClient<IComprasBffService, ComprasBffService>(config =>
+            config.BaseAddress = new Uri(configuration.GetValue<string>("ComprasBffUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(GetCircuitBreakerPolicy());
