@@ -29,5 +29,10 @@ public static class DependencyInjectionConfig
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
                 .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
                 .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
+
+        services.AddHttpClient<IClienteService, ClienteService>()
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
+                .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
     }
 }

@@ -4,7 +4,7 @@ namespace NSE.Clientes.API.Models;
 
 public class Endereco : Entity
 {
-    public Endereco(string logradouro, string numero, string bairro, string cep, string cidade, string estado, string complemento = "")
+    public Endereco(string logradouro, string numero, string bairro, string cep, string cidade, string estado, Guid clienteId, string complemento = "")
     {
         Logradouro = logradouro;
         Numero = numero;
@@ -13,6 +13,7 @@ public class Endereco : Entity
         Cep = cep;
         Cidade = cidade;
         Estado = estado;
+        ClienteId = clienteId;
     }
 
     public string Logradouro { get; private set; }

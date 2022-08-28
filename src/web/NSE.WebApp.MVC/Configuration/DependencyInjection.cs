@@ -37,6 +37,12 @@ public static class DependencyInjection
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(GetCircuitBreakerPolicy());
 
+        services.AddHttpClient<IClienteService, ClienteService>(config =>
+            config.BaseAddress = new Uri(configuration.GetValue<string>("ClienteUrl")))
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(GetRetryPolicy())
+            .AddPolicyHandler(GetCircuitBreakerPolicy());
+
         #endregion
                 
         return services;

@@ -1,4 +1,5 @@
 ﻿using NetDevPack.Specification;
+using NSE.Pedidos.Domain.Vouchers;
 
 namespace NSE.Pedidos.Domain.Specs;
 

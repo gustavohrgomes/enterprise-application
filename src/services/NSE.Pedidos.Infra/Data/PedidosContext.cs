@@ -4,8 +4,8 @@ using NSE.Core.Communication;
 using NSE.Core.Data;
 using NSE.Core.DomainObjects;
 using NSE.Core.Messages;
-using NSE.Pedidos.Domain;
 using NSE.Pedidos.Domain.Pedidos;
+using NSE.Pedidos.Domain.Vouchers;
 
 namespace NSE.Pedidos.Infra.Data;
 
@@ -19,8 +19,8 @@ public class PedidosContext : DbContext, IUnitOfWork
         _mediatorHandler = mediatorHandler;
     }
 
-    //public DbSet<Pedido> Pedidos { get; set; }
-    //public DbSet<PedidoItem> PedidoItems { get; set; }
+    public DbSet<Pedido> Pedidos { get; set; }
+    public DbSet<PedidoItem> PedidoItems { get; set; }
     public DbSet<Voucher> Vouchers { get; set; }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
@@ -42,7 +42,7 @@ public class PedidosContext : DbContext, IUnitOfWork
         foreach (var relationship in modelBuilder.Model.GetEntityTypes()
             .SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
-        modelBuilder.HasSequence<int>("MinhaSequencia").StartsAt(1000).IncrementsBy(1);
+        modelBuilder.HasSequence<int>("NumeroPedidos").StartsAt(1000).IncrementsBy(1);
 
         base.OnModelCreating(modelBuilder);
     }

@@ -23,6 +23,11 @@ public class ClienteRepository : IClienteRepository
     public async Task<IEnumerable<Cliente>> ObterTodos()
         => await _context.Clientes.AsNoTrackingWithIdentityResolution().ToListAsync();
 
+    public async Task<Endereco> ObterEnderecoPorId(Guid id)
+        => await _context.Enderecos.Where(e => e.ClienteId == id).FirstOrDefaultAsync();
+
+    public void AdicionarEndereco(Endereco endereco) => _context.Enderecos.Add(endereco);
+
     #region Disposable members
 
     private bool disposedValue;

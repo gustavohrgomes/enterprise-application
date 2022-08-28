@@ -1,6 +1,7 @@
 ﻿using NSE.Core.Communication;
 using NSE.Pedidos.API.Application.Queries;
-using NSE.Pedidos.Domain;
+using NSE.Pedidos.Domain.Pedidos;
+using NSE.Pedidos.Domain.Vouchers;
 using NSE.Pedidos.Infra.Data;
 using NSE.Pedidos.Infra.Data.Repository;
 using NSE.WebAPI.Core.Usuario;
@@ -18,8 +19,10 @@ public static class DependencyInjectionConfig
         // Application
         services.AddScoped<IMediatorHandler, MediatorHandler>();
         services.AddScoped<IVoucherQueries, VoucherQueries>();
+        services.AddScoped<IPedidoQueries, PedidoQueries>();
 
         // Data
+        services.AddScoped<IPedidoRepository, PedidoRepository>();
         services.AddScoped<IVoucherRepository, VoucherRepository>();
         services.AddScoped<PedidosContext>();
     }

@@ -23,4 +23,8 @@ public class CatalogoController : MainController
         
     [HttpGet("produtos/{id}")]
     public async Task<Produto> ProdutoDetalhe(Guid id) => await _produtoRepository.ObterPorId(id);
+
+    [HttpGet("produtos/lista/{ids}")]
+    public async Task<IEnumerable<Produto>> ObterProdutosPorId(string ids)
+        => await _produtoRepository.ObterProdutosPorId(ids);
 }

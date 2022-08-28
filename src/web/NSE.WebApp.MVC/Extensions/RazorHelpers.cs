@@ -20,7 +20,10 @@ public static class RazorHelpers
         return sBuilder.ToString();
     }
 
-    public static string FormatoMoeda(this RazorPage page, decimal valor) 
+    public static string FormatoMoeda(this RazorPage @page, decimal valor)
+        => FormatoMoeda(valor);
+
+    public static string FormatoMoeda(decimal valor) 
         => valor > 0 ? string.Format(Thread.CurrentThread.CurrentCulture, "{0:C}", valor) : "Gratuito";
 
     public static string MensagemEstoque(this RazorPage page, int quantidade) 
@@ -40,5 +43,41 @@ public static class RazorHelpers
         }
 
         return sb.ToString();
+    }
+
+    public static string UnidadesPorProdutoValorTotal(this RazorPage page, int unidades, decimal valor) 
+        => $"{unidades}x {FormatoMoeda(valor)} = Total: {FormatoMoeda(valor * unidades)}";
+
+    public static string ExibeStatus(this RazorPage page, int status)
+    {
+        var statusMensagem = "";
+        var statusClasse = "";
+
+        switch (status)
+        {
+            case 1:
+                statusClasse = "info";
+                statusMensagem = "Em aprovação";
+                break;
+            case 2:
+                statusClasse = "primary";
+                statusMensagem = "Aprovado";
+                break;
+            case 3:
+                statusClasse = "danger";
+                statusMensagem = "Recusado";
+                break;
+            case 4:
+                statusClasse = "success";
+                statusMensagem = "Entregue";
+                break;
+            case 5:
+                statusClasse = "warning";
+                statusMensagem = "Cancelado";
+                break;
+
+        }
+
+        return $"<span class='badge badge-{statusClasse}'>{statusMensagem}</span>";
     }
 }
