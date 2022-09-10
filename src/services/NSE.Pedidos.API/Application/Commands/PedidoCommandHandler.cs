@@ -1,6 +1,8 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 using NSE.Core.Messages;
+using NSE.Core.Messages.IntegrationEvents;
+using NSE.MessageBus;
 using NSE.Pedidos.API.Application.DTO;
 using NSE.Pedidos.API.Application.Events;
 using NSE.Pedidos.Domain.Pedidos;
@@ -13,6 +15,7 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
 {
     private readonly IPedidoRepository _pedidoRepository;
     private readonly IVoucherRepository _voucherRepository;
+    private readonly IMessageBus _bus;
 
     public PedidoCommandHandler(IVoucherRepository voucherRepository, IPedidoRepository pedidoRepository)
     {
@@ -35,7 +38,7 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
         if (!ValidarPedido(pedido)) return ValidationResult;
 
         // Processar pagamento
-        if (!ProcessarPagamento(pedido)) return ValidationResult;
+        if (!await ProcessarPagamento(pedido, message)) return ValidationResult;
 
         // Se pagamento tudo ok!
         pedido.AutorizarPedido();
@@ -122,5 +125,32 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
         return true;
     }
 
-    public bool ProcessarPagamento(Pedido pedido) => true;
+    public async Task<bool> ProcessarPagamento(Pedido pedido, AdicionarPedidoCommand message)
+    {
+        var pedidoIniciado = new PedidoIniciadoIntegrationEvent
+        {
+            PedidoId = pedido.Id,
+            ClienteId = pedido.ClienteId,
+            Valor = pedido.ValorTotal,
+            TipoPagamento = 1, // fixo. Alterar se tiver mais tipos
+            NomeCartao = message.NomeCartao,
+            NumeroCartao = message.NumeroCartao,
+            MesAnoVencimento = message.ExpiracaoCartao,
+            CVV = message.CvvCartao
+        };
+
+        var result = await _bus.RequestAsync<PedidoIniciadoIntegrationEvent, ResponseMessage>(pedidoIniciado);
+
+        if (result.ValidationResult.IsValid) return true;
+
+        // Poderia ser escrito da seguinte maneira:
+        // result.ValidationResult.Errors.ForEach(erro => AdicionarErro(erro.ErrorMessage));
+
+        foreach (var erro in result.ValidationResult.Errors)
+        {
+            AdicionarErro(erro.ErrorMessage);
+        }
+
+        return false;
+    }
 }
