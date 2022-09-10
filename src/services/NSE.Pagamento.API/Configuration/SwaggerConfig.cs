@@ -1,9 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 
-namespace NSE.Pedidos.API.Configuration;
+namespace NSE.Pagamentos.API.Configuration;
 
 public static class SwaggerConfig
 {
@@ -15,8 +12,8 @@ public static class SwaggerConfig
             {
                 Title = "NerdStore Enterprise Pedidos API",
                 Description = "Esta API foi desenvolvida durante o curso ASP.NET Core Enterprise Applications, da plataforma Desenvolvedor.io.",
-                Contact = new OpenApiContact() {Name = "Gustavo Gomes", Email = "dev.gustavogomes@gmail.com"},
-                License = new OpenApiLicense() {Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT")}
+                Contact = new OpenApiContact() { Name = "Gustavo Gomes", Email = "dev.gustavogomes@gmail.com" },
+                License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
