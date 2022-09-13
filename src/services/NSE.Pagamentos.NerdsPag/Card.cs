@@ -3,11 +3,11 @@ using System.Text;
 
 namespace NSE.Pagamentos.NerdsPag;
 
-public class Card
+public class CardHash
 {
     private readonly NerdsPagService _nerdsPagService;
 
-    public Card(NerdsPagService nerdsPagService)
+    public CardHash(NerdsPagService nerdsPagService)
     {
         _nerdsPagService = nerdsPagService;
     }
