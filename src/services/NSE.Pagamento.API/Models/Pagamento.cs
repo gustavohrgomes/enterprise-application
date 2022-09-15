@@ -15,5 +15,8 @@ public class Pagamento : Entity, IAggregateRoot
 
     public CartaoCredito CartaoCredito { get; set; }
 
-    public ICollection<Transacao> Transacoes { get; set; }  
+    public ICollection<Transacao> Transacoes { get; set; }
+
+    public void AdicionarTransacao(Transacao transacao)
+        => Transacoes.Add(transacao);
 }
