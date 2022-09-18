@@ -38,7 +38,7 @@ public class PagamentoCartaoCreditoFacade : IPagamentoFacade
             Amount = pagamento.Valor
         };
 
-        return ParaTransacao(await transaction.CaptureCardTransaction());
+        return ParaTransacao(await transaction.AuthorizeCardTransaction());
     }
 
     public static Transacao ParaTransacao(Transaction transaction)

@@ -23,28 +23,32 @@ public static class DependencyInjection
         services.AddHttpClient<IAutenticacaoService, AutenticacaoService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("AutenticacaoUrl")))
             .AddPolicyHandler(GetRetryPolicy())
-            .AddPolicyHandler(GetCircuitBreakerPolicy());
+            .AddTransientHttpErrorPolicy(
+                    p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
         services.AddHttpClient<ICatalogoService, CatalogService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AddPolicyHandler(GetRetryPolicy())
-            .AddPolicyHandler(GetCircuitBreakerPolicy());
+            .AddTransientHttpErrorPolicy(
+                    p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
         services.AddHttpClient<IComprasBffService, ComprasBffService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("ComprasBffUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AddPolicyHandler(GetRetryPolicy())
-            .AddPolicyHandler(GetCircuitBreakerPolicy());
+            .AddTransientHttpErrorPolicy(
+                    p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
         services.AddHttpClient<IClienteService, ClienteService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("ClienteUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AddPolicyHandler(GetRetryPolicy())
-            .AddPolicyHandler(GetCircuitBreakerPolicy());
+            .AddTransientHttpErrorPolicy(
+                    p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
         #endregion
-                
+
         return services;
     }
 
@@ -68,12 +72,5 @@ public static class DependencyInjection
                         Console.WriteLine($"Tentando pela {retryCount} vez!");
                         Console.ForegroundColor = ConsoleColor.White;
                     });
-    }
-
-    private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
-    {
-        return HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .CircuitBreakerAsync(handledEventsAllowedBeforeBreaking: 5, durationOfBreak: TimeSpan.FromSeconds(30));
     }
 }

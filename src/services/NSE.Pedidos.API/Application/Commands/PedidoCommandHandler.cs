@@ -17,14 +17,17 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
     private readonly IVoucherRepository _voucherRepository;
     private readonly IMessageBus _bus;
 
-    public PedidoCommandHandler(IVoucherRepository voucherRepository, IPedidoRepository pedidoRepository)
+    public PedidoCommandHandler(IVoucherRepository voucherRepository, 
+                                IPedidoRepository pedidoRepository, 
+                                IMessageBus bus)
     {
         _pedidoRepository = pedidoRepository ?? throw new ArgumentNullException(nameof(pedidoRepository));
         _voucherRepository = voucherRepository ?? throw new ArgumentNullException(nameof(voucherRepository));
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
     }
 
     public async Task<ValidationResult> Handle(AdicionarPedidoCommand message, CancellationToken cancellationToken)
-    {
+    {        
         // Validação do comando
         if (!message.EhValido()) return message.ValidationResult;
 
