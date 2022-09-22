@@ -44,6 +44,10 @@ public class Pedido : Entity, IAggregateRoot
 
     public void AutorizarPedido() => PedidoStatus = PedidoStatus.Autorizado;
 
+    public void CancelarPedido() => PedidoStatus = PedidoStatus.Cancelado;
+
+    public void FinalizarPedido() => PedidoStatus = PedidoStatus.Pago;
+
     public void AtribuirVoucher(Voucher voucher)
     {
         VoucherUtilizado = true;
@@ -81,6 +85,5 @@ public class Pedido : Entity, IAggregateRoot
         if (!Voucher.Percentual.HasValue) return 0;
 
         return ValorTotal * Voucher.Percentual.Value / 100;
-    }
-    
+    }    
 }
