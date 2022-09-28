@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using NSE.Catalogo.API.Models;
 using NSE.Core.Data;
 
@@ -17,6 +18,33 @@ public class ProdutoRepository : IProdutoRepository
 
     public async Task<IEnumerable<Produto>> ObterTodos() 
         => await _context.Produtos.AsNoTracking().ToListAsync();
+
+    public async Task<PagedResult<Produto>> ObterTodosPaginados(PagedResultFilter pagedFilter)
+    {
+        var sql = $@"SELECT * FROM Produtos
+                        WHERE (@Nome IS NULL OR Nome LIKE '%' + @Nome + '%')
+                        ORDER BY [Nome]
+                        OFFSET {pagedFilter.PageSize * (pagedFilter.PageIndex - 1)} ROWS
+                        FETCH NEXT {pagedFilter.PageSize} ROWS ONLY
+                        SELECT COUNT(1) FROM Produtos
+                        WHERE (@Nome IS NULL OR Nome LIKE '%' + @Nome + '%')";
+
+        var multi = await _context.Database
+            .GetDbConnection()
+            .QueryMultipleAsync(sql, new { Nome = pagedFilter.Query });
+
+        var produtos = multi.Read<Produto>();
+        var quantidadeTotalDeProdutos = multi.Read<int>().FirstOrDefault();
+
+        return new PagedResult<Produto>()
+        {
+            PageIndex = pagedFilter.PageIndex,
+            PageSize = pagedFilter.PageSize,
+            TotalRecords = quantidadeTotalDeProdutos,
+            Query = pagedFilter.Query,
+            Records = produtos
+        };
+    }
 
     public async Task<Produto> ObterPorId(Guid id) 
         => await _context.Produtos.FindAsync(id);

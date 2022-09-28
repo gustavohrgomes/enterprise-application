@@ -19,7 +19,8 @@ public class CatalogoController : MainController
 
     [AllowAnonymous]
     [HttpGet("produtos")]
-    public async Task<IEnumerable<Produto>> Index() => await _produtoRepository.ObterTodos();
+    public async Task<PagedResult<Produto>> Index([FromQuery] PagedResultFilter pagedResultFilter) 
+        => await _produtoRepository.ObterTodosPaginados(pagedResultFilter);
         
     [HttpGet("produtos/{id}")]
     public async Task<Produto> ProdutoDetalhe(Guid id) => await _produtoRepository.ObterPorId(id);
