@@ -13,20 +13,16 @@ public static class WebAppConfig
 
     public static void UseWebAppConfiguration(this WebApplication app)
     {
-        //if (app.Environment.IsDevelopment())
-        //{
-        //    app.UseDeveloperExceptionPage();
-        //}
-        //else
-        //{
-        //    app.UseExceptionHandler("/erro/500");
-        //    app.UseStatusCodePagesWithRedirects("/erro/{0}");
-        //    app.UseHsts();
-        //}
-
-        app.UseExceptionHandler("/erro/500");
-        app.UseStatusCodePagesWithRedirects("/erro/{0}");
-        app.UseHsts();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/erro/500");
+            app.UseStatusCodePagesWithRedirects("/erro/{0}");
+            app.UseHsts();
+        }
 
         app.UseStaticFiles();
 

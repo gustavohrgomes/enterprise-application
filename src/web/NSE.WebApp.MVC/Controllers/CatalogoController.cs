@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NSE.WebApp.MVC.Models;
 using NSE.WebApp.MVC.Services;
 
 namespace NSE.WebApp.MVC.Controllers;
@@ -14,9 +15,12 @@ public class CatalogoController : MainController
 
     [Route("")]
     [HttpGet("vitrine")]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index([FromQuery] PaginationFilter pagination)
     {
-        var produtos = await _catalogoService.ObterTodos();
+        var produtos = await _catalogoService.ObterTodosPaginado(pagination);
+        
+        ViewBag.Pesquisa = pagination.Query;
+        produtos.ReferenceAction = "Index";
 
         return View(produtos);
     }

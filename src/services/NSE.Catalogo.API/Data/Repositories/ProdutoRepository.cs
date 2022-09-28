@@ -19,7 +19,7 @@ public class ProdutoRepository : IProdutoRepository
     public async Task<IEnumerable<Produto>> ObterTodos() 
         => await _context.Produtos.AsNoTracking().ToListAsync();
 
-    public async Task<PagedResult<Produto>> ObterTodosPaginados(PagedResultFilter pagedFilter)
+    public async Task<PagedResult<Produto>> ObterTodosPaginados(PaginationFilter pagedFilter)
     {
         var sql = $@"SELECT * FROM Produtos
                         WHERE (@Nome IS NULL OR Nome LIKE '%' + @Nome + '%')

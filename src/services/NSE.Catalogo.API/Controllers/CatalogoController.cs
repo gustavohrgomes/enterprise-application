@@ -19,7 +19,7 @@ public class CatalogoController : MainController
 
     [AllowAnonymous]
     [HttpGet("produtos")]
-    public async Task<PagedResult<Produto>> Index([FromQuery] PagedResultFilter pagedResultFilter) 
+    public async Task<PagedResult<Produto>> Index([FromQuery] PaginationFilter pagedResultFilter) 
         => await _produtoRepository.ObterTodosPaginados(pagedResultFilter);
         
     [HttpGet("produtos/{id}")]

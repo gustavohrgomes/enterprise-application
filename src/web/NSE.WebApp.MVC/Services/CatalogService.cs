@@ -5,6 +5,7 @@ namespace NSE.WebApp.MVC.Services;
 public interface ICatalogoService
 {
     Task<IEnumerable<ProdutoViewModel>> ObterTodos();
+    Task<PagedViewModel<ProdutoViewModel>> ObterTodosPaginado(PaginationFilter pagination);
     Task<ProdutoViewModel> ObterPorId(Guid id);
 }
 
@@ -33,5 +34,14 @@ public class CatalogService : Service, ICatalogoService
         TratarErrosResponse(response);
 
         return await DeserializarObjetoResponse<IEnumerable<ProdutoViewModel>>(response);
+    }
+
+    public async Task<PagedViewModel<ProdutoViewModel>> ObterTodosPaginado(PaginationFilter pagination)
+    {
+        var response = await _httpClient.GetAsync($"/api/catalogo/produtos?PageSize={pagination.PageSize}&PageIndex={pagination.PageIndex}&Query={pagination.Query}");
+
+        TratarErrosResponse(response);
+
+        return await DeserializarObjetoResponse<PagedViewModel<ProdutoViewModel>>(response);
     }
 }
