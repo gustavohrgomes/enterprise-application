@@ -46,4 +46,13 @@ public class PedidoController : MainController
 
         return pedidos == null ? NotFound() : CustomResponse(pedidos);
     }
+
+    [AllowAnonymous]
+    [HttpGet("pedido/autorizados")]
+    public async Task<IActionResult> PedidosAutorizados()
+    {
+        var pedidos = await _pedidoQueries.ObterPedidosAutorizados();
+
+        return pedidos == null ? NotFound() : CustomResponse(pedidos);
+    }
 }

@@ -48,7 +48,7 @@ public class PedidoQueries : IPedidoQueries
 
     public async Task<PedidoDTO> ObterPedidosAutorizados()
     {
-        const string sql = @"SELECT 
+        const string sql = @"SELECT
                                 P.ID as 'PedidoId', P.ID, P.CLIENTEID, 
                                 PI.ID as 'PedidoItemId', PI.ID, PI.PRODUTOID, PI.QUANTIDADE 
                                 FROM PEDIDOS P 
@@ -56,18 +56,24 @@ public class PedidoQueries : IPedidoQueries
                                 WHERE P.PEDIDOSTATUS = 1                                
                                 ORDER BY P.DATACADASTRO";
 
+        var lookup = new Dictionary<Guid, PedidoDTO>();
+
         var pedido = await _pedidoRepository
             .ObterConexao()
             .QueryAsync<PedidoDTO, PedidoItemDTO, PedidoDTO>(sql,
             (p, pi) =>
             {
-                p.PedidoItems = new List<PedidoItemDTO>();
-                p.PedidoItems.Add(pi);
+                if (!lookup.TryGetValue(p.Id, out var pedidoDTO))
+                    lookup.Add(p.Id, pedidoDTO = p);
 
-                return p;
+                pedidoDTO.PedidoItems ??= new List<PedidoItemDTO>();
+                pedidoDTO.PedidoItems.Add(pi);
+
+                return pedidoDTO;
+
             }, splitOn: "PedidoId,PedidoItemId");
 
-        return pedido.FirstOrDefault();
+        return lookup.Values.OrderBy(p => p.Data).FirstOrDefault();
     }
 
     private static PedidoDTO MapearPedido(dynamic result)

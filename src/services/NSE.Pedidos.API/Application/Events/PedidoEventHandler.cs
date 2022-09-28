@@ -13,6 +13,6 @@ public class PedidoEventHandler : INotificationHandler<PedidoRealizadoEvent>
         _bus = bus;
     }
 
-    public Task Handle(PedidoRealizadoEvent message, CancellationToken cancellationToken) 
+    public Task Handle(PedidoRealizadoEvent message, CancellationToken cancellationToken)
         => _bus.PublishAsync(new PedidoRealizadoIntegrationEvent(message.ClienteId));
 }

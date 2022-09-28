@@ -28,6 +28,7 @@ public class PedidoOrquestradorIntegrationHandler : IHostedService, IDisposable
 
     private async void ProcessarPedidos(object state)
     {
+        _logger.LogInformation("Iniciando processamento de pedidos.");
         using (var scope = _serviceProvider.CreateScope())
         {
             var pedidoQueries = scope.ServiceProvider.GetRequiredService<IPedidoQueries>();

@@ -10,15 +10,20 @@ public class CatalogoIntegrationHandler : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IMessageBus _bus;
+    private readonly ILogger<CatalogoIntegrationHandler> _logger;
 
-    public CatalogoIntegrationHandler(IServiceProvider serviceProvider, IMessageBus bus)
+    public CatalogoIntegrationHandler(IServiceProvider serviceProvider, 
+                                      IMessageBus bus, 
+                                      ILogger<CatalogoIntegrationHandler> logger)
     {
         _serviceProvider = serviceProvider;
         _bus = bus;
+        _logger = logger;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Catalogo Integration Handler está em execução");
         SetSubscribers();
         return Task.CompletedTask;
     }
@@ -30,6 +35,7 @@ public class CatalogoIntegrationHandler : BackgroundService
 
     private async Task BaixarEstoque(PedidoAutorizadoIntegrationEvent message)
     {
+        _logger.LogInformation("Dando baixa no estoque para o pedido {0}", message.PedidoId);
         using (var scope = _serviceProvider.CreateScope())
         {
             var produtosComEstoque = new List<Produto>();
@@ -40,7 +46,8 @@ public class CatalogoIntegrationHandler : BackgroundService
 
             if (produtos.Count != message.Itens.Count)
             {
-                CancelarPedidoEstoque(message);
+                _logger.LogInformation("Quantidade do produto é diferente da quantidade de itens no pedido {0}", message.PedidoId);
+                CancelarPedidoSemEstoque(message);
                 return;
             }
 
@@ -57,7 +64,8 @@ public class CatalogoIntegrationHandler : BackgroundService
 
             if (produtosComEstoque.Count != message.Itens.Count)
             {
-                CancelarPedidoEstoque(message);
+                _logger.LogInformation("Quantidade do produto com estoque é diferente da quantidade de itens no pedido {0}", message.PedidoId);
+                CancelarPedidoSemEstoque(message);
                 return;
             }
 
@@ -73,10 +81,11 @@ public class CatalogoIntegrationHandler : BackgroundService
 
             var pedidoBaixado = new PedidoBaixadoIntegrationEvent(message.ClienteId, message.PedidoId);
             await _bus.PublishAsync(pedidoBaixado);
+            _logger.LogInformation("Produtos do pedido {0} foram baixados com sucesso.", message.PedidoId);
         }
     }
 
-    private async void CancelarPedidoEstoque(PedidoAutorizadoIntegrationEvent message)
+    private async void CancelarPedidoSemEstoque(PedidoAutorizadoIntegrationEvent message)
     {
         var pedidoCancelado = new PedidoCanceladoIntegrationEvent(message.ClienteId, message.PedidoId);
         await _bus.PublishAsync(pedidoCancelado);

@@ -9,15 +9,20 @@ public class PedidoIntegrationHandler : BackgroundService
 {
     private readonly IMessageBus _bus;
     private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<PedidoIntegrationHandler> _logger;
 
-    public PedidoIntegrationHandler(IMessageBus messageBus, IServiceProvider serviceProvider)
+    public PedidoIntegrationHandler(IMessageBus messageBus, 
+                                    IServiceProvider serviceProvider, 
+                                    ILogger<PedidoIntegrationHandler> logger)
     {
         _bus = messageBus;
         _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Pedido integration Handler está em execução.");
         SetSubscribers();
         return Task.CompletedTask;
     }
@@ -31,6 +36,7 @@ public class PedidoIntegrationHandler : BackgroundService
 
     private async Task CancelarPedido(PedidoCanceladoIntegrationEvent message)
     {
+        _logger.LogInformation("Cancelando pedido {0} do cliente {1}", message.PedidoId, message.ClienteId);
         using var scope = _serviceProvider.CreateScope();
 
         var pedidoRepository = scope.ServiceProvider.GetRequiredService<IPedidoRepository>();
@@ -42,20 +48,25 @@ public class PedidoIntegrationHandler : BackgroundService
 
         if (!await pedidoRepository.UnitOfWork.CommitAsync())
             throw new DomainException($"Problemas ao cancelar o pedido {message.PedidoId}");
+
+        _logger.LogInformation("Pedido {0} cancelado com sucesso", message.PedidoId);
     }
 
     private async Task FinalizarPedido(PedidoPagoIntegrationEvent message)
     {
+        _logger.LogInformation("Finalizando pedido {0} do cliente {1}", message.PedidoId, message.ClienteId);
         using var scope = _serviceProvider.CreateScope();
 
         var pedidoRepository = scope.ServiceProvider.GetRequiredService<IPedidoRepository>();
 
         var pedido = await pedidoRepository.ObterPorId(message.PedidoId);
-        pedido.CancelarPedido();
+        pedido.FinalizarPedido();
 
         pedidoRepository.Atualizar(pedido);
 
         if (!await pedidoRepository.UnitOfWork.CommitAsync())
             throw new DomainException($"Problemas ao finalizar o pedido {message.PedidoId}");
+
+        _logger.LogInformation("Pedido {0} finalizado com sucesso", message.PedidoId);
     }
 }
