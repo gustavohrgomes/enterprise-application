@@ -11,6 +11,11 @@ public static class ApiConfig
 
     public static void UseApiConfiguration(this WebApplication app)
     {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
         app.UseRouting();
 
         app.UseAuthConfiguration();
@@ -19,5 +24,7 @@ public static class ApiConfig
         {
             endpoints.MapControllers();
         });
+
+        app.UseJwksDiscovery();
     }
 }

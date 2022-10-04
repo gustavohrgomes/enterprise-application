@@ -10,6 +10,10 @@ public static class IdentityConfig
 {
     public static void AddIdentityconfiguration(this IServiceCollection services, IConfiguration configuration)
     {
+        services
+            .AddJwksManager()
+            .PersistKeysToDatabaseStore<ApplicationDbContext>();
+
         services.AddDbContext<ApplicationDbContext>(options
             => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
