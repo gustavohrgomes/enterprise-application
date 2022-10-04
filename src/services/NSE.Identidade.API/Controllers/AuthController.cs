@@ -1,5 +1,4 @@
-﻿using EasyNetQ;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NetDevPack.Security.Jwt.Core.Interfaces;
@@ -7,10 +6,8 @@ using NSE.Core.Messages.IntegrationEvents;
 using NSE.Identidade.API.Models;
 using NSE.MessageBus;
 using NSE.WebAPI.Core.Controllers;
-using NSE.WebAPI.Core.Usuario;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace NSE.Identidade.API.Controllers;
 
@@ -148,7 +145,7 @@ public class AuthController : MainController
         return new UsuarioRespostaLogin
         {
             AccessToken = encodedToken,
-            ExpiresIn = TimeSpan.FromHours(_configuration.GetValue<int>("AppSettings:ExpiracaoHoras")).TotalSeconds,
+            ExpiresIn = TimeSpan.FromHours(1).TotalSeconds,
             UsuarioToken = new UsuarioToken
             {
                 Id = user.Id,

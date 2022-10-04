@@ -22,8 +22,6 @@ public static class IdentityConfig
             .AddErrorDescriber<IdentityMensagensPortugues>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-
-        services.AddJwtConfiguration(configuration);
     }
 }
 

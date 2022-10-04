@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using NetDevPack.Security.JwtExtensions;
 using System.Text;
 
 namespace NSE.WebAPI.Core.Identidade;
@@ -19,15 +20,7 @@ public static class JwtConfig
         {
             bearerOptions.RequireHttpsMetadata = false;
             bearerOptions.SaveToken = true;
-            bearerOptions.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration.GetValue<string>("AppSettings:Secret"))),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidAudience = configuration.GetValue<string>("AppSettings:ValidoEm"),
-                ValidIssuer = configuration.GetValue<string>("AppSettings:Emissor")
-            };
+            bearerOptions.SetJwksOptions(new JwkOptions(configuration.GetValue<string>("Autenticacao:JwksUrl")));
         });
     }
 
