@@ -1,4 +1,6 @@
-﻿using NSE.WebAPI.Core.Identidade;
+﻿using NSE.Identidade.API.Services;
+using NSE.WebAPI.Core.Identidade;
+using NSE.WebAPI.Core.Usuario;
 
 namespace NSE.Identidade.API.Configurations;
 
@@ -6,6 +8,9 @@ public static class ApiConfig
 {
     public static void AddApiConfiguration(this IServiceCollection services)
     {
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IAspNetUser, AspNetUser>();
+
         services.AddControllers();
     }
 
