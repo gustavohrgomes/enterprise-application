@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using NetDevPack.Security.Jwt.Core.Interfaces;
 using NSE.Core.Messages.IntegrationEvents;
 using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Services;
 using NSE.MessageBus;
 using NSE.WebAPI.Core.Controllers;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace NSE.Identidade.API.Controllers;
 

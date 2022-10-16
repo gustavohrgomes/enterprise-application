@@ -1,4 +1,5 @@
 ﻿using NSE.WebApp.MVC.Exceptions;
+using NSE.WebApp.MVC.Services;
 using Polly.CircuitBreaker;
 using Refit;
 using System.Net;
@@ -8,14 +9,17 @@ namespace NSE.WebApp.MVC.Extensions;
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
+    private static IAutenticacaoService _autenticacaoService;
 
     public ExceptionMiddleware(RequestDelegate next)
     {
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, IAutenticacaoService autenticacaoService)
     {
+        _autenticacaoService = autenticacaoService;
+
         try
         {
             await _next(context);
@@ -42,6 +46,16 @@ public class ExceptionMiddleware
     {
         if (statusCode == HttpStatusCode.Unauthorized)
         {
+            if (_autenticacaoService.TokenExpirado())
+            {
+                if (_autenticacaoService.RefreshTokenValido().Result)
+                {
+                    context.Response.Redirect(context.Request.Path);
+                    return;
+                }
+            }
+
+            _autenticacaoService.RealizarLogout();
             context.Response.Redirect($"/login?ReturnUrl={context.Request.Path}");
             return;
         }

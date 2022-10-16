@@ -27,6 +27,8 @@ public class AspNetUser : IAspNetUser
 
     public string ObterUserToken() => EstaAutenticado() ? _accessor.HttpContext.User.GetUserToken() : "";
 
+    public string ObterUserRefreshToken() => EstaAutenticado() ? _accessor.HttpContext.User.GetUserRefreshToken() : "";
+
     public bool EstaAutenticado() => _accessor.HttpContext.User.Identity.IsAuthenticated;
 
     public bool PossuiRole(string role) => _accessor.HttpContext.User.IsInRole(role);
@@ -59,6 +61,14 @@ public static class ClaimsPrincipalExtensions
         ArgumentNullException.ThrowIfNull(principal);
 
         var claim = principal.FindFirst("JWT");
+        return claim?.Value;
+    }
+
+    public static string GetUserRefreshToken(this ClaimsPrincipal principal)
+    {
+        ArgumentNullException.ThrowIfNull(principal);
+
+        var claim = principal.FindFirst("RefreshToken");
         return claim?.Value;
     }
 }

@@ -79,7 +79,7 @@ public class AuthenticationService : IAuthenticationService
         {
             Issuer = currentIssuer,
             Subject = identityClaims,
-            Expires = DateTime.UtcNow.AddHours(1),
+            Expires = DateTime.UtcNow.AddSeconds(30),
             SigningCredentials = key
         });
 
@@ -121,9 +121,6 @@ public class AuthenticationService : IAuthenticationService
         };
     }
 
-    private static long ToUnixEpochDate(DateTime date)
-        => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
-
     private async Task<RefreshToken> GerarRefreshToken(string email)
     {
         var refreshToken = new RefreshToken
@@ -140,4 +137,7 @@ public class AuthenticationService : IAuthenticationService
 
         return refreshToken;
     }
+
+    private static long ToUnixEpochDate(DateTime date)
+        => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
 }

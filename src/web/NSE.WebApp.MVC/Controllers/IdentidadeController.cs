@@ -32,7 +32,7 @@ public class IdentidadeController : MainController
 
         if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioRegistro);
 
-        await RealizarLogin(resposta);
+        await _autenticacaoService.RealizarLogin(resposta);
 
         return RedirectToAction("Index", "Catalogo");
     }
@@ -54,7 +54,7 @@ public class IdentidadeController : MainController
 
         if (ResponsePossuiErros(response.ResponseResult)) return View(usuarioLogin);
 
-        await RealizarLogin(response);
+        await _autenticacaoService.RealizarLogin(response);
 
         if (string.IsNullOrWhiteSpace(returnUrl)) return RedirectToAction("Index", "");
 
@@ -67,29 +67,4 @@ public class IdentidadeController : MainController
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Catalogo");
     }
-
-    private async Task RealizarLogin(UsuarioRespostaLogin resposta)
-    {
-        var token = ObterTokenFormatado(resposta.AccessToken);
-
-        var claims = new List<Claim>();
-        claims.Add(new Claim("JWT", resposta.AccessToken));
-        claims.AddRange(token.Claims);
-
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-        var autoProperties = new AuthenticationProperties
-        {
-            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
-            IsPersistent = true,
-        };
-
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme, 
-            new ClaimsPrincipal(claimsIdentity),
-            autoProperties);
-    }
-
-    private static JwtSecurityToken ObterTokenFormatado(string token)
-        => new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
 }
