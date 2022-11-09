@@ -21,7 +21,8 @@ public class CatalogoController : MainController
     [HttpGet("produtos")]
     public async Task<PagedResult<Produto>> Index([FromQuery] PaginationFilter pagedResultFilter) 
         => await _produtoRepository.ObterTodosPaginados(pagedResultFilter);
-        
+
+    [AllowAnonymous]
     [HttpGet("produtos/{id}")]
     public async Task<Produto> ProdutoDetalhe(Guid id) => await _produtoRepository.ObterPorId(id);
 

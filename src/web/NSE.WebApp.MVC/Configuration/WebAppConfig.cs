@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Localization;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
 using NSE.WebApp.MVC.Extensions;
 using System.Globalization;
 
@@ -9,10 +10,17 @@ public static class WebAppConfig
     public static void AddWebAppConfiguration(this IServiceCollection services)
     {
         services.AddControllersWithViews();
+
+        services.Configure<ForwardedHeadersOptions>(options => 
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        });
     }
 
     public static void UseWebAppConfiguration(this WebApplication app)
     {
+        app.UseForwardedHeaders();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

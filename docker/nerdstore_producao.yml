@@ -1,0 +1,170 @@
+version: "3.4"
+
+services:
+  sql-server:
+    image: gustavohrgomes/nerdstore-sql-server:latest
+    container_name: nerdstore-sql-server
+    build:
+      context: ../sql
+      dockerfile: ./Dockerfile
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "SqlServer@2022"
+      ACCEPT_EULA: "Y"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbit-nerdstore
+    environment:
+      RABBITMQ_DEFAULT_USER: "nerdstore"
+      RABBITMQ_DEFAULT_PASS: "nerdstore"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  web-mvc:
+    image: gustavohrgomes/nerdstore-web-mvc-ecommerce:latest
+    container_name: nerdstore-web-mvc
+    build:
+      context: ../src
+      dockerfile: ./web/NSE.WebApp.MVC/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://*:5070
+    depends_on:
+      - api-catalogo
+      - api-identidade
+      - api-cliente
+      - api-bff-compras
+
+  api-bff-compras:
+    image: gustavohrgomes/nerdstore-api-bff-compras:latest
+    container_name: nerdstore-api-bff-compras
+    build:
+      context: ../src
+      dockerfile: ./api gateways/NSE.Bff.Compras/Dockerfile
+    restart: always
+    ports:
+      - "5076:5076"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5076
+    depends_on:
+      - rabbitmq
+      - api-identidade
+      - api-carrinho
+      - api-pagamento
+      - api-pedido
+
+  api-identidade:
+    image: gustavohrgomes/nerdstore-api-identiade:latest
+    container_name: nerdstore-api-identidade
+    restart: always
+    build:
+      context: ../src
+      dockerfile: ./services/NSE.Identidade.API/Dockerfile
+    ports:
+      - "5267:5267"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5267
+
+  api-carrinho:
+    image: gustavohrgomes/nerdstore-api-carrinho:latest
+    container_name: nerdstore-api-carrinho
+    build:
+      context: ../src
+      dockerfile: ./services/NSE.Carrinho.API/Dockerfile
+    restart: always
+    ports:
+      - "5215:5215"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5215
+    depends_on:
+      - rabbitmq
+      - api-identidade
+      - sql-server
+
+  api-catalogo:
+    image: gustavohrgomes/nerdstore-api-catalogo:latest
+    container_name: nerdstore-api-catalogo
+    restart: always
+    build:
+      context: ../src
+      dockerfile: ./services/NSE.Catalogo.API/Dockerfile
+    ports:
+      - "5083:5083"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5083
+    depends_on:
+      - rabbitmq
+      - sql-server
+
+  api-cliente:
+    image: gustavohrgomes/nerdstore-api-cliente:latest
+    container_name: nerdstore-api-cliente
+    build:
+      context: ../src
+      dockerfile: ./services/NSE.Clientes.API/Dockerfile
+    restart: always
+    ports:
+      - "5254:5254"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5254
+    depends_on:
+      - rabbitmq
+      - api-identidade
+      - sql-server
+
+  api-pagamento:
+    image: gustavohrgomes/nerdstore-api-pagamento:latest
+    container_name: nerdstore-api-pagamento
+    build:
+      context: ../src
+      dockerfile: ./services/NSE.Pagamentos.API/Dockerfile
+    restart: always
+    ports:
+      - "5220:5220"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5220
+    depends_on:
+      - rabbitmq
+      - api-identidade
+      - api-pedido
+      - sql-server
+
+  api-pedido:
+    image: gustavohrgomes/nerdstore-api-pedido:latest
+    container_name: nerdstore-api-pedido
+    build:
+      context: ../src
+      dockerfile: ./services/NSE.Pedidos.API/Dockerfile
+    restart: always
+    ports:
+      - "5105:5105"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5105
+    depends_on:
+      - rabbitmq
+      - sql-server
+      - api-identidade
+
+  nerdstore-server:
+    image: gustavohrgomes/nerdstore-server:latest
+    container_name: nerdstore-server
+    build:
+      context: ./
+      dockerfile: ./nginx/Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web-mvc
