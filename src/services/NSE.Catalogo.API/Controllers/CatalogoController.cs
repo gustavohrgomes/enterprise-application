@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSE.Catalogo.API.Models;
 using NSE.WebAPI.Core.Controllers;
+using NSE.WebAPI.Core.HttpResponses;
 using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Catalogo.API.Controllers;
@@ -19,14 +20,27 @@ public class CatalogoController : MainController
 
     [AllowAnonymous]
     [HttpGet("produtos")]
-    public async Task<PagedResult<Produto>> Index([FromQuery] PaginationFilter pagedResultFilter) 
-        => await _produtoRepository.ObterTodosPaginados(pagedResultFilter);
+    public async Task<ActionResult<PagedResult<Produto>>> Index([FromQuery] PaginationFilter pagedResultFilter)
+    {
+        var catalogoPaginado = await _produtoRepository.ObterTodosPaginados(pagedResultFilter);
+
+        return HttpOk(catalogoPaginado);
+    }
 
     [AllowAnonymous]
     [HttpGet("produtos/{id}")]
-    public async Task<Produto> ProdutoDetalhe(Guid id) => await _produtoRepository.ObterPorId(id);
+    public async Task<ActionResult<Produto>> ProdutoDetalhe(Guid id)
+    {
+        var produto = await _produtoRepository.ObterPorId(id);
+
+        return HttpOk(produto);
+    }
 
     [HttpGet("produtos/lista/{ids}")]
-    public async Task<IEnumerable<Produto>> ObterProdutosPorId(string ids)
-        => await _produtoRepository.ObterProdutosPorId(ids);
+    public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorId(string ids)
+    {
+        var produtos = await _produtoRepository.ObterProdutosPorId(ids);
+
+        return HttpOk(produtos);
+    }
 }

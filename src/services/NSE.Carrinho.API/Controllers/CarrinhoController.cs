@@ -35,10 +35,10 @@ public class CarrinhoController : MainController
         else
             ManipularCarrinhoExistente(carrinho, item);
 
-        if (!OperacaoValida()) return CustomResponse();
+        if (!OperacaoValida()) return HttpBadRequest();
 
         await PersistirDados();
-        return CustomResponse();
+        return HttpOk();
     }
 
     [HttpPut("carrinho/{produtoId}")]
@@ -47,18 +47,18 @@ public class CarrinhoController : MainController
         var carrinho = await ObterCarrinhoCliente();
         
         var itemCarrinho = await ObterItemCarrinhoValidado(produtoId, carrinho, item);
-        if (itemCarrinho is null) return CustomResponse();
+        if (itemCarrinho is null) return HttpNotFound();
                 
         carrinho.AtualizarUnidades(itemCarrinho, item.Quantidade);
 
         ValidarCarrinho(carrinho);
-        if (!OperacaoValida()) return CustomResponse();
+        if (!OperacaoValida()) return HttpBadRequest();
 
         _context.CarrinhoItens.Update(itemCarrinho);
         _context.CarrinhoCliente.Update(carrinho);
 
         await PersistirDados();
-        return CustomResponse();
+        return HttpNoContent();
     }
 
     [HttpDelete("carrinho/{produtoId}")]
@@ -67,10 +67,10 @@ public class CarrinhoController : MainController
         var carrinho = await ObterCarrinhoCliente();
 
         var itemCarrinho = await ObterItemCarrinhoValidado(produtoId, carrinho);
-        if (itemCarrinho is null) return CustomResponse();
+        if (itemCarrinho is null) return HttpNotFound();
         
         ValidarCarrinho(carrinho);
-        if (!OperacaoValida()) return CustomResponse();
+        if (!OperacaoValida()) return HttpBadRequest();
 
         carrinho.RemoverItem(itemCarrinho);
 
@@ -79,7 +79,7 @@ public class CarrinhoController : MainController
 
         await PersistirDados();
 
-        return CustomResponse();
+        return HttpNoContent();
     }
 
     [HttpPost]
@@ -93,7 +93,7 @@ public class CarrinhoController : MainController
         _context.CarrinhoCliente.Update(carrinho);
 
         await PersistirDados();
-        return CustomResponse();
+        return HttpNoContent();
     }
 
     private async Task<CarrinhoCliente> ObterCarrinhoCliente()

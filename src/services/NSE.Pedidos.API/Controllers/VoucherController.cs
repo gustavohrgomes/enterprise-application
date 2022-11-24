@@ -23,10 +23,10 @@ public class VoucherController : MainController
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> ObterPorCodigo(string codigo)
     {
-        if (string.IsNullOrEmpty(codigo)) return NotFound();
+        if (string.IsNullOrEmpty(codigo)) return HttpNotFound();
 
         var voucher = await _voucherQueries.ObterVoucherPorCodigo(codigo);
 
-        return voucher == null ? NotFound() : CustomResponse(voucher);
+        return voucher is null ? HttpNotFound() : HttpOk(voucher);
     }
 }

@@ -1,7 +1,9 @@
 ﻿using NSE.Core.Communication;
 using NSE.WebApp.MVC.Exceptions;
 using NSE.WebApp.MVC.Models;
+using System.Net;
 using System.Net.Mime;
+using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
 
@@ -16,28 +18,49 @@ public abstract class Service
             PropertyNameCaseInsensitive = true
         };
 
-        return JsonSerializer.Deserialize<T>(await response.Content.ReadAsStreamAsync(), options);
+        var deserializedResponse = DeJson<T>(await response.Content.ReadAsStringAsync(), options);
+
+        return deserializedResponse;
     }
 
-    protected static StringContent ObterConteudo(object objeto)
+    protected T DeJson<T>(string json, JsonSerializerOptions options)
+    {
+        var objectResult = (T)DeJson(json, typeof(T), options);
+
+        return objectResult;
+    }
+
+    protected object DeJson(string json, Type type, JsonSerializerOptions options)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return null;
+
+        var objectResult = JsonSerializer.Deserialize(json, type, options);
+
+        return objectResult;
+    }
+
+    protected static StringContent ParaConteudoHttp(object objeto)
         => new(JsonSerializer.Serialize(objeto), Encoding.UTF8, MediaTypeNames.Application.Json);
 
-    protected static bool TratarErrosResponse(HttpResponseMessage response)
+    protected static async Task<bool> TratarResponseAsync(HttpResponseMessage response)
     {
-        switch ((int)response.StatusCode)
+        if (response.StatusCode == HttpStatusCode.BadRequest) return false;
+
+        if (!response.IsSuccessStatusCode)
         {
-            case 400:
-                return false;
-            case 401:
-            case 403:
-            case 404:
-            case 500:
-                throw new CustomHttpRequestException(response.StatusCode);
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.Forbidden || response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new AuthenticationException(content);
+            }
+
+            throw new CustomHttpRequestException(response.StatusCode, content);
         }
 
         response.EnsureSuccessStatusCode();
         return true;
     }
 
-    protected ResponseResult RetornoOk() => new();
+    protected ResponseResult Ok() => new();
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NSE.Core.Communication;
+using NSE.WebAPI.Core.HttpResponses;
 using NSE.WebAPI.Core.Usuario;
 using NSE.WebApp.MVC.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -36,28 +37,32 @@ public class AutenticacaoService : Service, IAutenticacaoService
 
     public async Task<UsuarioRespostaLogin> Login(UsuarioLogin usuarioLogin)
     {
-        var loginContent = ObterConteudo(usuarioLogin);
+        var loginContent = ParaConteudoHttp(usuarioLogin);
 
         var response = await _httpClient.PostAsync("/api/identidade/login", loginContent);
 
-        if (!TratarErrosResponse(response))
+        if (!await TratarResponseAsync(response))
         {
+            var objectResponse = await DeserializarObjetoResponse<HttpOkResponse<ResponseResult>>(response);
+
             return new UsuarioRespostaLogin
             {
-                ResponseResult = await DeserializarObjetoResponse<ResponseResult>(response)
+                ResponseResult = objectResponse.Result
             };
         }
 
-        return await DeserializarObjetoResponse<UsuarioRespostaLogin>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<UsuarioRespostaLogin>>(response);
+
+        return responseDeserializado?.Result;
     }
 
     public async Task<UsuarioRespostaLogin> Registrar(UsuarioRegistro usuarioRegistro)
     {
-        var registroContent = ObterConteudo(usuarioRegistro);
+        var registroContent = ParaConteudoHttp(usuarioRegistro);
 
         var response = await _httpClient.PostAsync("/api/identidade/nova-conta", registroContent);
-
-        if (!TratarErrosResponse(response))
+        
+        if (!await TratarResponseAsync(response))
         {
             return new UsuarioRespostaLogin
             {
@@ -65,24 +70,30 @@ public class AutenticacaoService : Service, IAutenticacaoService
             };
         }
 
-        return await DeserializarObjetoResponse<UsuarioRespostaLogin>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<UsuarioRespostaLogin>>(response);
+
+        return responseDeserializado?.Result;
     }
 
     public async Task<UsuarioRespostaLogin> UtilizarRefreshToken(string refreshToken)
     {
-        var refreshTokenContent = ObterConteudo(refreshToken);
+        var refreshTokenContent = ParaConteudoHttp(refreshToken);
 
         var response = await _httpClient.PostAsync("/api/identidade/refresh-token", refreshTokenContent);
 
-        if (!TratarErrosResponse(response))
+        if (!await TratarResponseAsync(response))
         {
+            var objectResponse = await DeserializarObjetoResponse<HttpOkResponse<ResponseResult>>(response);
+
             return new UsuarioRespostaLogin
             {
-                ResponseResult = await DeserializarObjetoResponse<ResponseResult>(response)
+                ResponseResult = objectResponse.Result
             };
         }
 
-        return await DeserializarObjetoResponse<UsuarioRespostaLogin>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<UsuarioRespostaLogin>>(response);
+
+        return responseDeserializado?.Result;
     }
 
     public async Task RealizarLogin(UsuarioRespostaLogin resposta)

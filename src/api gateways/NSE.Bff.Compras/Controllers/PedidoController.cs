@@ -35,11 +35,11 @@ public class PedidoController : MainController
         var produtos = await _catalogoService.ObterItens(carrinho.Itens.Select(p => p.ProdutoId));
         var endereco = await _clienteService.ObterEndereco();
 
-        if (!await ValidarCarrinhoProdutos(carrinho, produtos)) return CustomResponse();
+        if (!await ValidarCarrinhoProdutos(carrinho, produtos)) return HttpBadRequest();
 
         PopularDadosPedido(carrinho, endereco, pedido);
 
-        return CustomResponse(await _pedidoService.FinalizarPedido(pedido));
+        return HttpOk(await _pedidoService.FinalizarPedido(pedido));
     }
 
     [HttpGet("compras/pedido/ultimo")]
@@ -49,10 +49,10 @@ public class PedidoController : MainController
         if (pedido is null)
         {
             AdicionarErroProcessamento("Pedido não encontrado!");
-            return CustomResponse();
+            return HttpNotFound();
         }
 
-        return CustomResponse(pedido);
+        return HttpOk(pedido);
     }
 
     [HttpGet("compras/pedido/lista-cliente")]
@@ -60,7 +60,7 @@ public class PedidoController : MainController
     {
         var pedidos = await _pedidoService.ObterListaPorClienteId();
 
-        return pedidos == null ? NotFound() : CustomResponse(pedidos);
+        return pedidos is null ? HttpNotFound() : HttpOk(pedidos);
     }
 
     private async Task<bool> ValidarCarrinhoProdutos(CarrinhoDTO carrinho, IEnumerable<ItemProdutoDTO> produtos)

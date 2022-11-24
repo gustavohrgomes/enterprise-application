@@ -1,4 +1,5 @@
 ﻿using NSE.Core.Communication;
+using NSE.WebAPI.Core.HttpResponses;
 using NSE.WebApp.MVC.Models;
 
 namespace NSE.WebApp.MVC.Services;
@@ -35,60 +36,62 @@ public class ComprasBffService : Service, IComprasBffService
     {
         var response = await _httpClient.GetAsync("/compras/carrinho/");
 
-        TratarErrosResponse(response);
+        await TratarResponseAsync(response);
 
-        return await DeserializarObjetoResponse<CarrinhoViewModel>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<CarrinhoViewModel>>(response);
+
+        return responseDeserializado?.Result;
     }
 
     public async Task<int> ObterQuantidadeCarrinho()
     {
         var response = await _httpClient.GetAsync("/compras/carrinho-quantidade/");
 
-        TratarErrosResponse(response);
+        await TratarResponseAsync(response);
 
         return await DeserializarObjetoResponse<int>(response);
     }
 
     public async Task<ResponseResult> AdicionarItemCarrinho(ItemCarrinhoViewModel carrinho)
     {
-        var itemContent = ObterConteudo(carrinho);
+        var itemContent = ParaConteudoHttp(carrinho);
 
         var response = await _httpClient.PostAsync("/compras/carrinho/items/", itemContent);
 
-        if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+        if (!await TratarResponseAsync(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
 
-        return RetornoOk();
+        return Ok();
     }
 
     public async Task<ResponseResult> AtualizarItemCarrinho(Guid produtoId, ItemCarrinhoViewModel item)
     {
-        var itemContent = ObterConteudo(item);
+        var itemContent = ParaConteudoHttp(item);
 
         var response = await _httpClient.PutAsync($"/compras/carrinho/items/{produtoId}", itemContent);
 
-        if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+        if (!await TratarResponseAsync(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
 
-        return RetornoOk();
+        return Ok();
     }
 
     public async Task<ResponseResult> RemoverItemCarrinho(Guid produtoId)
     {
         var response = await _httpClient.DeleteAsync($"/compras/carrinho/items/{produtoId}");
 
-        if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+        if (!await TratarResponseAsync(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
 
-        return RetornoOk();
+        return Ok();
     }
 
     public async Task<ResponseResult> AplicarVoucherCarrinho(string voucher)
     {
-        var itemContent = ObterConteudo(voucher);
+        var itemContent = ParaConteudoHttp(voucher);
 
         var response = await _httpClient.PostAsync("/compras/carrinho/aplicar-voucher/", itemContent);
 
-        if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+        if (!await TratarResponseAsync(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
 
-        return RetornoOk();
+        return Ok();
     }
 
     #endregion Carrinho
@@ -97,31 +100,35 @@ public class ComprasBffService : Service, IComprasBffService
 
     public async Task<ResponseResult> FinalizarPedido(PedidoTransacaoViewModel pedidoTransacao)
     {
-        var pedidoTransacaoContent = ObterConteudo(pedidoTransacao);
+        var pedidoTransacaoContent = ParaConteudoHttp(pedidoTransacao);
 
         var response = await _httpClient.PostAsync("/compras/pedido", pedidoTransacaoContent);
 
-        if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+        if (!await TratarResponseAsync(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
 
-        return RetornoOk();
+        return Ok();
     }
 
     public async Task<PedidoViewModel> ObterUltimoPedido()
     {
         var response = await _httpClient.GetAsync("/compras/pedido/ultimo");
 
-        TratarErrosResponse(response);
+        await TratarResponseAsync(response);
 
-        return await DeserializarObjetoResponse<PedidoViewModel>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<PedidoViewModel>>(response);
+
+        return responseDeserializado.Result;
     }
 
     public async Task<IEnumerable<PedidoViewModel>> ObterListaPorClienteId()
     {
         var response = await _httpClient.GetAsync("/compras/pedido/lista-cliente/");
 
-        TratarErrosResponse(response);
+        await TratarResponseAsync(response);
 
-        return await DeserializarObjetoResponse<IEnumerable<PedidoViewModel>>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<IEnumerable<PedidoViewModel>>>(response);
+
+        return responseDeserializado.Result;
     }
 
     public PedidoTransacaoViewModel MapearParaPedido(CarrinhoViewModel carrinho, EnderecoViewModel endereco = null)

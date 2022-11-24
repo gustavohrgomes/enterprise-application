@@ -3,6 +3,7 @@ using NSE.WebApp.MVC.Services;
 using Polly.CircuitBreaker;
 using Refit;
 using System.Net;
+using System.Security.Authentication;
 
 namespace NSE.WebApp.MVC.Extensions;
 
@@ -39,6 +40,10 @@ public class ExceptionMiddleware
         catch (BrokenCircuitException)
         {
             HandleBrokenCircuitExceptionAsync(context);
+        }
+        catch (AuthenticationException)
+        {
+            HandleRequestExceptionAsync(context, HttpStatusCode.Unauthorized);
         }
     }
 

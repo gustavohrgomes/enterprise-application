@@ -1,4 +1,5 @@
 ﻿using NSE.Core.Communication;
+using NSE.WebAPI.Core.HttpResponses;
 using NSE.WebApp.MVC.Models;
 using System.Net;
 
@@ -25,19 +26,21 @@ public class ClienteService : Service, IClienteService
 
         if (response.StatusCode == HttpStatusCode.NotFound) return null;
 
-        TratarErrosResponse(response);
+        await TratarResponseAsync(response);
 
-        return await DeserializarObjetoResponse<EnderecoViewModel>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<EnderecoViewModel>>(response);
+
+        return responseDeserializado.Result;
     }
 
     public async Task<ResponseResult> AdicionarEndereco(EnderecoViewModel endereco)
     {
-        var enderecoContent = ObterConteudo(endereco);
+        var enderecoContent = ParaConteudoHttp(endereco);
 
         var response = await _httpClient.PostAsync("/cliente/endereco", enderecoContent);
 
-        if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+        if (!await TratarResponseAsync(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
 
-        return RetornoOk();        
+        return Ok();
     }
 }
