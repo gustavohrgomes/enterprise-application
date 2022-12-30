@@ -17,21 +17,25 @@ public static class DependencyInjectionConfig
 
         services.AddHttpClient<ICatalogoService, CatalogoService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AllowSelfSignedCertificate()
             .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
             .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
 
         services.AddHttpClient<ICarrinhoService, CarrinhoService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AllowSelfSignedCertificate()
             .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
             .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
 
         services.AddHttpClient<IPedidoService, PedidoService>()
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AllowSelfSignedCertificate()
                 .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
                 .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
 
         services.AddHttpClient<IClienteService, ClienteService>()
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AllowSelfSignedCertificate()
                 .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
                 .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
     }

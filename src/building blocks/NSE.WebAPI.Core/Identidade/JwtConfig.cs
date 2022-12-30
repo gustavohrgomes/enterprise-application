@@ -19,6 +19,7 @@ public static class JwtConfig
         }).AddJwtBearer(bearerOptions =>
         {
             bearerOptions.RequireHttpsMetadata = false;
+            bearerOptions.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
             bearerOptions.SaveToken = true;
             bearerOptions.SetJwksOptions(new JwkOptions(configuration.GetValue<string>("Autenticacao:JwksUrl")));
         });

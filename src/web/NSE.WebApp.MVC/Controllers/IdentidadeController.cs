@@ -23,6 +23,7 @@ public class IdentidadeController : MainController
         return View();
     }
 
+    [ValidateAntiForgeryToken]
     [HttpPost("nova-conta")]
     public async Task<IActionResult> Registro(UsuarioRegistro usuarioRegistro)
     {
@@ -44,6 +45,7 @@ public class IdentidadeController : MainController
         return View();
     }
 
+    [ValidateAntiForgeryToken]
     [HttpPost("login")]
     public async Task<IActionResult> Login(UsuarioLogin usuarioLogin, string returnUrl = null)
     {
@@ -61,6 +63,7 @@ public class IdentidadeController : MainController
         return LocalRedirect(returnUrl);
     }
 
+    [ValidateAntiForgeryToken]
     [HttpGet("sair")]
     public async Task<IActionResult> Logout()
     {

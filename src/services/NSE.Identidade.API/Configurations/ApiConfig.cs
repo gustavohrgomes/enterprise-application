@@ -36,6 +36,8 @@ public static class ApiConfig
             app.UseDeveloperExceptionPage();
         }
 
+        app.UseHttpsRedirection();
+
         app.UseRouting();
 
         app.UseAuthConfiguration();
