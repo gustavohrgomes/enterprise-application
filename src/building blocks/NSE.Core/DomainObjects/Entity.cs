@@ -2,17 +2,22 @@
 
 namespace NSE.Core.DomainObjects;
 
-public abstract class Entity
+public abstract class Entity : IEquatable<Entity>
 {
     protected Entity()
     {
         Id = Guid.NewGuid();
     }
 
-    public Guid Id { get; set; }
+    protected Entity(Guid id)
+    {
+        Id = id;
+    }
 
-    private List<Event> _eventos;
-    public IReadOnlyCollection<Event> Eventos => _eventos?.AsReadOnly();
+    public Guid Id { get; private init; }
+
+    private List<Event>? _eventos;
+    public IReadOnlyCollection<Event> Eventos => _eventos?.AsReadOnly()!;
 
     public void AdicionarEvento(Event evento)
     {
@@ -24,39 +29,34 @@ public abstract class Entity
 
     public void LimparEventos() => _eventos?.Clear();
 
-    public override bool Equals(object obj)
+    public static bool operator ==(Entity? first, Entity? second)
     {
-        var compareTo = obj as Entity;
-
-        if (ReferenceEquals(this, compareTo)) return true;
-        if (ReferenceEquals(null, compareTo)) return false;
-
-        return Id.Equals(compareTo.Id);
+        return first is not null && second is not null && first.Equals(second);
     }
 
-    public static bool operator ==(Entity a, Entity b)
+    public static bool operator !=(Entity? first, Entity? second)
     {
-        if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
-            return true;
-
-        if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
-            return false;
-
-        return a.Equals(b);
+        return !(first == second);
     }
 
-    public static bool operator !=(Entity a, Entity b)
+    public bool Equals(Entity? other)
     {
-        return !(a == b);
+        if (other is null) return false;
+        if (other.GetType() != GetType()) return false;
+
+        return other.Id == Id;
     }
 
-    public override int GetHashCode()
+    public override bool Equals(object? obj)
     {
-        return (GetType().GetHashCode() * 907) + Id.GetHashCode();
+        if (obj is null) return false;
+        if (obj.GetType() != GetType()) return false;
+        if (obj is not Entity entity) return false;
+
+        return entity.Id == Id;
     }
 
-    public override string ToString()
-    {
-        return $"{GetType().Name} [Id={Id}]";
-    }
+    public override int GetHashCode() => (GetType().GetHashCode() * 907) + Id.GetHashCode();
+
+    public override string ToString() => $"{GetType().Name} [Id={Id}]";
 }

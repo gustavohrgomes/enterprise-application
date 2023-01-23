@@ -61,18 +61,16 @@ public class PagamentoCartaoCreditoFacade : IPagamentoFacade
 
     public static Transacao ParaTransacao(Transaction transaction)
     {
-        return new Transacao
-        {
-            Id = Guid.NewGuid(),
-            Status = (StatusTransacao)transaction.Status,
-            ValorTotal = transaction.Amount,
-            BandeiraCartao = transaction.CardBrand,
-            CodigoAutorizacao = transaction.AuthorizationCode,
-            CustoTransacao = transaction.Cost,
-            DataTransacao = transaction.TransactionDate,
-            NSU = transaction.Nsu,
-            TID = transaction.Tid
-        };
+        return new Transacao(
+            Guid.NewGuid(),
+            transaction.AuthorizationCode,
+            transaction.CardBrand,
+            transaction.TransactionDate,
+            transaction.Amount,
+            transaction.PaidAmount,
+            (StatusTransacao)transaction.Status,
+            transaction.Tid,
+            transaction.Nsu);
     }
 
     public static Transaction ParaTransaction(Transacao transacao, NerdsPagService nerdsPagService)
