@@ -6,8 +6,8 @@ namespace NSE.Clientes.API.Models;
 public class Cliente : Entity, IAggregateRoot
 {
     public Cliente(Guid id, string nome, string email, string cpf)
+        : base(id)
     {
-        Id = id;
         Nome = nome;
         Email = new Email(email);
         Cpf = new Cpf(cpf);
