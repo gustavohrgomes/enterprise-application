@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+	<DataCollectionRunSettings>
+		<DataCollectors>
+			<DataCollector friendlyName="XPlat code coverage">
+				<Configuration>
+					<Format>json,cobertura,lcov,teamcity,opencover</Format>
+					<Exclude>[*]NSE.Carrinho.API.Data*,[*]NSE.Carrinho.API.Configuration*,[*]NSE.Carrinho.API.Services*</Exclude>
+					<!-- [Assembly-Filter]Type-Filter -->
+					<ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
+					<!-- Globbing filter -->
+					<UseSourceLink>true</UseSourceLink>
+					<IncludeTestAssembly>false</IncludeTestAssembly>
+					<SkipAutoProps>false</SkipAutoProps>
+					<DeterministicReport>false</DeterministicReport>
+					<ExcludeAssembliesWithoutSources>MissingAll,MissingAny,None</ExcludeAssembliesWithoutSources>
+				</Configuration>
+			</DataCollector>
+		</DataCollectors>
+	</DataCollectionRunSettings>
+</RunSettings>

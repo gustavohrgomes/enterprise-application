@@ -99,7 +99,7 @@ public class CarrinhoController : MainController
     private async Task<CarrinhoCliente> ObterCarrinhoCliente()
         => await _context.CarrinhoCliente
             .Include(c => c.Itens)
-            .FirstOrDefaultAsync(c => c.ClienteId == _user.ObterUserId())!;
+            .FirstOrDefaultAsync(c => c.ClienteId == _user.ObterUserId());
 
     private void ManipularNovoCarrinho(CarrinhoItem item)
     {
