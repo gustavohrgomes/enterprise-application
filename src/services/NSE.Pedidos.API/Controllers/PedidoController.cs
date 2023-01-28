@@ -28,7 +28,7 @@ public class PedidoController : MainController
     public async Task<IActionResult> AdicionarPedido(AdicionarPedidoCommand pedido)
     {
         pedido.ClienteId = _user.ObterUserId();
-        return CustomResponse(await _mediator.EnviarComando(pedido));
+        return HttpOk(await _mediator.EnviarComando(pedido));
     }
 
     [HttpGet("pedido/ultimo")]
@@ -36,7 +36,7 @@ public class PedidoController : MainController
     {
         var pedido = await _pedidoQueries.ObterUltimoPedido(_user.ObterUserId());
 
-        return pedido == null ? NotFound() : CustomResponse(pedido);
+        return pedido is null ? HttpNotFound() : HttpOk(pedido);
     }
 
     [HttpGet("pedido/lista-cliente")]
@@ -44,7 +44,7 @@ public class PedidoController : MainController
     {
         var pedidos = await _pedidoQueries.ObterListaPorClienteId(_user.ObterUserId());
 
-        return pedidos == null ? NotFound() : CustomResponse(pedidos);
+        return pedidos is null ? HttpNotFound() : HttpOk(pedidos);
     }
 
     [AllowAnonymous]
@@ -53,6 +53,6 @@ public class PedidoController : MainController
     {
         var pedidos = await _pedidoQueries.ObterPedidosAutorizados();
 
-        return pedidos == null ? NotFound() : CustomResponse(pedidos);
+        return pedidos is null ? HttpNotFound() : HttpOk(pedidos);
     }
 }

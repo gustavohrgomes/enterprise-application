@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using NSE.Bff.Compras.Extensions;
 using NSE.Bff.Compras.Models;
+using NSE.WebAPI.Core.HttpResponses;
 
 namespace NSE.Bff.Compras.Services;
 
@@ -26,7 +27,9 @@ public class CatalogoService : Service, ICatalogoService
 
         TratarErrosResponse(response);
 
-        return await DeserializarObjetoResponse<ItemProdutoDTO>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<ItemProdutoDTO>>(response);
+
+        return responseDeserializado.Result;
     }
 
     public async Task<IEnumerable<ItemProdutoDTO>> ObterItens(IEnumerable<Guid> itensProdutoIds)
@@ -37,6 +40,8 @@ public class CatalogoService : Service, ICatalogoService
 
         TratarErrosResponse(response);
 
-        return await DeserializarObjetoResponse<IEnumerable<ItemProdutoDTO>>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<IEnumerable<ItemProdutoDTO>>>(response);
+
+        return responseDeserializado.Result;
     }
 }

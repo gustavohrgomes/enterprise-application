@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using NSE.WebAPI.Core.Extensions;
 using NSE.WebAPI.Core.Usuario;
 using NSE.WebApp.MVC.Extensions;
 using NSE.WebApp.MVC.Services;
@@ -22,6 +23,7 @@ public static class DependencyInjection
 
         services.AddHttpClient<IAutenticacaoService, AutenticacaoService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("AutenticacaoUrl")))
+            .AllowSelfSignedCertificate()
             .AddPolicyHandler(GetRetryPolicy())
             .AddTransientHttpErrorPolicy(
                     p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
@@ -29,6 +31,7 @@ public static class DependencyInjection
         services.AddHttpClient<ICatalogoService, CatalogService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("CatalogoUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AllowSelfSignedCertificate()
             .AddPolicyHandler(GetRetryPolicy())
             .AddTransientHttpErrorPolicy(
                     p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
@@ -36,6 +39,7 @@ public static class DependencyInjection
         services.AddHttpClient<IComprasBffService, ComprasBffService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("ComprasBffUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AllowSelfSignedCertificate()
             .AddPolicyHandler(GetRetryPolicy())
             .AddTransientHttpErrorPolicy(
                     p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
@@ -43,6 +47,7 @@ public static class DependencyInjection
         services.AddHttpClient<IClienteService, ClienteService>(config =>
             config.BaseAddress = new Uri(configuration.GetValue<string>("ClienteUrl")))
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AllowSelfSignedCertificate()
             .AddPolicyHandler(GetRetryPolicy())
             .AddTransientHttpErrorPolicy(
                     p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));

@@ -1,4 +1,5 @@
-﻿using NSE.WebApp.MVC.Models;
+﻿using NSE.WebAPI.Core.HttpResponses;
+using NSE.WebApp.MVC.Models;
 
 namespace NSE.WebApp.MVC.Services;
 
@@ -22,26 +23,32 @@ public class CatalogService : Service, ICatalogoService
     {
         var response = await _httpClient.GetAsync($"/api/catalogo/produtos/{id}");
 
-        TratarErrosResponse(response);
+        await TratarResponseAsync(response);
 
-        return await DeserializarObjetoResponse<ProdutoViewModel>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<ProdutoViewModel>>(response);
+
+        return responseDeserializado?.Result;
     }
 
     public async Task<IEnumerable<ProdutoViewModel>> ObterTodos()
     {
         var response = await _httpClient.GetAsync("/api/catalogo/produtos");
 
-        TratarErrosResponse(response);
+        await TratarResponseAsync(response);
 
-        return await DeserializarObjetoResponse<IEnumerable<ProdutoViewModel>>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<IEnumerable<ProdutoViewModel>>>(response);
+
+        return responseDeserializado?.Result;
     }
 
     public async Task<PagedViewModel<ProdutoViewModel>> ObterTodosPaginado(PaginationFilter pagination)
     {
         var response = await _httpClient.GetAsync($"/api/catalogo/produtos?PageSize={pagination.PageSize}&PageIndex={pagination.PageIndex}&Query={pagination.Query}");
 
-        TratarErrosResponse(response);
+        await TratarResponseAsync(response);
 
-        return await DeserializarObjetoResponse<PagedViewModel<ProdutoViewModel>>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<PagedViewModel<ProdutoViewModel>>>(response);
+
+        return responseDeserializado?.Result;
     }
 }

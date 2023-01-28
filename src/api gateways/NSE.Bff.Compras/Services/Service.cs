@@ -1,5 +1,6 @@
 ﻿using NSE.Core.Communication;
 using System.Net;
+using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 
@@ -7,12 +8,12 @@ namespace NSE.Bff.Compras.Services;
 
 public abstract class Service
 {
-    protected StringContent ObterConteudo(object dado)
+    protected StringContent ParaConteudoHttp(object dado)
     {
         return new StringContent(
             JsonSerializer.Serialize(dado),
             Encoding.UTF8,
-            "application/json");
+            MediaTypeNames.Application.Json);
     }
 
     protected async Task<T> DeserializarObjetoResponse<T>(HttpResponseMessage responseMessage)
@@ -33,5 +34,5 @@ public abstract class Service
         return true;
     }
 
-    protected ResponseResult RetornoOk() => new();
+    protected ResponseResult Ok() => new();
 }

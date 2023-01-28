@@ -27,13 +27,13 @@ public class ClientesController : MainController
     {
         var endereco = await _clienteRepository.ObterEnderecoPorId(_user.ObterUserId());
 
-        return endereco == null ? NotFound() : CustomResponse(endereco);
+        return endereco == null ? HttpNotFound() : HttpOk(endereco);
     }
 
     [HttpPost("cliente/endereco")]
     public async Task<IActionResult> AdicionarEndereco(AdicionarEnderecoCommand endereco)
     {
         endereco.ClienteId = _user.ObterUserId();
-        return CustomResponse(await _mediator.EnviarComando(endereco));
+        return HttpOk(await _mediator.EnviarComando(endereco));
     }
 }

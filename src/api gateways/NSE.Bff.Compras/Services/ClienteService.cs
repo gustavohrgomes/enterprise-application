@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using NSE.Bff.Compras.Extensions;
 using NSE.Bff.Compras.Models;
+using NSE.WebAPI.Core.HttpResponses;
 
 namespace NSE.Bff.Compras.Services;
 
@@ -28,6 +29,8 @@ public class ClienteService : Service, IClienteService
 
         TratarErrosResponse(response);
 
-        return await DeserializarObjetoResponse<EnderecoDTO>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<EnderecoDTO>>(response);
+
+        return responseDeserializado.Result;
     }
 }

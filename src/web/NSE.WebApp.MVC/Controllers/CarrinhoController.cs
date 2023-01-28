@@ -16,7 +16,12 @@ public class CarrinhoController : MainController
     }
 
     [Route("carrinho")]
-    public async Task<IActionResult> Index() => View(await _comprasBffService.ObterCarrinho());
+    public async Task<IActionResult> Index()
+    {
+        var carrinho = await _comprasBffService.ObterCarrinho();
+
+        return View(carrinho);
+    }
 
     [HttpPost]
     [Route("carrinho/adicionar-item")]

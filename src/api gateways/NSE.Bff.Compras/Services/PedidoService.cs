@@ -2,6 +2,7 @@
 using NSE.Bff.Compras.Extensions;
 using NSE.Bff.Compras.Models;
 using NSE.Core.Communication;
+using NSE.WebAPI.Core.HttpResponses;
 using System.Net;
 
 namespace NSE.Bff.Compras.Services;
@@ -26,13 +27,13 @@ public class PedidoService : Service, IPedidoService
 
     public async Task<ResponseResult> FinalizarPedido(PedidoDTO pedido)
     {
-        var pedidoContent = ObterConteudo(pedido);
+        var pedidoContent = ParaConteudoHttp(pedido);
 
         var response = await _httpClient.PostAsync("/pedido/", pedidoContent);
 
         if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
 
-        return RetornoOk();
+        return Ok();
     }
 
     public async Task<PedidoDTO> ObterUltimoPedido()
@@ -43,7 +44,9 @@ public class PedidoService : Service, IPedidoService
 
         TratarErrosResponse(response);
 
-        return await DeserializarObjetoResponse<PedidoDTO>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<PedidoDTO>>(response);
+
+        return responseDeserializado.Result;
     }
 
     public async Task<IEnumerable<PedidoDTO>> ObterListaPorClienteId()
@@ -54,7 +57,9 @@ public class PedidoService : Service, IPedidoService
 
         TratarErrosResponse(response);
 
-        return await DeserializarObjetoResponse<IEnumerable<PedidoDTO>>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<IEnumerable<PedidoDTO>>>(response);
+
+        return responseDeserializado.Result;
     }
 
     public async Task<VoucherDTO> ObterVoucherPorCodigo(string codigo)
@@ -65,6 +70,8 @@ public class PedidoService : Service, IPedidoService
 
         TratarErrosResponse(response);
 
-        return await DeserializarObjetoResponse<VoucherDTO>(response);
+        var responseDeserializado = await DeserializarObjetoResponse<HttpOkResponse<VoucherDTO>>(response);
+
+        return responseDeserializado.Result;
     }
 }

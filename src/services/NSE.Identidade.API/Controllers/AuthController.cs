@@ -6,6 +6,7 @@ using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Services;
 using NSE.MessageBus;
 using NSE.WebAPI.Core.Controllers;
+using NSE.WebAPI.Core.HttpResponses;
 
 namespace NSE.Identidade.API.Controllers;
 
@@ -13,26 +14,23 @@ namespace NSE.Identidade.API.Controllers;
 public class AuthController : MainController
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly IConfiguration _configuration;
     private readonly IMessageBus _bus;
-    private readonly IJwtService _jwtService;
 
     public AuthController(IConfiguration configuration,
                           IMessageBus bus,
                           IJwtService jwtService,
                           IAuthenticationService authenticationService)
     {
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
-        _jwtService = jwtService ?? throw new ArgumentNullException(nameof(jwtService));
         _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService)); ;
     }
 
     [HttpPost("nova-conta")]
+    [ProducesResponseType(typeof(HttpCreatedResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(HttpBadRequestResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(HttpInternalServerErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Registrar(UsuarioRegistro usuarioRegistro)
     {
-        if (!ModelState.IsValid) return CustomResponse(ModelState);
-
         var user = new IdentityUser
         {
             UserName = usuarioRegistro.Email,
@@ -49,52 +47,56 @@ public class AuthController : MainController
             if (!clienteResult.ValidationResult.IsValid)
             {
                 await _authenticationService.UserManager.DeleteAsync(user);
-                return CustomResponse(clienteResult.ValidationResult);
+                return HttpBadRequest(clienteResult.ValidationResult);
             }
             
-            return CustomResponse(await _authenticationService.GerarJwtToken(usuarioRegistro.Email));
+            return HttpCreated(await _authenticationService.GerarJwtToken(usuarioRegistro.Email));
         }
 
         foreach (var error in result.Errors)
             AdicionarErroProcessamento(error.Description);
 
-        return CustomResponse();
+        return HttpBadRequest();
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(typeof(HttpOkResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(HttpBadRequestResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(HttpInternalServerErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Login(UsuarioLogin usuarioLogin)
     {
-        if (!ModelState.IsValid) return CustomResponse(ModelState);
-
         var user = await _authenticationService.UserManager.FindByEmailAsync(usuarioLogin.Email);
 
         if (user is null)
         {
             AdicionarErroProcessamento("Usuário ou senha incorretos");
-            return CustomResponse();
+            return HttpBadRequest();
         };
 
         var result = await _authenticationService.SignInManager.PasswordSignInAsync(user, usuarioLogin.Senha, false, true);
 
-        if (result.Succeeded) return CustomResponse(await _authenticationService.GerarJwtToken(usuarioLogin.Email));
+        if (result.Succeeded) return HttpOk(await _authenticationService.GerarJwtToken(usuarioLogin.Email));
 
         if (result.IsLockedOut)
         {
             AdicionarErroProcessamento("Usuário temporariamente bloqueado por tentativas inválidas");
-            return CustomResponse();
+            return HttpBadRequest();
         }
 
         AdicionarErroProcessamento("Usuário ou senha incorretos");
-        return CustomResponse();
+        return HttpBadRequest();
     }
 
     [HttpPost("refresh-token")]
+    [ProducesResponseType(typeof(HttpOkResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(HttpBadRequestResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(HttpInternalServerErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> RefreshToken([FromBody] string refreshToken)
     {
         if (string.IsNullOrEmpty(refreshToken))
         {
             AdicionarErroProcessamento("Refresh Token inválido");
-            return CustomResponse();
+            return HttpBadRequest();
         }
 
         var token = await _authenticationService.ObterRefreshToken(Guid.Parse(refreshToken));
@@ -102,10 +104,10 @@ public class AuthController : MainController
         if (token is null)
         {
             AdicionarErroProcessamento("Refresh Token expirado");
-            return CustomResponse();
+            return HttpBadRequest();
         }
 
-        return CustomResponse(await _authenticationService.GerarJwtToken(token.Username));
+        return HttpOk(await _authenticationService.GerarJwtToken(token.Username));
     }
 
     private async Task<ResponseMessage> RegistrarCliente(UsuarioRegistro usuarioRegistro)
@@ -124,7 +126,5 @@ public class AuthController : MainController
             throw;
         }
     }
-
-
 }
 

@@ -24,7 +24,14 @@ public class CarrinhoController : MainController
 
     [HttpGet]
     [Route("compras/carrinho")]
-    public async Task<IActionResult> Index() => CustomResponse(await _carrinhoService.ObterCarrinho());
+    public async Task<IActionResult> Index()
+    {
+        var carrinho = await _carrinhoService.ObterCarrinho();
+
+        if (carrinho is null) return HttpNotFound();
+
+        return HttpOk(carrinho);
+    }
 
     [HttpGet]
     [Route("compras/carrinho-quantidade")]
@@ -41,7 +48,7 @@ public class CarrinhoController : MainController
         var produto = await _catalogoService.ObterPorId(itemProduto.ProdutoId);
 
         await ValidarItemCarrinho(produto, itemProduto.Quantidade, true);
-        if (!OperacaoValida()) return CustomResponse();
+        if (!OperacaoValida()) return HttpBadRequest();
 
         itemProduto.Nome = produto.Nome;
         itemProduto.Valor = produto.Valor;
@@ -49,7 +56,7 @@ public class CarrinhoController : MainController
 
         var resposta = await _carrinhoService.AdicionarItemCarrinho(itemProduto);
 
-        return CustomResponse(resposta);
+        return HttpOk(resposta);
     }
 
     [HttpPut]
@@ -59,11 +66,11 @@ public class CarrinhoController : MainController
         var produto = await _catalogoService.ObterPorId(produtoId);
 
         await ValidarItemCarrinho(produto, itemProduto.Quantidade);
-        if (!OperacaoValida()) return CustomResponse();
+        if (!OperacaoValida()) return HttpBadRequest();
 
         var resposta = await _carrinhoService.AtualizarItemCarrinho(produtoId, itemProduto);
 
-        return CustomResponse(resposta);
+        return HttpOk(resposta);
     }
 
     [HttpDelete]
@@ -75,12 +82,12 @@ public class CarrinhoController : MainController
         if (produto == null)
         {
             AdicionarErroProcessamento("Produto inexistente!");
-            return CustomResponse();
+            return HttpNotFound();
         }
 
         var resposta = await _carrinhoService.RemoverItemCarrinho(produtoId);
 
-        return CustomResponse(resposta);
+        return HttpOk(resposta);
     }
 
     [HttpPost]
@@ -91,12 +98,12 @@ public class CarrinhoController : MainController
         if (voucher is null)
         {
             AdicionarErroProcessamento("Voucher inválido ou não encontrado!");
-            return CustomResponse();
+            return HttpBadRequest();
         }
 
         var resposta = await _carrinhoService.AplicarVoucherCarrinho(voucher);
 
-        return CustomResponse(resposta);
+        return HttpOk(resposta);
     }
 
     private async Task ValidarItemCarrinho(ItemProdutoDTO produto, int quantidade, bool adicionarProduto = false)
