@@ -1,4 +1,6 @@
+using NSE.Core.Logging;
 using NSE.WebApp.MVC.Configuration;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -9,6 +11,8 @@ builder.Configuration
     .AddJsonFile("appsettings.json", true, true)
     .AddJsonFile($"appsetting.{hostEnvironment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
+
+builder.Host.UseSerilog((contextBuilder, loggerConfiguration) => loggerConfiguration.Configure(contextBuilder.Configuration));
 
 if (hostEnvironment.IsDevelopment())
 {
