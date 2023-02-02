@@ -1,5 +1,7 @@
+using NSE.Core.Logging;
 using NSE.Pagamentos.API.Configuration;
 using NSE.WebAPI.Core.Identidade;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var hostEnvironment = builder.Environment;
@@ -11,6 +13,8 @@ builder.Configuration
     .AddJsonFile("appsettings.json", true, true)
     .AddJsonFile($"appsetting.{hostEnvironment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
+
+builder.Host.UseSerilog((contextBuilder, loggerConfiguration) => loggerConfiguration.Configure(contextBuilder.Configuration));
 
 if (hostEnvironment.IsDevelopment())
 {

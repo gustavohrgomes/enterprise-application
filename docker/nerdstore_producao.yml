@@ -203,3 +203,11 @@ services:
       - "443:443"
     depends_on:
       - web-mvc
+
+  nerdstore-seq:
+    image: datalust/seq:latest
+    container_name: nerdstore-seq
+    ports:
+        - 5341:80
+    environment:
+        ACCEPT_EULA: "Y"
