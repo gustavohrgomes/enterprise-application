@@ -12,7 +12,7 @@ builder.Configuration
     .AddJsonFile($"appsetting.{hostEnvironment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
 
-builder.Host.UseSerilog((contextBuilder, loggerConfiguration) => loggerConfiguration.Configure(contextBuilder.Configuration));
+builder.Host.UseSerilog((contextBuilder, loggerConfiguration) => loggerConfiguration.Configure(contextBuilder));
 
 if (hostEnvironment.IsDevelopment())
 {
