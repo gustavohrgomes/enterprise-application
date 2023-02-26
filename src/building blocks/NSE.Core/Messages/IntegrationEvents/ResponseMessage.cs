@@ -2,7 +2,7 @@
 
 namespace NSE.Core.Messages.IntegrationEvents;
 
-public class ResponseMessage : Message
+public record ResponseMessage : Message
 {
     public ResponseMessage(ValidationResult validationResult)
     {

@@ -3,7 +3,7 @@ using NSE.Core.Messages;
 
 namespace NSE.Clientes.API.Application.Commands;
 
-public class AdicionarEnderecoCommand : Command
+public sealed record AdicionarEnderecoCommand : Command
 {
     public AdicionarEnderecoCommand() { }
 

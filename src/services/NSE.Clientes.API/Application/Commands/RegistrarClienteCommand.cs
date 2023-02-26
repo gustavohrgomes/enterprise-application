@@ -3,7 +3,7 @@ using NSE.Core.Messages;
 
 namespace NSE.Clientes.API.Application.Commands;
 
-public class RegistrarClienteCommand : Command
+public sealed record RegistrarClienteCommand : Command
 {
     public RegistrarClienteCommand(Guid id, string nome, string email, string cpf)
     {
