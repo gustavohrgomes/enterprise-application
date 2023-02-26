@@ -16,16 +16,16 @@ public abstract class Entity : IEquatable<Entity>
 
     public Guid Id { get; private init; }
 
-    private List<Event>? _eventos;
-    public IReadOnlyCollection<Event> Eventos => _eventos?.AsReadOnly()!;
+    private List<DomainEvent>? _eventos;
+    public IReadOnlyCollection<DomainEvent> Eventos => _eventos?.AsReadOnly()!;
 
-    public void AdicionarEvento(Event evento)
+    public void AdicionarEvento(DomainEvent @evento)
     {
-        _eventos ??= new List<Event>();
-        _eventos.Add(evento);
+        _eventos ??= new List<DomainEvent>();
+        _eventos.Add(@evento);
     }
 
-    public void RemoverEvento(Event evento) => _eventos?.Remove(evento);
+    public void RemoverEvento(DomainEvent @evento) => _eventos?.Remove(evento);
 
     public void LimparEventos() => _eventos?.Clear();
 

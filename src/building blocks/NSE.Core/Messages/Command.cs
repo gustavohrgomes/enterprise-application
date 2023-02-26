@@ -3,7 +3,7 @@ using MediatR;
 
 namespace NSE.Core.Messages;
 
-public abstract class Command : Message, IRequest<ValidationResult>
+public abstract record Command : Message, IRequest<ValidationResult>
 {
     protected Command()
     {

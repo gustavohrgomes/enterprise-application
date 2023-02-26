@@ -1,6 +1,6 @@
 ﻿namespace NSE.Core.Messages.IntegrationEvents;
 
-public class PedidoIniciadoIntegrationEvent : IntegrationEvent
+public sealed record PedidoIniciadoIntegrationEvent : IntegrationEvent
 {
     public Guid ClienteId { get; set; }
     public Guid PedidoId { get; set; }

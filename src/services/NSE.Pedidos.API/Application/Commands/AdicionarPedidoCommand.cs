@@ -4,7 +4,7 @@ using NSE.Pedidos.API.Application.DTO;
 
 namespace NSE.Pedidos.API.Application.Commands;
 
-public class AdicionarPedidoCommand : Command
+public sealed record AdicionarPedidoCommand : Command
 {
     // Pedido
     public Guid ClienteId { get; set; }

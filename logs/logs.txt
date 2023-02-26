@@ -1,0 +1,88 @@
+01/30/2023 06:46:32 Catalogo Integration Handler está em execução
+01/30/2023 06:46:32 Now listening on: "http://localhost:5083"
+01/30/2023 06:46:32 Application started. Press Ctrl+C to shut down.
+01/30/2023 06:46:32 Hosting environment: "Development"
+01/30/2023 06:46:32 Content root path: "C:\www\desenvolvedor.io\Enterprise Applications\enterprise-application\src\services\NSE.Catalogo.API\"
+01/30/2023 06:46:57 No store type was specified for the decimal property '"Valor"' on entity type '"Produto"'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+01/30/2023 06:46:57 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 06:46:58 HTTP "GET" "/api/catalogo/produtos" responded 200 in 3006.9268 ms
+01/30/2023 06:47:01 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 06:47:01 HTTP "GET" "/api/catalogo/produtos" responded 200 in 19.6314 ms
+01/30/2023 06:54:31 Catalogo Integration Handler está em execução
+01/30/2023 06:54:32 Now listening on: "http://localhost:5083"
+01/30/2023 06:54:32 Application started. Press Ctrl+C to shut down.
+01/30/2023 06:54:32 Hosting environment: "Development"
+01/30/2023 06:54:32 Content root path: "C:\www\desenvolvedor.io\Enterprise Applications\enterprise-application\src\services\NSE.Catalogo.API\"
+01/30/2023 06:54:56 No store type was specified for the decimal property '"Valor"' on entity type '"Produto"'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+01/30/2023 06:54:56 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 06:54:58 HTTP "GET" "/api/catalogo/produtos" responded 200 in 4169.9612 ms
+01/30/2023 06:54:59 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 06:54:59 HTTP "GET" "/api/catalogo/produtos" responded 200 in 35.3120 ms
+01/30/2023 06:55:24 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 06:55:25 Executed DbCommand ("7"ms) [Parameters=["@__get_Item_0='?' (DbType = Guid)"], CommandType='Text', CommandTimeout='30']"
+""SELECT TOP(1) [p].[Id], [p].[Ativo], [p].[DataCadastro], [p].[Descricao], [p].[Imagem], [p].[Nome], [p].[QuantidadeEstoque], [p].[Valor]
+FROM [Produtos] AS [p]
+WHERE [p].[Id] = @__get_Item_0"
+01/30/2023 06:55:25 HTTP "GET" "/api/catalogo/produtos/e34de15b-75a1-4db8-821c-8d237af331ae" responded 204 in 953.7865 ms
+01/30/2023 06:56:06 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 06:56:06 Executed DbCommand ("6"ms) [Parameters=["@__get_Item_0='?' (DbType = Guid)"], CommandType='Text', CommandTimeout='30']"
+""SELECT TOP(1) [p].[Id], [p].[Ativo], [p].[DataCadastro], [p].[Descricao], [p].[Imagem], [p].[Nome], [p].[QuantidadeEstoque], [p].[Valor]
+FROM [Produtos] AS [p]
+WHERE [p].[Id] = @__get_Item_0"
+01/30/2023 06:56:06 HTTP "GET" "/api/catalogo/produtos/e34de15b-75a1-4db8-821c-8d237af331ae" responded 204 in 60.8709 ms
+01/30/2023 06:56:30 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 06:56:46 Executed DbCommand ("6"ms) [Parameters=["@__get_Item_0='?' (DbType = Guid)"], CommandType='Text', CommandTimeout='30']"
+""SELECT TOP(1) [p].[Id], [p].[Ativo], [p].[DataCadastro], [p].[Descricao], [p].[Imagem], [p].[Nome], [p].[QuantidadeEstoque], [p].[Valor]
+FROM [Produtos] AS [p]
+WHERE [p].[Id] = @__get_Item_0"
+01/30/2023 06:56:46 HTTP "GET" "/api/catalogo/produtos/7d67df76-2d4e-4a47-a11c-08eb80a9060b" responded 200 in 15655.5729 ms
+01/30/2023 06:57:05 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 06:57:05 Executed DbCommand ("7"ms) [Parameters=["@__get_Item_0='?' (DbType = Guid)"], CommandType='Text', CommandTimeout='30']"
+""SELECT TOP(1) [p].[Id], [p].[Ativo], [p].[DataCadastro], [p].[Descricao], [p].[Imagem], [p].[Nome], [p].[QuantidadeEstoque], [p].[Valor]
+FROM [Produtos] AS [p]
+WHERE [p].[Id] = @__get_Item_0"
+01/30/2023 06:57:05 HTTP "GET" "/api/catalogo/produtos/e34de15b-75a1-4db8-821c-8d237af331ae" responded 204 in 32.8729 ms
+01/30/2023 07:14:49 Catalogo Integration Handler está em execução
+01/30/2023 07:14:49 Now listening on: "http://localhost:5083"
+01/30/2023 07:14:49 Application started. Press Ctrl+C to shut down.
+01/30/2023 07:14:49 Hosting environment: "Development"
+01/30/2023 07:14:49 Content root path: "C:\www\desenvolvedor.io\Enterprise Applications\enterprise-application\src\services\NSE.Catalogo.API\"
+01/30/2023 07:15:00 No store type was specified for the decimal property '"Valor"' on entity type '"Produto"'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+01/30/2023 07:15:00 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/30/2023 07:15:02 Executed DbCommand ("67"ms) [Parameters=["@__get_Item_0='?' (DbType = Guid)"], CommandType='Text', CommandTimeout='30']"
+""SELECT TOP(1) [p].[Id], [p].[Ativo], [p].[DataCadastro], [p].[Descricao], [p].[Imagem], [p].[Nome], [p].[QuantidadeEstoque], [p].[Valor]
+FROM [Produtos] AS [p]
+WHERE [p].[Id] = @__get_Item_0"
+01/30/2023 07:15:02 HTTP "GET" "/api/catalogo/produtos/e34de15b-75a1-4db8-821c-8d237af331ae" responded 204 in 2739.3837 ms
+01/31/2023 08:25:54 Catalogo Integration Handler está em execução
+01/31/2023 08:26:43 Catalogo Integration Handler está em execução
+01/31/2023 08:27:06 Catalogo Integration Handler está em execução
+01/31/2023 08:27:07 Now listening on: "https://localhost:7083"
+01/31/2023 08:27:07 Now listening on: "http://localhost:5083"
+01/31/2023 08:27:07 Application started. Press Ctrl+C to shut down.
+01/31/2023 08:27:07 Hosting environment: "Development"
+01/31/2023 08:27:07 Content root path: "C:\www\desenvolvedor.io\Enterprise Applications\enterprise-application\src\services\NSE.Catalogo.API\"
+01/31/2023 08:28:28 Catalogo Integration Handler está em execução
+01/31/2023 08:28:28 Now listening on: "https://localhost:7083"
+01/31/2023 08:28:28 Now listening on: "http://localhost:5083"
+01/31/2023 08:28:28 Application started. Press Ctrl+C to shut down.
+01/31/2023 08:28:28 Hosting environment: "Development"
+01/31/2023 08:28:28 Content root path: "C:\www\desenvolvedor.io\Enterprise Applications\enterprise-application\src\services\NSE.Catalogo.API\"
+01/31/2023 08:30:25 Catalogo Integration Handler está em execução
+01/31/2023 08:30:50 Now listening on: "https://localhost:7083"
+01/31/2023 08:30:50 Now listening on: "http://localhost:5083"
+01/31/2023 08:30:50 Application started. Press Ctrl+C to shut down.
+01/31/2023 08:30:50 Hosting environment: "Development"
+01/31/2023 08:30:50 Content root path: "C:\www\desenvolvedor.io\Enterprise Applications\enterprise-application\src\services\NSE.Catalogo.API\"
+01/31/2023 08:31:00 No store type was specified for the decimal property '"Valor"' on entity type '"Produto"'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+01/31/2023 08:31:00 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/31/2023 08:31:02 HTTP "GET" "/api/catalogo/produtos" responded 200 in 3310.6276 ms
+01/31/2023 08:32:01 Catalogo Integration Handler está em execução
+01/31/2023 08:32:02 Now listening on: "https://localhost:7083"
+01/31/2023 08:32:02 Now listening on: "http://localhost:5083"
+01/31/2023 08:32:02 Application started. Press Ctrl+C to shut down.
+01/31/2023 08:32:02 Hosting environment: "Development"
+01/31/2023 08:32:02 Content root path: "C:\www\desenvolvedor.io\Enterprise Applications\enterprise-application\src\services\NSE.Catalogo.API\"
+01/31/2023 08:32:43 No store type was specified for the decimal property '"Valor"' on entity type '"Produto"'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+01/31/2023 08:32:43 Entity Framework Core "6.0.9" initialized '"CatalogContext"' using provider '"Microsoft.EntityFrameworkCore.SqlServer":"6.0.9"' with options: "None"
+01/31/2023 08:32:44 HTTP "GET" "/api/catalogo/produtos" responded 200 in 1557.6146 ms
