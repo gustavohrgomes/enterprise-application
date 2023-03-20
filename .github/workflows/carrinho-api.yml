@@ -15,5 +15,12 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
-      - run: dotnet build src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
-      - run: dotnet test tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+      
+      - name: Dotnet Build
+        run: dotnet build src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+      
+      - name: Run Tests
+        run: dotnet test tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+
+      - name: Build Image
+        run: docker build ./src -t gustavohrgomes/nerdstore-carrinho-api:latest -f src/services/NSE.Carrinho.API/Dockerfile
