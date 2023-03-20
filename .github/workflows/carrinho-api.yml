@@ -1,0 +1,19 @@
+name: carrinho-api-workflow
+
+on: [push]
+
+jobs:
+  build-application:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+      - run: dotnet build src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+      - run: dotnet test tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
