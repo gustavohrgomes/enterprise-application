@@ -1,0 +1,31 @@
+name: carrinho-api-push-workflow
+
+on:
+  push:
+    branches: [main, develop]
+
+jobs:
+  build-application:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET SDK
+        uses: ./.github/workflows/build.yml
+        with:
+          project-path: dotnet build src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+      
+      - name: Tests
+        uses: ./.github/workflows/tests.yml
+        whit:
+          test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+
+      - name: Build and push docker image
+        uses: ./.github/workflows/push-image.yml
+        with:
+          context: ./src
+          dockerfile-path: ./src/services/NSE.Carrinho.API/Dockerfile
+          image-tag: gustavohrgomes/nerdstore-carrinho-api:latest

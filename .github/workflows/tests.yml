@@ -1,0 +1,16 @@
+name: Tests
+
+on:
+  workflow_call:
+    inputs:
+      test-project-path:
+        required: true
+        type: string
+        description: "Path of the test project"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Tests
+        run: dotnet test ${{ inputs.test-project-path }}
