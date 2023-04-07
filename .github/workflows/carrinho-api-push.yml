@@ -20,7 +20,7 @@ jobs:
       
       - name: Tests
         uses: ./.github/workflows/tests.yml
-        whit:
+        with:
           test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
 
       - name: Build and push docker image
