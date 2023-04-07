@@ -5,7 +5,7 @@ on:
     branches: [main, develop]
 
 jobs:
-  build-application:
+  build-test-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -16,7 +16,8 @@ jobs:
       - name: Setup .NET SDK
         uses: ./.github/workflows/build.yml
         with:
-          project-path: dotnet build src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+          project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+          dotnet-version: 6.0.x
       
       - name: Tests
         uses: ./.github/workflows/tests.yml
