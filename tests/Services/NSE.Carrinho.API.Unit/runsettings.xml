@@ -5,7 +5,7 @@
 			<DataCollector friendlyName="XPlat code coverage">
 				<Configuration>
 					<Format>json,cobertura,lcov,teamcity,opencover</Format>
-					<Exclude>[*]NSE.Carrinho.API.Data*,[*]NSE.Carrinho.API.Configuration*,[*]NSE.Carrinho.API.Services*</Exclude>
+					<Exclude>[*]NSE.Core*,[*]NSE.MessageBus*,[*]NSE.WebAPI.Core*,[*]NSE.Carrinho.API.Controllers*,[*]NSE.Carrinho.API.Data*,[*]NSE.Carrinho.API.Configuration*,[*]NSE.Carrinho.API.Services*</Exclude>
 					<!-- [Assembly-Filter]Type-Filter -->
 					<ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
 					<!-- Globbing filter -->
