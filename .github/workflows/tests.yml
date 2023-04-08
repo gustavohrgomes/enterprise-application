@@ -5,12 +5,17 @@ on:
     inputs:
       test-project-path:
         required: true
-        type: string
         description: "Path of the test project"
+        type: string
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
       - name: Run Tests
         run: dotnet test ${{ inputs.test-project-path }}

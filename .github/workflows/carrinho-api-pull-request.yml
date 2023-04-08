@@ -1,23 +1,27 @@
-name: carrinho-api-push-workflow
+name: carrinho-api-pull-request
 
 on:
   pull_request:
 
 jobs:
-  build-application:
+  checkout:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: checkout repo
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Setup .NET SDK
-        uses: ./.github/workflows/build.yml
-        with:
-          project-path: dotnet build src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
-      
-      - name: Tests
-        uses: ./.github/workflows/tests.yml
-        whit:
-          test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+  build_carrinho_api:
+    name: Build Carrinho API
+    uses: ./.github/workflows/build.yml
+    with:
+      project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+      dotnet-version: 6.0.x
+  
+  run_tests:
+    name: Run Carrinho API Unit Tests
+    needs: build_carrinho_api
+    uses: ./.github/workflows/tests.yml
+    with:
+      test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj

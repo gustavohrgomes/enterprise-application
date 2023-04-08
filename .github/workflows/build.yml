@@ -7,18 +7,28 @@ on:
         required: true
         type: string
         description: "Path of the project to build"
+      dotnet-version:
+        required: true
+        description: "The SDK version to be installed"
+        default: "6.0.x"
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Restore
         run: dotnet restore ${{ inputs.project-path }}
       
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build ${{ inputs.project-path }} --no-restore
