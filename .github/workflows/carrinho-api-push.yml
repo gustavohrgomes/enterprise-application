@@ -35,3 +35,6 @@ jobs:
       context: ./src
       dockerfile-path: ./src/services/NSE.Carrinho.API/Dockerfile
       image-tag: gustavohrgomes/nerdstore-carrinho-api:latest
+    secrets:
+      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}

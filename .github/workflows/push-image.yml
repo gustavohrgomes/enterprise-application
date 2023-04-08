@@ -15,6 +15,16 @@ on:
         required: true
         type: string
         description: "Docker image tag"
+    secrets:
+      dockerhub-username:
+        required: true
+        type: string
+        description: "The Docker Hub username passed by the caller workflow"
+      dockerhub-token:
+        required: true
+        type: string
+        description: "The Docker Hub token passed by the caller workflow"
+
 
 jobs:
   build-and-push-image:
@@ -28,8 +38,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.dockerhub-username }}
+          password: ${{ secrets.dockerhub-token }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
