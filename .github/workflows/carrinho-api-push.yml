@@ -5,28 +5,33 @@ on:
     branches: [main, develop]
 
 jobs:
-  build-test-push:
+  checkout:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: checkout repo
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Setup .NET SDK
-        uses: ./.github/workflows/build.yml
-        with:
-          project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
-          dotnet-version: 6.0.x
-      
-      - name: Tests
-        uses: ./.github/workflows/tests.yml
-        with:
-          test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+  build_carrinho_api:
+    name: Build Carrinho API
+    uses: ./.github/workflows/build.yml
+    with:
+      project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+      dotnet-version: 6.0.x
 
-      - name: Build and push docker image
-        uses: ./.github/workflows/push-image.yml
-        with:
-          context: ./src
-          dockerfile-path: ./src/services/NSE.Carrinho.API/Dockerfile
-          image-tag: gustavohrgomes/nerdstore-carrinho-api:latest
+  run_tests:
+    name: Run Carrinho API Unit Tests
+    needs: build_carrinho_api
+    uses: ./.github/workflows/tests.yml
+    with:
+      test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+
+  build_and_push_image:
+    name: Builde and Push Docker Image
+    needs: [build_carrinho_api, run_tests]
+    uses: ./.github/workflows/push-image.yml
+    with:
+      context: ./src
+      dockerfile-path: ./src/services/NSE.Carrinho.API/Dockerfile
+      image-tag: gustavohrgomes/nerdstore-carrinho-api:latest

@@ -21,6 +21,7 @@ jobs:
   
   run_tests:
     name: Run Carrinho API Unit Tests
+    needs: build_carrinho_api
     uses: ./.github/workflows/tests.yml
     with:
       test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
