@@ -1,4 +1,4 @@
-name: carrinho-api-push-workflow
+name: carrinho-api-push
 
 on:
   push:
