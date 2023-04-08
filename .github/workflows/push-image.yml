@@ -18,11 +18,9 @@ on:
     secrets:
       dockerhub-username:
         required: true
-        type: string
         description: "The Docker Hub username passed by the caller workflow"
       dockerhub-token:
         required: true
-        type: string
         description: "The Docker Hub token passed by the caller workflow"
 
 
