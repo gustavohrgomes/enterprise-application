@@ -25,3 +25,4 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+      runsettings-path: tests/Services/NSE.Carrinho.API.Unit/runsettings.xml

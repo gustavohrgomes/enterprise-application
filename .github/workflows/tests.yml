@@ -7,15 +7,74 @@ on:
         required: true
         description: "Path of the test project"
         type: string
+      runsettings-path:
+        description: "Path to runsettings.xml"
+        default: ""
 
 jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'zulu' # Alternative distribution options are available.
+
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
           
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v3
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        run: dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
+
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin \
+          /k:"nerdstore-enterprise_carrinho-api" \
+          /o:"gustavohrgomes" \
+          /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          dotnet build \
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
       - name: Run Tests
-        run: dotnet test ${{ inputs.test-project-path }}
+        if: ${{ inputs.runsettings-path == '' }}
+        env:
+          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+        run: |
+          dotnet test ${{ inputs.test-project-path }} \
+          --collect:"XPlat Code Coverage" \
+          --results-directory:"$COVERAGE_REPORTS_DIR/" \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover \
+          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=CompilerGeneratedAttribute
+
+      - name: Run Tests
+        if: ${{ inputs.runsettings-path != '' }}
+        env:
+          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+        run: |
+          dotnet test ${{ inputs.test-project-path }} \
+          --collect:"XPlat Code Coverage" \
+          --results-directory:"$COVERAGE_REPORTS_DIR/" \
+          --settings ${{ inputs.runsettings-path }}
