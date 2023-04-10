@@ -54,10 +54,10 @@ jobs:
           dotnet-sonarscanner begin \
           /k:"nerdstore-enterprise_carrinho-api" \
           /o:"gustavohrgomes" \
-          /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+          /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
           dotnet build \
-          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner end /d:sonar.login="$SONAR_TOKEN"
 
       - name: Run Tests
         if: ${{ inputs.runsettings-path == '' }}
