@@ -26,3 +26,5 @@ jobs:
     with:
       test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
       runsettings-path: tests/Services/NSE.Carrinho.API.Unit/runsettings.xml
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
