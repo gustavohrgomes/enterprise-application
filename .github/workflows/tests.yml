@@ -9,6 +9,7 @@ on:
         type: string
       runsettings-path:
         description: "Path to runsettings.xml"
+        type: string
         default: ""
 
 jobs:
