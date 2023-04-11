@@ -25,7 +25,11 @@ jobs:
     needs: build_carrinho_api
     uses: ./.github/workflows/tests.yml
     with:
-      test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+      pull-request: false
+      test-project: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+      runsettings-path: tests/Services/NSE.Carrinho.API.Unit/runsettings.xml
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   build_and_push_image:
     name: Builde and Push Docker Image
