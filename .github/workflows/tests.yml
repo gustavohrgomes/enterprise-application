@@ -88,13 +88,9 @@ jobs:
           /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
 
       - name: Restore
-        env:
-          PROJECT: ${{ inputs.project }}
         run: dotnet restore
 
       - name: Build Application
-        env:
-          PROJECT: ${{ inputs.project }}
         run: dotnet build --no-restore
 
       - name: Run Tests
