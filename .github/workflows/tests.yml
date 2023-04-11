@@ -77,7 +77,7 @@ jobs:
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
         run: |
           dotnet-sonarscanner begin \
-          /k:"nerdstore-enterprise_carrinho-api" \
+          /k:"gustavohrgomes_enterprise-application_nse-carrinho-api" \
           /o:"gustavohrgomes" \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
