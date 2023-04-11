@@ -77,13 +77,10 @@ jobs:
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
         run: |
           dotnet-sonarscanner begin \
-          /k:"gustavohrgomes_enterprise-application_nse-carrinho-api" \
+          /k:"gustavohrgomes_nerdstore-enterprise-application" \
           /o:"gustavohrgomes" \
-          /d:sonar.projectBaseDir=$PROJECT_FOLDER \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
-          /d:sonar.exclusions="$TEST_PROJECT_FOLDER" \
-          /d:sonar.tests.exclusions="$PROJECT_FOLDER,tests/**/*.xml" \
           /d:sonar.pullrequest.key=${{ github.event.pull_request.number }} \
           /d:sonar.pullrequest.base=${{ github.event.pull_request.base.ref }} \
           /d:sonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} \
@@ -98,7 +95,7 @@ jobs:
       - name: Build Application
         env:
           PROJECT: ${{ inputs.project }}
-        run: dotnet build $PROJECT --no-restore
+        run: dotnet build --no-restore
 
       - name: Run Tests
         if: ${{ inputs.runsettings-path != '' }}
