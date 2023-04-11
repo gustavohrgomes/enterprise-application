@@ -3,20 +3,23 @@ name: Tests
 on:
   workflow_call:
     inputs:
-      project: 
+      pull-request:
         required: true
+        type: boolean
+      project: 
+        required: false
         description: "Path to csproj file"
         type: string
       project-folder: 
-        required: true
+        required: false
         description: "Path to project folder"
         type: string
       test-project:
-        required: true
+        required: false
         description: "Path of test project"
         type: string
       test-project-folder:
-        required: true
+        required: false
         description: "Path of test project folder"
         type: string
       runsettings-path:
@@ -27,7 +30,6 @@ on:
       sonar-token:
         required: true
         description: "Sonar Cloud Token configured in the repository"
-
 
 jobs:
   tests:
@@ -69,11 +71,24 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Begin SonarCloud Scan
+        if: ${{ inputs.pull-request == 'false' }}
+        env:
+          SONAR_TOKEN: ${{ secrets.sonar-token }}
+          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+        run: |
+          dotnet-sonarscanner begin \
+          /k:"gustavohrgomes_nerdstore-enterprise-application" \
+          /o:"gustavohrgomes" \
+          /d:sonar.login="$SONAR_TOKEN" \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.cs.coveragePlugin=opencover \
+          /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
+
+      - name: Begin SonarCloud Scan For Pull Request
+        if: ${{ inputs.pull-request == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.sonar-token }}
-          PROJECT_FOLDER: ${{ inputs.project-folder }}
-          TEST_PROJECT_FOLDER: ${{ inputs.test-project-folder }}
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
         run: |
           dotnet-sonarscanner begin \
