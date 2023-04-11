@@ -24,8 +24,10 @@ jobs:
     #needs: build_carrinho_api
     uses: ./.github/workflows/tests.yml
     with:
-      project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
-      test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+      project: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+      project-folder: src/services/NSE.Carrinho.API/
+      test-project: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+      test-project-folder: tests/Services/NSE.Carrinho.API.Unit/
       runsettings-path: tests/Services/NSE.Carrinho.API.Unit/runsettings.xml
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}

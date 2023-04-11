@@ -3,16 +3,24 @@ name: Tests
 on:
   workflow_call:
     inputs:
-      project-path: 
+      project: 
         required: true
-        description: "Path of the project that the test project refeers to."
+        description: "Path to csproj file"
         type: string
-      test-project-path:
+      project-folder: 
         required: true
-        description: "Path of the test project."
+        description: "Path to project folder"
+        type: string
+      test-project:
+        required: true
+        description: "Path of test project"
+        type: string
+      test-project-folder:
+        required: true
+        description: "Path of test project folder"
         type: string
       runsettings-path:
-        description: "Path to runsettings.xml."
+        description: "Path to runsettings.xml"
         type: string
         default: ""
     secrets:
@@ -41,20 +49,20 @@ jobs:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+      # - name: Cache SonarCloud packages
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~\sonar\cache
+      #     key: ${{ runner.os }}-sonar
+      #     restore-keys: ${{ runner.os }}-sonar
           
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v3
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
+      # - name: Cache SonarCloud scanner
+      #   id: cache-sonar-scanner
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: .\.sonar\scanner
+      #     key: ${{ runner.os }}-sonar-scanner
+      #     restore-keys: ${{ runner.os }}-sonar-scanner
 
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
@@ -64,22 +72,44 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.sonar-token }}
+          PROJECT_FOLDER: ${{ inputs.project-folder }}
+          TEST_PROJECT_FOLDER: ${{ inputs.test-project-folder }}
+          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
         run: |
           dotnet-sonarscanner begin \
           /k:"nerdstore-enterprise_carrinho-api" \
           /o:"gustavohrgomes" \
-          /d:sonar.sources="src/services/NSE.Carrinho.API/" \
-          /d:sonar.tests="tests/Services/NSE.Carrinho.API.Unit" \
-          /d:sonar.pullrequest.base=${{ github.event.pull_request.base.ref }} \
-          /d:sonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.exclusions="$TEST_PROJECT_FOLDER" \
+          /d:sonar.tests.exclusions="$PROJECT_FOLDER,tests/**/*.xml" \
+          /d:sonar.pullrequest.key=${{ github.event.pull_request.number }} \
+          /d:sonar.pullrequest.base=${{ github.event.pull_request.base.ref }} \
+          /d:sonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} \
+          /d:sonar.cs.coveragePlugin=opencover \
+          /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
 
       - name: Restore
+        env:
+          PROJECT: ${{ inputs.project }}
         run: dotnet restore
 
       - name: Build Application
-        run: dotnet build --no-restore
+        env:
+          PROJECT: ${{ inputs.project }}
+        run: dotnet build $PROJECT --no-restore
+
+      - name: Run Tests
+        if: ${{ inputs.runsettings-path != '' }}
+        env:
+          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+          RUN_SETTINGS: ${{ inputs.runsettings-path }}
+          TEST_PROJECT: ${{ inputs.test-project-path }}
+        run: |
+          dotnet test $TEST_PROJECT \
+          --collect:"XPlat Code Coverage" \
+          --results-directory:"$COVERAGE_REPORTS_DIR/" \
+          --settings $RUN_SETTINGS
 
       - name: End SonarCloud Scan
         env:
