@@ -71,7 +71,7 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Begin SonarCloud Scan
-        if: ${{ inputs.pull-request == 'false' }}
+        if: ${{ inputs.pull-request == false }}
         env:
           SONAR_TOKEN: ${{ secrets.sonar-token }}
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
@@ -85,7 +85,7 @@ jobs:
           /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
 
       - name: Begin SonarCloud Scan For Pull Request
-        if: ${{ inputs.pull-request == 'true' }}
+        if: ${{ inputs.pull-request == true }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.sonar-token }}
