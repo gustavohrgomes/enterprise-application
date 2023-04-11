@@ -4,26 +4,27 @@ on:
   pull_request:
 
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+  # checkout:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: checkout repo
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
 
-  build_carrinho_api:
-    name: Build Carrinho API
-    uses: ./.github/workflows/build.yml
-    with:
-      project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
-      dotnet-version: 6.0.x
+  # build_carrinho_api:
+  #   name: Build Carrinho API
+  #   uses: ./.github/workflows/build.yml
+  #   with:
+  #     project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+  #     dotnet-version: 6.0.x
   
   run_tests:
     name: Run Carrinho API Unit Tests
-    needs: build_carrinho_api
+    #needs: build_carrinho_api
     uses: ./.github/workflows/tests.yml
     with:
+      project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
       test-project-path: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
       runsettings-path: tests/Services/NSE.Carrinho.API.Unit/runsettings.xml
     secrets:
