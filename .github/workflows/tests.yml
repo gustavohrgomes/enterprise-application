@@ -85,7 +85,7 @@ jobs:
           /o:"gustavohrgomes" \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
-          /d:sonar.coverage.exclusions=$CODE_EXCLUSIONS \
+          /d:sonar.coverage.exclusions="$CODE_EXCLUSIONS" \
           /d:sonar.cs.coveragePlugin=opencover \
           /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
 
