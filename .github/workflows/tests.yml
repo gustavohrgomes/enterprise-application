@@ -124,24 +124,3 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.sonar-token }}
         run: dotnet-sonarscanner end /d:sonar.login="$SONAR_TOKEN"
-
-      # - name: Run Tests
-      #   if: ${{ inputs.runsettings-path == '' }}
-      #   env:
-      #     COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
-      #   run: |
-      #     dotnet test ${{ inputs.test-project-path }} \
-      #     --collect:"XPlat Code Coverage" \
-      #     --results-directory:"$COVERAGE_REPORTS_DIR/" \
-      #     -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover \
-      #     DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=CompilerGeneratedAttribute
-
-      # - name: Run Tests
-      #   if: ${{ inputs.runsettings-path != '' }}
-      #   env:
-      #     COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
-      #   run: |
-      #     dotnet test ${{ inputs.test-project-path }} \
-      #     --collect:"XPlat Code Coverage" \
-      #     --results-directory:"tests/Services/NSE.Carrinho.API.Unit/TestResults/" \
-      #     --settings ${{ inputs.runsettings-path }}
