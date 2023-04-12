@@ -23,7 +23,6 @@ on:
         required: true
         description: "The Docker Hub token passed by the caller workflow"
 
-
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
