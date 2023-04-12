@@ -26,6 +26,9 @@ on:
         description: "Path to runsettings.xml"
         type: string
         default: ""
+      code-exclusions:
+        description: "Files to exclude from coverage"
+        type: string
     secrets:
       sonar-token:
         required: true
@@ -75,12 +78,14 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.sonar-token }}
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+          CODE_EXCLUSIONS: ${{ inputs.code-exclusions }}
         run: |
           dotnet-sonarscanner begin \
           /k:"gustavohrgomes_nerdstore-enterprise-application" \
           /o:"gustavohrgomes" \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.coverage.exclusions=$CODE_EXCLUSIONS \
           /d:sonar.cs.coveragePlugin=opencover \
           /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
 
