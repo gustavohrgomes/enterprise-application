@@ -28,8 +28,9 @@ public class PagamentosContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) 
     {
-        modelBuilder.Ignore<ValidationResult>();
         modelBuilder.Ignore<Event>();
+        modelBuilder.Ignore<DomainEvent>();
+        modelBuilder.Ignore<ValidationResult>();
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;

@@ -36,6 +36,7 @@ public sealed class ClientesContext : DbContext, IUnitOfWork
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Ignore<Event>();
+        modelBuilder.Ignore<DomainEvent>();
         modelBuilder.Ignore<ValidationResult>();
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes()

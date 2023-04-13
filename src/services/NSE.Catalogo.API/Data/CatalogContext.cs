@@ -23,8 +23,9 @@ public class CatalogContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Ignore<ValidationResult>();
         modelBuilder.Ignore<Event>();
+        modelBuilder.Ignore<DomainEvent>();
+        modelBuilder.Ignore<ValidationResult>();
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogContext).Assembly);
 

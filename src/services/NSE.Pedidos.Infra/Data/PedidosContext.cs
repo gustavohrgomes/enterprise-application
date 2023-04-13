@@ -35,6 +35,7 @@ public class PedidosContext : DbContext, IUnitOfWork
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Ignore<Event>();
+        modelBuilder.Ignore<DomainEvent>();
         modelBuilder.Ignore<ValidationResult>();
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PedidosContext).Assembly);
