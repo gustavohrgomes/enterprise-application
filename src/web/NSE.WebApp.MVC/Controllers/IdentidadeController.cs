@@ -62,8 +62,7 @@ public class IdentidadeController : MainController
 
         return LocalRedirect(returnUrl);
     }
-
-    [ValidateAntiForgeryToken]
+        
     [HttpGet("sair")]
     public async Task<IActionResult> Logout()
     {
