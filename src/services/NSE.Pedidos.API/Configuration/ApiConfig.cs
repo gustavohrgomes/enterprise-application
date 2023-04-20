@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NSE.Pedidos.Infra.Data;
 using NSE.WebAPI.Core.Identidade;
 
@@ -13,6 +14,11 @@ public static class ApiConfig
 
         services.AddControllers();
 
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
+
         services.AddCors(options =>
         {
             options.AddPolicy("Total",
@@ -24,14 +30,15 @@ public static class ApiConfig
         });
     }
 
-    public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
+    public static void UseApiConfiguration(this WebApplication app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
 
-        //app.UseHttpsRedirection();
+        if (app.Configuration["USE_HTTPS_REDIRECTION"] == "true")
+            app.UseHttpsRedirection();
 
         app.UseRouting();
 

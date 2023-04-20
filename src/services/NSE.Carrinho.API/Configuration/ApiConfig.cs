@@ -30,14 +30,15 @@ public static class ApiConfig
         });
     }
 
-    public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
+    public static void UseApiConfiguration(this WebApplication app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
 
-        app.UseHttpsRedirection();
+        if (app.Configuration["USE_HTTPS_REDIRECTION"] == "true")
+            app.UseHttpsRedirection();
 
         app.UseRouting();
 

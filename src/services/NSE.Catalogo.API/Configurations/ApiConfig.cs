@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NSE.Catalogo.API.Data;
 using NSE.WebAPI.Core.Identidade;
 
@@ -12,6 +13,11 @@ public static class ApiConfig
             => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddControllers();
+
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
 
         services.AddCors(options =>
         {
@@ -31,7 +37,8 @@ public static class ApiConfig
             app.UseDeveloperExceptionPage();
         }
 
-        app.UseHttpsRedirection();
+        if (app.Configuration["USE_HTTPS_REDIRECTION"] == "true")
+            app.UseHttpsRedirection();
 
         app.UseRouting();
 

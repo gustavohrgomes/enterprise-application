@@ -36,7 +36,8 @@ public static class ApiConfig
             app.UseDeveloperExceptionPage();
         }
 
-        app.UseHttpsRedirection();
+        if (app.Configuration["USE_HTTPS_REDIRECTION"] == "true")
+            app.UseHttpsRedirection();
 
         app.UseRouting();
 
