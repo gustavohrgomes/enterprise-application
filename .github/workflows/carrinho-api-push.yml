@@ -5,36 +5,43 @@ on:
     branches: [main, develop]
 
 jobs:
-  build_carrinho_api:
-    name: Build Carrinho API
-    uses: ./.github/workflows/build.yml
-    with:
-      project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
-      dotnet-version: 6.0.x
+  # build_carrinho_api:
+  #   name: Build Carrinho API
+  #   uses: ./.github/workflows/build.yml
+  #   with:
+  #     project-path: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+  #     dotnet-version: 6.0.x
 
   run_tests:
     name: Run Carrinho API Unit Tests
-    needs: build_carrinho_api
+    #needs: build_carrinho_api
     uses: ./.github/workflows/tests.yml
     with:
       pull-request: false
+      sonar-project-key: "gustavohrgomes_enterprise-application_carrinho-api"
+      project: src/services/NSE.Carrinho.API/NSE.Carrinho.API.csproj
+      project-folder: src/services/NSE.Carrinho.API/
       test-project: tests/Services/NSE.Carrinho.API.Unit/NSE.Carrinho.API.Tests.Unit.csproj
+      test-project-folder: tests/Services/NSE.Carrinho.API.Unit/
       runsettings-path: tests/Services/NSE.Carrinho.API.Unit/runsettings.xml
       code-exclusions: >-
+        src/building blocks/**/**/*.cs,
+        src/services/**/Program.cs,
         src/services/**/Configuration/*.cs,
         src/services/**/Configurations/*.cs,
-        src/services/**/Migrations/*.cs
+        src/services/**/Migrations/*.cs,
+        src/services/**/*Context.cs
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 
-  build_and_push_image:
-    name: Builde and Push Docker Image
-    needs: [build_carrinho_api, run_tests]
-    uses: ./.github/workflows/push-image.yml
-    with:
-      context: ./src
-      dockerfile-path: ./src/services/NSE.Carrinho.API/Dockerfile
-      image-tag: gustavohrgomes/nerdstore-carrinho-api:latest
-    secrets:
-      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+  # build_and_push_image:
+  #   name: Builde and Push Docker Image
+  #   needs: [build_carrinho_api, run_tests]
+  #   uses: ./.github/workflows/push-image.yml
+  #   with:
+  #     context: ./src
+  #     dockerfile-path: ./src/services/NSE.Carrinho.API/Dockerfile
+  #     image-tag: gustavohrgomes/nerdstore-carrinho-api:latest
+  #   secrets:
+  #     dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}

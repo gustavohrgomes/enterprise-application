@@ -29,6 +29,9 @@ on:
       code-exclusions:
         description: "Files to exclude from coverage"
         type: string
+        default: ""
+      sonar-project-key:
+        type: string
     secrets:
       sonar-token:
         required: true
@@ -74,7 +77,23 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Begin SonarCloud Scan
-        if: ${{ inputs.pull-request == false }}
+        if: ${{ inputs.pull-request == false && inputs.code-exclusions != '' }}
+        env:
+          SONAR_TOKEN: ${{ secrets.sonar-token }}
+          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+          CODE_EXCLUSIONS: ${{ inputs.code-exclusions }}
+        run: |
+          dotnet-sonarscanner begin \
+          /k:${{ inputs.sonar-project-key }} \
+          /o:"gustavohrgomes" \
+          /d:sonar.login="$SONAR_TOKEN" \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.coverage.exclusions="$CODE_EXCLUSIONS" \
+          /d:sonar.cs.coveragePlugin=opencover \
+          /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
+
+      - name: Begin SonarCloud Scan
+        if: ${{ inputs.pull-request == false && inputs.code-exclusions == '' }}
         env:
           SONAR_TOKEN: ${{ secrets.sonar-token }}
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
@@ -90,7 +109,26 @@ jobs:
           /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
 
       - name: Begin SonarCloud Scan For Pull Request
-        if: ${{ inputs.pull-request == true }}
+        if: ${{ inputs.pull-request == true && inputs.code-exclusions != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.sonar-token }}
+          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+        run: |
+          dotnet-sonarscanner begin \
+          /k:"gustavohrgomes_nerdstore-enterprise-application" \
+          /o:"gustavohrgomes" \
+          /d:sonar.login="$SONAR_TOKEN" \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.pullrequest.key=${{ github.event.pull_request.number }} \
+          /d:sonar.pullrequest.base=${{ github.event.pull_request.base.ref }} \
+          /d:sonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} \
+          /d:sonar.coverage.exclusions="$CODE_EXCLUSIONS" \
+          /d:sonar.cs.coveragePlugin=opencover \
+          /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
+
+      - name: Begin SonarCloud Scan For Pull Request
+        if: ${{ inputs.pull-request == true && inputs.code-exclusions == '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.sonar-token }}
@@ -107,11 +145,11 @@ jobs:
           /d:sonar.cs.coveragePlugin=opencover \
           /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
 
-      - name: Restore
-        run: dotnet restore
+      - name: Restore Dependencies
+        run: dotnet restore ${{ inputs.project }}
 
       - name: Build Application
-        run: dotnet build --no-restore
+        run: dotnet build ${{ inputs.project }} --no-restore
 
       - name: Run Tests
         if: ${{ inputs.runsettings-path != '' }}
