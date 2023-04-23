@@ -16,6 +16,19 @@ public class CarrinhoClienteTests
         _clienteId = Guid.NewGuid();
     }
 
+    [Fact]
+    public void Construtor_DeveIniciarComIdEClienteId_QuandoForChamado()
+    {
+        // Arrange
+        var clienteId = Guid.NewGuid();
+        CarrinhoCliente sut = new(clienteId);
+
+        // Assert
+        sut.ClienteId.Should().Be(clienteId);
+        sut.ClienteId.Should().NotBe(Guid.NewGuid());
+        sut.ClienteId.Should().NotBeEmpty();
+    }
+
     [Theory]
     [InlineData(0, 0, 0)]
     [InlineData(3, 50, 150)]
@@ -79,6 +92,39 @@ public class CarrinhoClienteTests
 
         // Assert
         sut.ValorTotal.Should().Be(135);
+    }
+
+    [Fact]
+    public void CalcularValorCarrinho_DeveManterValorSemDesconto_QuandoVoucherNaoPossuirPercentualInvalido()
+    {
+        // Arrange
+        CarrinhoCliente sut = new()
+        {
+            Id = _carrinhoClienteId,
+            ClienteId = _clienteId,
+            Itens = new List<CarrinhoItem>
+            {
+                new CarrinhoItem
+                {
+                    CarrinhoId = _carrinhoClienteId,
+                    Quantidade = 3,
+                    Valor = 50
+                }
+            },
+            VoucherUtilizado = true,
+            Voucher = new()
+            {
+                Codigo = "10-OFF",
+                Percentual = null,
+                TipoDesconto = TipoDescontoVoucher.Porcentagem
+            }
+        };
+
+        // Act
+        sut.CalcularValorCarrinho();
+
+        // Assert
+        sut.ValorTotal.Should().Be(150);
     }
 
     [Fact]
@@ -168,6 +214,38 @@ public class CarrinhoClienteTests
 
         // Assert
         sut.ValorTotal.Should().Be(0);
+    }
+
+    [Fact]
+    public void CalcularValorCarrinho_DeveManterValorTotalDaCompra_QuandoValorDescontoNaoTiverValor()
+    {
+        // Arrange
+        CarrinhoCliente sut = new()
+        {
+            Id = _carrinhoClienteId,
+            ClienteId = _clienteId,
+            Itens = new()
+            {
+                new CarrinhoItem
+                {
+                    Quantidade = 3,
+                    Valor = 70
+                }
+            },
+            VoucherUtilizado = true,
+            Voucher = new()
+            {
+                Codigo = "35-OFF",
+                ValorDesconto = null,
+                TipoDesconto = TipoDescontoVoucher.Valor
+            }
+        };
+
+        // Act
+        sut.CalcularValorCarrinho();
+
+        // Assert
+        sut.ValorTotal.Should().Be(210);
     }
 
     [Fact]
@@ -482,5 +560,35 @@ public class CarrinhoClienteTests
         sut.Itens
             .Should().BeNullOrEmpty()
             .And.HaveCount(0);
+    }
+
+    [Fact]
+    public void EhValido_DeveRetornarVerdadeiro_QuandoNaoHouverErros()
+    {
+        // Arrange
+        CarrinhoCliente sut = new()
+        {
+            Id = _carrinhoClienteId,
+            ClienteId = _clienteId,
+            Itens = new()
+            {
+                new CarrinhoItem
+                {
+                    Id = Guid.NewGuid(),
+                    CarrinhoId = _carrinhoClienteId,
+                    ProdutoId = Guid.NewGuid(),
+                    Nome = "Produto teste 1",
+                    Quantidade = 3,
+                    Valor = 50
+                }
+            }
+        };
+
+        // Act
+        sut.CalcularValorCarrinho();
+        var result = sut.EhValido();
+
+        // Assert
+        result.Should().Be(true);
     }
 }
