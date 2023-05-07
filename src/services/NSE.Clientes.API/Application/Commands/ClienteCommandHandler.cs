@@ -3,6 +3,7 @@ using MediatR;
 using NSE.Clientes.API.Application.Events;
 using NSE.Clientes.API.Models;
 using NSE.Core.Messages;
+using NSE.Core.Utils;
 
 namespace NSE.Clientes.API.Application.Commands;
 
@@ -21,7 +22,7 @@ public class ClienteCommandHandler : CommandHandler,
     {
         if (!message.EhValido()) return message.ValidationResult;
 
-        var cliente = new Cliente(message.Id, message.Nome, message.Email, message.Cpf);
+        var cliente = new Cliente(message.Id, message.Nome, message.Email, message.Cpf.ApenasNumeros());
 
         var clienteExistente = await _clienteRepository.ObterPorCpf(cliente.Cpf.Numero);
 
