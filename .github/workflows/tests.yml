@@ -22,6 +22,10 @@ on:
         required: false
         description: "Path of test project folder"
         type: string
+      integration-test-project:
+        required: false
+        description: "Path of test project"
+        type: string
       runsettings-path:
         description: "Path to runsettings.xml"
         type: string
@@ -151,7 +155,7 @@ jobs:
       - name: Build Application
         run: dotnet build ${{ inputs.project }} --no-restore
 
-      - name: Run Tests
+      - name: Run Unit Tests
         if: ${{ inputs.runsettings-path != '' }}
         env:
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
@@ -162,6 +166,16 @@ jobs:
           --collect:"XPlat Code Coverage" \
           --results-directory:"$COVERAGE_REPORTS_DIR/" \
           --settings $RUN_SETTINGS
+
+      - name: Run Integration Tests
+        if: ${{ inputs.integration-test-project != '' }}
+        env:
+          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+          TEST_PROJECT: ${{ inputs.integration-test-project }}
+        run: |
+          dotnet test $TEST_PROJECT \
+          --collect:"XPlat Code Coverage" \
+          --results-directory:"$COVERAGE_REPORTS_DIR/"
 
       - name: End SonarCloud Scan
         env:

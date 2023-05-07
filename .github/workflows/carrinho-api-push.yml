@@ -23,6 +23,7 @@ jobs:
       project-folder: src/services/NSE.Carrinho.API/
       test-project: tests/services/NSE.Carrinho.API.Tests.Unit/NSE.Carrinho.API.Tests.Unit.csproj
       test-project-folder: tests/services/NSE.Carrinho.API.Tests.Unit/
+      integration-test-project: tests/services/NSE.Carrinho.API.Tests.Integration/
       runsettings-path: tests/services/NSE.Carrinho.API.Tests.Unit/runsettings.xml
       code-exclusions: >-
         src/building blocks/**/**/*.cs,
