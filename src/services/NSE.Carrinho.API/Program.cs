@@ -32,3 +32,10 @@ app.UseSwaggerConfiguration();
 app.UseApiConfiguration(builder.Environment);
 
 app.Run();
+
+
+#pragma warning disable CA1050
+public interface IAssemblyMarker
+{
+    
+}

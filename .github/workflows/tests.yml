@@ -156,7 +156,7 @@ jobs:
         env:
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
           RUN_SETTINGS: ${{ inputs.runsettings-path }}
-          TEST_PROJECT: ${{ inputs.test-project-path }}
+          TEST_PROJECT: ${{ inputs.test-project }}
         run: |
           dotnet test $TEST_PROJECT \
           --collect:"XPlat Code Coverage" \
