@@ -40,6 +40,13 @@ public static class ApiConfig
         if (app.Configuration["USE_HTTPS_REDIRECTION"] == "true")
             app.UseHttpsRedirection();
 
+        if (env.EnvironmentName == "Testing")
+        {
+            using var scope = app.Services.CreateScope();
+            var carrinhoContext = scope.ServiceProvider.GetRequiredService<CarrinhoContext>();
+            carrinhoContext.Database.Migrate();
+        }
+
         app.UseRouting();
 
         app.UseCors("Total");
