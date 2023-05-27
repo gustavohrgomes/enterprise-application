@@ -6,27 +6,12 @@ on:
       pull-request:
         required: true
         type: boolean
-      project: 
+      solution-path:
         required: false
-        description: "Path to csproj file"
-        type: string
-      project-folder: 
-        required: false
-        description: "Path to project folder"
-        type: string
-      test-project:
-        required: false
-        description: "Path of test project"
-        type: string
-      test-project-folder:
-        required: false
-        description: "Path of test project folder"
-        type: string
-      integration-test-project:
-        required: false
-        description: "Path of test project"
+        description: "Solution path to test"
         type: string
       runsettings-path:
+        required: false
         description: "Path to runsettings.xml"
         type: string
         default: ""
@@ -104,7 +89,7 @@ jobs:
           CODE_EXCLUSIONS: ${{ inputs.code-exclusions }}
         run: |
           dotnet-sonarscanner begin \
-          /k:"gustavohrgomes_nerdstore-enterprise-application" \
+          /k:${{ inputs.sonar-project-key }} \
           /o:"gustavohrgomes" \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
@@ -120,7 +105,7 @@ jobs:
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
         run: |
           dotnet-sonarscanner begin \
-          /k:"gustavohrgomes_nerdstore-enterprise-application" \
+          /k:${{ inputs.sonar-project-key }} \
           /o:"gustavohrgomes" \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
@@ -139,7 +124,7 @@ jobs:
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
         run: |
           dotnet-sonarscanner begin \
-          /k:"gustavohrgomes_nerdstore-enterprise-application" \
+          /k:${{ inputs.sonar-project-key }} \
           /o:"gustavohrgomes" \
           /d:sonar.login="$SONAR_TOKEN" \
           /d:sonar.host.url="https://sonarcloud.io" \
@@ -150,32 +135,32 @@ jobs:
           /d:sonar.cs.opencover.reportsPaths="$COVERAGE_REPORTS_DIR/**/*.opencover.xml"
 
       - name: Restore Dependencies
-        run: dotnet restore ${{ inputs.project }}
+        run: dotnet restore ${{ inputs.solution-path }}
 
       - name: Build Application
-        run: dotnet build ${{ inputs.project }} --no-restore
+        run: dotnet build ${{ inputs.solution-path }} --no-restore
 
-      - name: Run Unit Tests
-        if: ${{ inputs.runsettings-path != '' }}
+      - name: Run Tests
+        #if: ${{ inputs.runsettings-path != '' }}
         env:
           COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
-          RUN_SETTINGS: ${{ inputs.runsettings-path }}
-          TEST_PROJECT: ${{ inputs.test-project }}
+          #RUN_SETTINGS: ${{ inputs.runsettings-path }}
+          SOLUTION_PATH: ${{ inputs.solution-path}}
         run: |
-          dotnet test $TEST_PROJECT \
-          --collect:"XPlat Code Coverage" \
+          dotnet test $SOLUTION_PATH \
+          --collect:"XPlat Code Coverage;Format=opencover" \
           --results-directory:"$COVERAGE_REPORTS_DIR/" \
-          --settings $RUN_SETTINGS
+        # --settings $RUN_SETTINGS
 
-      - name: Run Integration Tests
-        if: ${{ inputs.integration-test-project != '' }}
-        env:
-          COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
-          TEST_PROJECT: ${{ inputs.integration-test-project }}
-        run: |
-          dotnet test $TEST_PROJECT \
-          --collect:"XPlat Code Coverage" \
-          --results-directory:"$COVERAGE_REPORTS_DIR/"
+      # - name: Run Integration Tests
+      #   if: ${{ inputs.integration-test-project != '' }}
+      #   env:
+      #     COVERAGE_REPORTS_DIR: ${{ github.workspace }}/TestResults
+      #     TEST_PROJECT: ${{ inputs.integration-test-project }}
+      #   run: |
+      #     dotnet test $TEST_PROJECT \
+      #     --collect:"XPlat Code Coverage" \
+      #     --results-directory:"$COVERAGE_REPORTS_DIR/"
 
       - name: End SonarCloud Scan
         env:

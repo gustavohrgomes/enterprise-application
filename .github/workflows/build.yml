@@ -4,9 +4,13 @@ on:
   workflow_call:
     inputs:
       project-path:
-        required: true
+        required: false
         type: string
         description: "Path of the project to build"
+      solution-path:
+        required: false
+        type: string
+        description: "Solution path to build"
       dotnet-version:
         required: true
         description: "The SDK version to be installed"
