@@ -25,7 +25,8 @@ if (hostEnvironment.IsDevelopment())
 services.AddApiConfiguration(builder.Configuration);
 services.AddJwtConfiguration(builder.Configuration);
 services.AddSwaggerConfiguration();
-services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+services.AddMediatR(config 
+    => config.RegisterServicesFromAssembly(typeof(Program).Assembly));
 services.RegisterServices();
 services.AddMessageBusConfiguration(builder.Configuration);
 
@@ -39,3 +40,5 @@ if (app.Environment.IsDevelopment())
 app.UseApiConfiguration(builder.Environment);
 
 app.Run();
+
+public partial class Program { }

@@ -58,7 +58,7 @@ public class IdentidadeController : MainController
 
         await _autenticacaoService.RealizarLogin(response);
 
-        if (string.IsNullOrWhiteSpace(returnUrl)) return RedirectToAction("Index", "");
+        if (string.IsNullOrWhiteSpace(returnUrl)) return RedirectToAction("Index", "Catalogo");
 
         return LocalRedirect(returnUrl);
     }
