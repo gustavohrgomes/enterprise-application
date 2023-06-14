@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NSE.Pagamentos.API.Data;
 using NSE.Pagamentos.API.Facade;
+using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Pagamentos.API.Configuration;
@@ -22,6 +23,8 @@ public static class ApiConfig
             options.SuppressModelStateInvalidFilter = true;
         });
 
+        services.AddCompressionConfiguration();
+        
         services.AddCors(options =>
         {
             options.AddPolicy("Total",

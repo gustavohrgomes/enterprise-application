@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NSE.Clientes.API.Data;
+using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Extensions;
 using NSE.WebAPI.Core.HttpResponses;
 using NSE.WebAPI.Core.Identidade;
@@ -20,6 +21,8 @@ public static class ApiConfig
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+        
+        services.AddCompressionConfiguration();
 
         services.AddCors(options =>
         {

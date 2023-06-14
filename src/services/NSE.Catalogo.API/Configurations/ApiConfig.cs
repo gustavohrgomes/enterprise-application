@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NSE.Catalogo.API.Data;
+using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Catalogo.API.Configurations;
@@ -18,6 +19,8 @@ public static class ApiConfig
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+        
+        services.AddCompressionConfiguration();
 
         services.AddCors(options =>
         {

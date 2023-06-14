@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSE.Identidade.API.Services;
+using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Extensions;
 using NSE.WebAPI.Core.HttpResponses;
 using NSE.WebAPI.Core.Identidade;
@@ -27,6 +28,8 @@ public static class ApiConfig
                 return new BadRequestObjectResult(errorResponse);
             };
         });
+        
+        services.AddCompressionConfiguration();
     }
 
     public static void UseApiConfiguration(this WebApplication app)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NSE.Pedidos.Infra.Data;
+using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Pedidos.API.Configuration;
@@ -19,6 +20,8 @@ public static class ApiConfig
             options.SuppressModelStateInvalidFilter = true;
         });
 
+        services.AddCompressionConfiguration();    
+        
         services.AddCors(options =>
         {
             options.AddPolicy("Total",
