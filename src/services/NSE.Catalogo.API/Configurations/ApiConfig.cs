@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NSE.Catalogo.API.Data;
 using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Identidade;
+using NSE.WebAPI.Core.Middlewares;
 
 namespace NSE.Catalogo.API.Configurations;
 
@@ -10,6 +11,9 @@ public static class ApiConfig
 {
     public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddExceptionHandlingConfiguration();
+        services.AddCompressionConfiguration();
+        
         services.AddDbContext<CatalogContext>(options
             => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
@@ -19,8 +23,6 @@ public static class ApiConfig
         {
             options.SuppressModelStateInvalidFilter = true;
         });
-        
-        services.AddCompressionConfiguration();
 
         services.AddCors(options =>
         {
@@ -42,17 +44,19 @@ public static class ApiConfig
 
         if (app.Configuration["USE_HTTPS_REDIRECTION"] == "true")
             app.UseHttpsRedirection();
-
+        
         app.UseRouting();
 
         app.UseCors("Total");
 
         app.UseAuthConfiguration();
+        
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
         });
-        
+
     }
 }

@@ -4,6 +4,7 @@ using NSE.Pagamentos.API.Data;
 using NSE.Pagamentos.API.Facade;
 using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Identidade;
+using NSE.WebAPI.Core.Middlewares;
 
 namespace NSE.Pagamentos.API.Configuration;
 
@@ -11,6 +12,9 @@ public static class ApiConfig
 {
     public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddExceptionHandlingConfiguration();
+        services.AddCompressionConfiguration();
+        
         services.AddDbContext<PagamentosContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
@@ -22,8 +26,6 @@ public static class ApiConfig
         {
             options.SuppressModelStateInvalidFilter = true;
         });
-
-        services.AddCompressionConfiguration();
         
         services.AddCors(options =>
         {
@@ -51,6 +53,8 @@ public static class ApiConfig
         app.UseCors("Total");
 
         app.UseAuthConfiguration();
+        
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {

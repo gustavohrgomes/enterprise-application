@@ -33,6 +33,8 @@ public class CatalogoController : MainController
     {
         var produto = await _produtoRepository.ObterPorId(id);
 
+        if (produto is null) return HttpNotFound("Produto não encontrado.");
+
         return HttpOk(produto);
     }
 

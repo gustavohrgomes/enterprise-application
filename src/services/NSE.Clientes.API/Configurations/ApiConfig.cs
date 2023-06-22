@@ -5,6 +5,7 @@ using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Extensions;
 using NSE.WebAPI.Core.HttpResponses;
 using NSE.WebAPI.Core.Identidade;
+using NSE.WebAPI.Core.Middlewares;
 
 namespace NSE.Clientes.API.Configurations;
 
@@ -12,6 +13,9 @@ public static class ApiConfig
 {
     public static void AddApiconfiguration(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddExceptionHandlingConfiguration();
+        services.AddCompressionConfiguration();
+        
         services.AddDbContext<ClientesContext>(options => 
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
@@ -22,8 +26,6 @@ public static class ApiConfig
             options.SuppressModelStateInvalidFilter = true;
         });
         
-        services.AddCompressionConfiguration();
-
         services.AddCors(options =>
         {
             options.AddPolicy("Total",
@@ -48,6 +50,8 @@ public static class ApiConfig
 
         app.UseAuthConfiguration();
 
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();

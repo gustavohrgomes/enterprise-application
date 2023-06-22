@@ -4,6 +4,7 @@ using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Extensions;
 using NSE.WebAPI.Core.HttpResponses;
 using NSE.WebAPI.Core.Identidade;
+using NSE.WebAPI.Core.Middlewares;
 using NSE.WebAPI.Core.Usuario;
 
 namespace NSE.Identidade.API.Configurations;
@@ -12,6 +13,9 @@ public static class ApiConfig
 {
     public static void AddApiConfiguration(this IServiceCollection services)
     {
+        services.AddExceptionHandlingConfiguration();
+        services.AddCompressionConfiguration();
+        
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IAspNetUser, AspNetUser>();
 
@@ -28,8 +32,6 @@ public static class ApiConfig
                 return new BadRequestObjectResult(errorResponse);
             };
         });
-        
-        services.AddCompressionConfiguration();
     }
 
     public static void UseApiConfiguration(this WebApplication app)
@@ -45,7 +47,9 @@ public static class ApiConfig
         app.UseRouting();
 
         app.UseAuthConfiguration();
-
+        
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NSE.Pedidos.Infra.Data;
 using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Identidade;
+using NSE.WebAPI.Core.Middlewares;
 
 namespace NSE.Pedidos.API.Configuration;
 
@@ -10,6 +11,9 @@ public static class ApiConfig
 {
     public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddExceptionHandlingConfiguration();
+        services.AddCompressionConfiguration();
+        
         services.AddDbContext<PedidosContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
@@ -19,8 +23,6 @@ public static class ApiConfig
         {
             options.SuppressModelStateInvalidFilter = true;
         });
-
-        services.AddCompressionConfiguration();    
         
         services.AddCors(options =>
         {
@@ -48,6 +50,8 @@ public static class ApiConfig
         app.UseCors("Total");
 
         app.UseAuthConfiguration();
+        
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {

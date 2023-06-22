@@ -27,8 +27,8 @@ public static class WebAppConfig
         }
         else
         {
-            app.UseExceptionHandler("/erro/500");
-            app.UseStatusCodePagesWithRedirects("/erro/{0}");
+            app.UseExceptionHandler("/error");
+            app.UseStatusCodePagesWithRedirects("/error/{0}");
         }
 
         // Under certain scenarios, e.g minikube / linux environment / behind load balancer
