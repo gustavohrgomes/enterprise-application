@@ -3,7 +3,7 @@ using NSE.Pedidos.Domain.Vouchers;
 
 namespace NSE.Pedidos.Domain.Pedidos;
 
-public class Pedido : Entity, IAggregateRoot
+public class Pedido : AggregateRoot
 {
     public Pedido(
         Guid clienteId, 

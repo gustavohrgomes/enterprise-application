@@ -47,7 +47,7 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
         pedido.AutorizarPedido();
 
         // Adicionar Evento
-        pedido.AdicionarEvento(new PedidoRealizadoEvent(pedido.Id, pedido.ClienteId));
+        pedido.AddDomainEvent(new PedidoRealizadoEvent(pedido.Id, pedido.ClienteId));
 
         // Adicionar Pedido Repositorio
         _pedidoRepository.Adicionar(pedido);

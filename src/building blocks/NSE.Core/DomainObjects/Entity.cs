@@ -2,42 +2,21 @@
 
 namespace NSE.Core.DomainObjects;
 
-public abstract class Entity : IEquatable<Entity>
+public abstract class Entity : IEntity, IEquatable<Entity>
 {
-    protected Entity()
-    {
-        Id = Guid.NewGuid();
-    }
-
     protected Entity(Guid id)
     {
         Id = id;
     }
 
-    public Guid Id { get; private init; }
+    protected Entity()
+    { }
+    
+    public Guid Id { get; protected set; }
+   
+    public static bool operator ==(Entity? first, Entity? second) => first is not null && second is not null && first.Equals(second);
 
-    private List<DomainEvent>? _eventos;
-    public IReadOnlyCollection<DomainEvent> Eventos => _eventos?.AsReadOnly()!;
-
-    public void AdicionarEvento(DomainEvent @evento)
-    {
-        _eventos ??= new List<DomainEvent>();
-        _eventos.Add(@evento);
-    }
-
-    public void RemoverEvento(DomainEvent @evento) => _eventos?.Remove(evento);
-
-    public void LimparEventos() => _eventos?.Clear();
-
-    public static bool operator ==(Entity? first, Entity? second)
-    {
-        return first is not null && second is not null && first.Equals(second);
-    }
-
-    public static bool operator !=(Entity? first, Entity? second)
-    {
-        return !(first == second);
-    }
+    public static bool operator !=(Entity? first, Entity? second) => !(first == second);
 
     public bool Equals(Entity? other)
     {

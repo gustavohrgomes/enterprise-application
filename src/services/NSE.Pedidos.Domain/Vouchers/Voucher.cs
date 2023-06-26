@@ -4,7 +4,7 @@ using NSE.Pedidos.Domain.Specs;
 
 namespace NSE.Pedidos.Domain.Vouchers;
 
-public class Voucher : Entity, IAggregateRoot
+public class Voucher : AggregateRoot
 {
     public string Codigo { get; private set; }
     public decimal? Percentual { get; private set; }

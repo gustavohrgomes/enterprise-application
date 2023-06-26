@@ -2,7 +2,7 @@
 
 namespace NSE.Pagamentos.API.Models;
 
-public class Pagamento : Entity, IAggregateRoot
+public class Pagamento : AggregateRoot
 {
     public Pagamento()
     {

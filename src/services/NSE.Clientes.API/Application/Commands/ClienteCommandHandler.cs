@@ -35,7 +35,7 @@ public class ClienteCommandHandler : CommandHandler,
 
         _clienteRepository.Adicionar(cliente);
 
-        cliente.AdicionarEvento(new ClienteRegistradoEvent(message.Id, message.Nome, message.Email, message.Cpf));
+        cliente.AddDomainEvent(new ClienteRegistradoEvent(message.Id, message.Nome, message.Email, message.Cpf));
 
         return await PersistirDados(_clienteRepository.UnitOfWork);
     }

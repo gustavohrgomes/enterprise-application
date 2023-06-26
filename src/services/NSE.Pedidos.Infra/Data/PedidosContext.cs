@@ -75,21 +75,21 @@ public static class MediatorExtension
 {
     public static async Task PublicarEventos<T>(this IMediatorHandler mediator, T ctx) where T : DbContext
     {
-        var domainEntities = ctx.ChangeTracker
-            .Entries<Entity>()
-            .Where(x => x.Entity.Eventos != null && x.Entity.Eventos.Any());
-
-        var domainEvents = domainEntities
-            .SelectMany(x => x.Entity.Eventos)
+        var aggregates = ctx.ChangeTracker
+            .Entries<IAggregateRoot>()
+            .Where(x => x.Entity.DomainEvents.Any())
             .ToList();
 
-        domainEntities.ToList()
-            .ForEach(entity => entity.Entity.LimparEventos());
+        var domainEvents = aggregates
+            .SelectMany(x => x.Entity.DomainEvents)
+            .ToList();
 
-        var tasks = domainEvents
-            .Select(async (domainEvent) => {
-                await mediator.PublicarEvento(domainEvent);
-            });
+        foreach (var aggregateEntry in aggregates)
+        {
+            aggregateEntry.Entity.ClearDomainEvents();
+        }
+
+        var tasks = domainEvents.Select(async (domainEvent) => await mediator.PublicarEvento(domainEvent));
 
         await Task.WhenAll(tasks);
     }
