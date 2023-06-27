@@ -17,7 +17,7 @@ namespace NSE.Pedidos.Infra.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -37,7 +37,7 @@ namespace NSE.Pedidos.Infra.Data.Migrations
                     b.Property<int>("Codigo")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR MinhaSequencia");
+                        .HasDefaultValueSql("NEXT VALUE FOR NumeroPedidos");
 
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
@@ -98,7 +98,7 @@ namespace NSE.Pedidos.Infra.Data.Migrations
                     b.ToTable("PedidoItems", (string)null);
                 });
 
-            modelBuilder.Entity("NSE.Pedidos.Domain.Voucher", b =>
+            modelBuilder.Entity("NSE.Pedidos.Domain.Vouchers.Voucher", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -143,7 +143,7 @@ namespace NSE.Pedidos.Infra.Data.Migrations
 
             modelBuilder.Entity("NSE.Pedidos.Domain.Pedidos.Pedido", b =>
                 {
-                    b.HasOne("NSE.Pedidos.Domain.Voucher", "Voucher")
+                    b.HasOne("NSE.Pedidos.Domain.Vouchers.Voucher", "Voucher")
                         .WithMany()
                         .HasForeignKey("VoucherId");
 

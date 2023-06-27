@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace NSE.Pedidos.Infra.Data.Migrations
 {
-    public partial class Pedido : Migration
+    public partial class Pedidos : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +39,7 @@ namespace NSE.Pedidos.Infra.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Codigo = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR MinhaSequencia"),
+                    Codigo = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR NumeroPedidos"),
                     ClienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VoucherId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     VoucherUtilizado = table.Column<bool>(type: "bit", nullable: false),
