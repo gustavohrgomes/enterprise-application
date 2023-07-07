@@ -13,8 +13,6 @@ public class ClienteRepository : IClienteRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public IUnitOfWork UnitOfWork => _context;
-
     public void Adicionar(Cliente cliente) => _context.Clientes.Add(cliente);
 
     public async Task<Cliente> ObterPorCpf(string cpf) 

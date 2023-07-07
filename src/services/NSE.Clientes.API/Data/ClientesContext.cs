@@ -8,7 +8,7 @@ using NSE.Core.Messages;
 
 namespace NSE.Clientes.API.Data;
 
-public sealed class ClientesContext : DbContext, IUnitOfWork
+public sealed class ClientesContext : DbContext
 {
     private readonly IMediatorHandler _mediatorHandler;
 
@@ -45,37 +45,5 @@ public sealed class ClientesContext : DbContext, IUnitOfWork
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ClientesContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
-    }
-
-    public async Task<bool> CommitAsync()
-    {
-        var sucesso = await base.SaveChangesAsync() > 0;
-        if (sucesso) _mediatorHandler.PublicarEventos(context: this);
-
-        return sucesso;
-    }
-}
-
-public static class MediatorExtensions
-{
-    public static async void PublicarEventos<T>(this IMediatorHandler mediator, T context) where T : DbContext
-    {
-        var aggregates = context.ChangeTracker
-            .Entries<IAggregateRoot>()
-            .Where(x => x.Entity.DomainEvents.Any())
-            .ToList();
-
-        var domainEvents = aggregates
-            .SelectMany(x => x.Entity.DomainEvents)
-            .ToList();
-
-        foreach (var aggregateEntry in aggregates)
-        {
-            aggregateEntry.Entity.ClearDomainEvents();
-        }
-
-        var tasks = domainEvents.Select(async (domainEvent) => await mediator.PublicarEvento(domainEvent));
-
-        await Task.WhenAll(tasks);
     }
 }

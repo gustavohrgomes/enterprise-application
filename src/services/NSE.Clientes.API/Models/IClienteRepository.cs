@@ -2,7 +2,7 @@
 
 namespace NSE.Clientes.API.Models;
 
-public interface IClienteRepository : IRepository<Cliente>
+public interface IClienteRepository
 {
     void Adicionar(Cliente cliente);
     Task<IEnumerable<Cliente>> ObterTodos();

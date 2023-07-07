@@ -6,7 +6,7 @@ using NSE.Pagamentos.API.Models;
 
 namespace NSE.Pagamentos.API.Data;
 
-public class PagamentosContext : DbContext, IUnitOfWork
+public class PagamentosContext : DbContext
 {
     public PagamentosContext(DbContextOptions<PagamentosContext> options) : base(options)
     {

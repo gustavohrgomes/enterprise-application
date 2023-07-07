@@ -1,5 +1,7 @@
 ﻿using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using NSE.Core.Communication;
 using NSE.Core.Data;
 using NSE.Core.DomainObjects;
@@ -9,7 +11,7 @@ using NSE.Pedidos.Domain.Vouchers;
 
 namespace NSE.Pedidos.Infra.Data;
 
-public class PedidosContext : DbContext, IUnitOfWork
+public class PedidosContext : DbContext
 {
     private readonly IMediatorHandler _mediatorHandler;
 
@@ -47,28 +49,6 @@ public class PedidosContext : DbContext, IUnitOfWork
 
         base.OnModelCreating(modelBuilder);
     }
-
-    public async Task<bool> CommitAsync()
-    {
-        foreach (var entry in ChangeTracker.Entries()
-            .Where(entry => entry.Entity.GetType().GetProperty("DataCadastro") != null))
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Property("DataCadastro").CurrentValue = DateTime.Now;
-            }
-
-            if (entry.State == EntityState.Modified)
-            {
-                entry.Property("DataCadastro").IsModified = false;
-            }
-        }
-
-        var sucesso = await base.SaveChangesAsync() > 0;
-        if (sucesso) await _mediatorHandler.PublicarEventos(this);
-
-        return sucesso;
-    }
 }
 
 public static class MediatorExtension
@@ -94,3 +74,43 @@ public static class MediatorExtension
         await Task.WhenAll(tasks);
     }
 }
+
+// public class PedidosContextDesignTimeFactory : IDesignTimeDbContextFactory<PedidosContext>
+// {
+//     public PedidosContext CreateDbContext(string[] args)
+//     {
+//         var configurationBuilder = new ConfigurationBuilder();
+//
+//         var dotnetEnvironment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+//         var aspnetcoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+//
+//         var appsettingsPath = Directory.GetDirectoryRoot("/src/services/NSE.Pedidos.API/");
+//
+//         configurationBuilder
+//             .SetBasePath(appsettingsPath)
+//             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+//
+//         if (!string.IsNullOrWhiteSpace(dotnetEnvironment))
+//         {
+//             configurationBuilder.AddJsonFile($"appsettings.{dotnetEnvironment}.json", true, true);
+//         }
+//         
+//         if (!string.IsNullOrWhiteSpace(aspnetcoreEnvironment))
+//         {
+//             configurationBuilder.AddJsonFile($"appsettings.{aspnetcoreEnvironment}.json", true, true);
+//         }
+//
+//         var configuration = configurationBuilder.AddEnvironmentVariables().Build();
+//
+//         var connectionString = configuration.GetConnectionString("DefaultConnection");
+//
+//         if (string.IsNullOrWhiteSpace(connectionString))
+//         {
+//             throw new NullReferenceException("Connection string not found.");
+//         }
+//         
+//         var builder = new DbContextOptionsBuilder<PedidosContext>().UseSqlServer(connectionString!);
+//
+//         return new PedidosContext(builder.Options, null);
+//     }
+// }

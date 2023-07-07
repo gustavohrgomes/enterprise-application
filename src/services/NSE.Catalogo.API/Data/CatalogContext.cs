@@ -6,7 +6,7 @@ using NSE.Core.Messages;
 
 namespace NSE.Catalogo.API.Data;
 
-public class CatalogContext : DbContext, IUnitOfWork
+public class CatalogContext : DbContext
 {
     public CatalogContext(DbContextOptions<CatalogContext> options) : base(options) { }
 

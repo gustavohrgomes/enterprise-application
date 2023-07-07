@@ -13,8 +13,6 @@ public class PagamentoRepository : IPagamentoRepository
         _context = context;
     }
 
-    public IUnitOfWork UnitOfWork => _context;
-
     public void AdicionarPagamento(Pagamento pagamento)
         => _context.Pagamentos.Add(pagamento);
 

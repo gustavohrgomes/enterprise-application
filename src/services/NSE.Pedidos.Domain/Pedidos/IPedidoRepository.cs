@@ -3,7 +3,7 @@ using NSE.Core.Data;
 
 namespace NSE.Pedidos.Domain.Pedidos;
 
-public interface IPedidoRepository : IRepository<Pedido>
+public interface IPedidoRepository
 {
     Task<Pedido> ObterPorId(Guid id);
     Task<IEnumerable<Pedido>> ObterListaPorClienteId(Guid clienteId);

@@ -2,7 +2,7 @@
 
 namespace NSE.Catalogo.API.Models;
 
-public interface IProdutoRepository : IRepository<Produto>
+public interface IProdutoRepository
 {
     Task<IEnumerable<Produto>> ObterTodos();
     Task<PagedResult<Produto>> ObterTodosPaginados(PaginationFilter pagedFilter);

@@ -14,8 +14,6 @@ public class ProdutoRepository : IProdutoRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public IUnitOfWork UnitOfWork => _context;
-
     public async Task<IEnumerable<Produto>> ObterTodos() 
         => await _context.Produtos.AsNoTracking().ToListAsync();
 
@@ -70,7 +68,7 @@ public class ProdutoRepository : IProdutoRepository
             .Where(p => idsValue.Contains(p.Id) && p.Ativo)
             .ToListAsync();
     }
-
+    
     #region Disposable members
 
     private bool disposed;

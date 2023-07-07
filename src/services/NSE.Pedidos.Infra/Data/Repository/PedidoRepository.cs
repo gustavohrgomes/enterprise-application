@@ -14,8 +14,6 @@ public class PedidoRepository : IPedidoRepository
         _context = context;
     }
 
-    public IUnitOfWork UnitOfWork => _context;
-
     public DbConnection ObterConexao() => _context.Database.GetDbConnection();
 
     public async Task<Pedido> ObterPorId(Guid id) => await _context.Pedidos.FindAsync(id);

@@ -2,7 +2,7 @@
 
 namespace NSE.Pagamentos.API.Models;
 
-public interface IPagamentoRepository : IRepository<Pagamento>
+public interface IPagamentoRepository
 {
     void AdicionarPagamento(Pagamento pagamento);
     void AdicionarTransacao(Transacao transacao);
