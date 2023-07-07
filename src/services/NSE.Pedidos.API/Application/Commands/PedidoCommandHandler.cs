@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using MediatR;
+using NSE.Core.Data;
 using NSE.Core.Messages;
 using NSE.Core.Messages.IntegrationEvents;
 using NSE.MessageBus;
@@ -16,14 +17,19 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
     private readonly IPedidoRepository _pedidoRepository;
     private readonly IVoucherRepository _voucherRepository;
     private readonly IMessageBus _bus;
+    private readonly IUnitOfWork _unitOfWork;
 
     public PedidoCommandHandler(IVoucherRepository voucherRepository, 
                                 IPedidoRepository pedidoRepository, 
-                                IMessageBus bus)
+                                IMessageBus bus, 
+                                IUnitOfWork unitOfWork,
+                                IPublisher publisher)
+        : base(publisher)
     {
         _pedidoRepository = pedidoRepository ?? throw new ArgumentNullException(nameof(pedidoRepository));
         _voucherRepository = voucherRepository ?? throw new ArgumentNullException(nameof(voucherRepository));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
     public async Task<ValidationResult> Handle(AdicionarPedidoCommand message, CancellationToken cancellationToken)
@@ -53,7 +59,7 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
         _pedidoRepository.Adicionar(pedido);
 
         // Persistir dados de pedido e voucher
-        return await PersistirDados(_pedidoRepository.UnitOfWork);
+        return await PersistirDados(_unitOfWork);
     }
 
     private static Pedido MapearPedido(AdicionarPedidoCommand message)
@@ -70,6 +76,7 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
         };
 
         var pedido = new Pedido(
+            Guid.NewGuid(),
             message.ClienteId,
             message.ValorTotal,
             message.PedidoItems.Select(PedidoItemDTO.ParaPedidoItem).ToList(),

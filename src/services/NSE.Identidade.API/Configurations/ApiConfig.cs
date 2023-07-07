@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NSE.Identidade.API.Data;
 using NSE.Identidade.API.Services;
 using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Extensions;
@@ -43,6 +45,13 @@ public static class ApiConfig
 
         if (app.Configuration["USE_HTTPS_REDIRECTION"] == "true")
             app.UseHttpsRedirection();
+        
+        if (app.Environment.IsEnvironment("Testing"))
+        {
+            using var scope = app.Services.CreateScope();
+            var identidadeContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            identidadeContext.Database.Migrate();
+        }
 
         app.UseRouting();
 

@@ -1,4 +1,5 @@
 ﻿using NSE.Core.Communication;
+using NSE.Core.Data;
 using NSE.Pedidos.API.Application.Queries;
 using NSE.Pedidos.Domain.Pedidos;
 using NSE.Pedidos.Domain.Vouchers;
@@ -24,6 +25,6 @@ public static class DependencyInjectionConfig
         // Data
         services.AddScoped<IPedidoRepository, PedidoRepository>();
         services.AddScoped<IVoucherRepository, VoucherRepository>();
-        services.AddScoped<PedidosContext>();
+        services.AddScoped<IUnitOfWork, UnitOfWork<PedidosContext>>();
     }
 }

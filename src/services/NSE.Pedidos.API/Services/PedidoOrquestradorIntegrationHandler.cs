@@ -21,7 +21,7 @@ public class PedidoOrquestradorIntegrationHandler : IHostedService, IDisposable
     {
         _logger.LogInformation("Serviço de pedidos iniciado.");
 
-        _timer = new Timer(ProcessarPedidos, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
+        _timer = new Timer(ProcessarPedidos, null, TimeSpan.Zero, TimeSpan.FromSeconds(90));
 
         return Task.CompletedTask;
     }
@@ -29,24 +29,23 @@ public class PedidoOrquestradorIntegrationHandler : IHostedService, IDisposable
     private async void ProcessarPedidos(object state)
     {
         _logger.LogInformation("Iniciando processamento de pedidos.");
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            var pedidoQueries = scope.ServiceProvider.GetRequiredService<IPedidoQueries>();
-            var pedido = await pedidoQueries.ObterPedidosAutorizados();
+        using var scope = _serviceProvider.CreateScope();
+        
+        var pedidoQueries = scope.ServiceProvider.GetRequiredService<IPedidoQueries>();
+        var pedido = await pedidoQueries.ObterPedidosAutorizados();
 
-            if (pedido is null) return;
+        if (pedido is null) return;
 
-            var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+        var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
 
-            var pedidoAutorizado = new PedidoAutorizadoIntegrationEvent(
-                pedido.ClienteId,
-                pedido.Id,
-                pedido.PedidoItems.ToDictionary(p => p.ProdutoId, p => p.Quantidade));
+        var pedidoAutorizado = new PedidoAutorizadoIntegrationEvent(
+            pedido.ClienteId,
+            pedido.Id,
+            pedido.PedidoItems.ToDictionary(p => p.ProdutoId, p => p.Quantidade));
 
-            await bus.PublishAsync(pedidoAutorizado);
+        await bus.PublishAsync(pedidoAutorizado);
 
-            _logger.LogInformation($"Pedido ID: {pedido.Id} foi encaminhado para baixa no estoque.");
-        }
+        _logger.LogInformation($"Pedido ID: {pedido.Id} foi encaminhado para baixa no estoque.");
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

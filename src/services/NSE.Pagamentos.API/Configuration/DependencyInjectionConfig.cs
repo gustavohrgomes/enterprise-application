@@ -1,4 +1,5 @@
-﻿using NSE.Pagamentos.API.Data;
+﻿using NSE.Core.Data;
+using NSE.Pagamentos.API.Data;
 using NSE.Pagamentos.API.Data.Repository;
 using NSE.Pagamentos.API.Facade;
 using NSE.Pagamentos.API.Models;
@@ -18,6 +19,6 @@ public static class DependencyInjectionConfig
         services.AddScoped<IPagamentoFacade, PagamentoCartaoCreditoFacade>();
 
         services.AddScoped<IPagamentoRepository, PagamentoRepository>();
-        services.AddScoped<PagamentosContext>();
+        services.AddScoped<IUnitOfWork, UnitOfWork<PagamentosContext>>();
     }
 }

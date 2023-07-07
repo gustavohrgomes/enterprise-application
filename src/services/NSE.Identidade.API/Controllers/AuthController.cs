@@ -15,14 +15,17 @@ public class AuthController : MainController
 {
     private readonly IAuthenticationService _authenticationService;
     private readonly IMessageBus _bus;
+    private readonly ILogger<AuthController> _logger;
 
     public AuthController(IConfiguration configuration,
                           IMessageBus bus,
                           IJwtService jwtService,
-                          IAuthenticationService authenticationService)
+                          IAuthenticationService authenticationService,
+                          ILogger<AuthController> logger)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService)); ;
+        _logger = logger;
     }
 
     [HttpPost("nova-conta")]
@@ -120,8 +123,9 @@ public class AuthController : MainController
         {
             return await _bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(usuarioRegistrado);
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogError("Erro ao registrar o cliente. {0}", ex.Message);
             await _authenticationService.UserManager.DeleteAsync(usuario);
             throw;
         }

@@ -1,4 +1,5 @@
-﻿using NSE.Core.DomainObjects;
+﻿using NSE.Core.Data;
+using NSE.Core.DomainObjects;
 using NSE.Core.Messages.IntegrationEvents;
 using NSE.MessageBus;
 using NSE.Pedidos.Domain.Pedidos;
@@ -46,7 +47,8 @@ public class PedidoIntegrationHandler : BackgroundService
 
         pedidoRepository.Atualizar(pedido);
 
-        if (!await pedidoRepository.UnitOfWork.CommitAsync())
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        if (!await unitOfWork.CommitAsync())
             throw new DomainException($"Problemas ao cancelar o pedido {message.PedidoId}");
 
         _logger.LogInformation("Pedido {0} cancelado com sucesso", message.PedidoId);
@@ -64,7 +66,8 @@ public class PedidoIntegrationHandler : BackgroundService
 
         pedidoRepository.Atualizar(pedido);
 
-        if (!await pedidoRepository.UnitOfWork.CommitAsync())
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        if (!await unitOfWork.CommitAsync())
             throw new DomainException($"Problemas ao finalizar o pedido {message.PedidoId}");
 
         _logger.LogInformation("Pedido {0} finalizado com sucesso", message.PedidoId);

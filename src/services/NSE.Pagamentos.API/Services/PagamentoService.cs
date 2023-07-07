@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using NSE.Core.Data;
 using NSE.Core.DomainObjects;
 using NSE.Core.Messages.IntegrationEvents;
 using NSE.Pagamentos.API.Facade;
@@ -10,11 +11,13 @@ public class PagamentoService : IPagamentoService
 {
     private readonly IPagamentoFacade _pagamentoFacade;
     private readonly IPagamentoRepository _pagamentoRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public PagamentoService(IPagamentoFacade pagamentoFacade, IPagamentoRepository pagamentoRepository)
+    public PagamentoService(IPagamentoFacade pagamentoFacade, IPagamentoRepository pagamentoRepository, IUnitOfWork unitOfWork)
     {
         _pagamentoFacade = pagamentoFacade ?? throw new ArgumentNullException(nameof(pagamentoFacade));
         _pagamentoRepository = pagamentoRepository ?? throw new ArgumentNullException(nameof(pagamentoRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
     public async Task<ResponseMessage> AutorizarPagamento(Pagamento pagamento)
@@ -32,7 +35,7 @@ public class PagamentoService : IPagamentoService
         pagamento.AdicionarTransacao(transacao);
         _pagamentoRepository.AdicionarPagamento(pagamento);
 
-        if (!await _pagamentoRepository.UnitOfWork.CommitAsync())
+        if (!await _unitOfWork.CommitAsync())
         {
             validationResult.Errors.Add(new ValidationFailure("Pagamento", "Houve um erro ao realizar o pagamento"));
 
@@ -64,7 +67,7 @@ public class PagamentoService : IPagamentoService
         transacao.PagamentoId = transacaoAutorizada.PagamentoId;
         _pagamentoRepository.AdicionarTransacao(transacao);
 
-        if (!await _pagamentoRepository.UnitOfWork.CommitAsync())
+        if (!await _unitOfWork.CommitAsync())
         {
             validationResult.Errors.Add(new ValidationFailure("Pagamento", $"Não foi possível persistir a captura do pagamento do pedido {pedidoId}"));
 
@@ -94,7 +97,7 @@ public class PagamentoService : IPagamentoService
         transacao.PagamentoId = transacaoAutorizada.PagamentoId;
         _pagamentoRepository.AdicionarTransacao(transacao);
 
-        if (!await _pagamentoRepository.UnitOfWork.CommitAsync())
+        if (!await _unitOfWork.CommitAsync())
         {
             validationResult.Errors.Add(new ValidationFailure("Pagamento", $"Não foi possível persistir o cancelamento do pagamento do pedido {pedidoId}"));
 

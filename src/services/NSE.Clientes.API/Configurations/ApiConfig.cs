@@ -43,6 +43,13 @@ public static class ApiConfig
 
         if (app.Configuration["USE_HTTPS_REDIRECTION"] == "true")
             app.UseHttpsRedirection();
+        
+        if (app.Environment.IsEnvironment("Testing"))
+        {
+            using var scope = app.Services.CreateScope();
+            var clientesContext = scope.ServiceProvider.GetRequiredService<ClientesContext>();
+            clientesContext.Database.Migrate();
+        }
 
         app.UseRouting();
 

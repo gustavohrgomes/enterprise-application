@@ -2,6 +2,7 @@
 using MediatR;
 using NSE.Clientes.API.Application.Events;
 using NSE.Clientes.API.Models;
+using NSE.Core.Data;
 using NSE.Core.Messages;
 using NSE.Core.Utils;
 
@@ -12,24 +13,28 @@ public class ClienteCommandHandler : CommandHandler,
     IRequestHandler<AdicionarEnderecoCommand, ValidationResult>
 {
     private readonly IClienteRepository _clienteRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ClienteCommandHandler(IClienteRepository clienteRepository)
+    public ClienteCommandHandler(IClienteRepository clienteRepository, 
+                                 IPublisher publisher, 
+                                 IUnitOfWork unitOfWork)
+        : base(publisher)
     {
         _clienteRepository = clienteRepository ?? throw new ArgumentNullException(nameof(clienteRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
     public async Task<ValidationResult> Handle(RegistrarClienteCommand message, CancellationToken cancellationToken)
     {
         if (!message.EhValido()) return message.ValidationResult;
 
-        var cliente = new Cliente(message.Id, message.Nome, message.Email, message.Cpf.ApenasNumeros());
+        var cliente = Cliente.Create(message.Id, message.Nome, message.Email, message.Cpf);
 
         var clienteExistente = await _clienteRepository.ObterPorCpf(cliente.Cpf.Numero);
 
-        // TODO: caso cliente já esteja cadastrado, adicionar erro
         if (clienteExistente is not null)
         {
-            AdicionarErro("Este CPF já está cadastrado");
+            AdicionarErro("CPF já cadastrado.");
             return ValidationResult;
         }
 
@@ -37,7 +42,7 @@ public class ClienteCommandHandler : CommandHandler,
 
         cliente.AddDomainEvent(new ClienteRegistradoEvent(message.Id, message.Nome, message.Email, message.Cpf));
 
-        return await PersistirDados(_clienteRepository.UnitOfWork);
+        return await PersistirDados(_unitOfWork);
     }
 
     public async Task<ValidationResult> Handle(AdicionarEnderecoCommand message, CancellationToken cancellationToken)
@@ -48,6 +53,6 @@ public class ClienteCommandHandler : CommandHandler,
         
         _clienteRepository.AdicionarEndereco(endereco);
 
-        return await PersistirDados(_clienteRepository.UnitOfWork);
+        return await PersistirDados(_unitOfWork);
     }
 }

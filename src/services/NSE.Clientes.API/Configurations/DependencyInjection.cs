@@ -6,6 +6,7 @@ using NSE.Clientes.API.Data.Repositories;
 using NSE.Clientes.API.Models;
 using NSE.Clientes.API.Services;
 using NSE.Core.Communication;
+using NSE.Core.Data;
 using NSE.WebAPI.Core.Usuario;
 
 namespace NSE.Clientes.API.Configurations;
@@ -20,6 +21,6 @@ public static class DependencyInjection
         services.AddScoped<IMediatorHandler, MediatorHandler>();
 
         services.AddScoped<IClienteRepository, ClienteRepository>();
-        services.AddScoped<ClientesContext>();
+        services.AddScoped<IUnitOfWork, UnitOfWork<ClientesContext>>();
     }
 }
