@@ -11,7 +11,7 @@ var services = builder.Services;
 builder.Configuration
     .SetBasePath(hostEnvironment.ContentRootPath)
     .AddJsonFile("appsettings.json", true, true)
-    .AddJsonFile($"appsetting.{hostEnvironment.EnvironmentName}.json", true, true)
+    .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
 
 builder.Host.UseSerilog((contextBuilder, loggerConfiguration) => loggerConfiguration.Configure(contextBuilder));
