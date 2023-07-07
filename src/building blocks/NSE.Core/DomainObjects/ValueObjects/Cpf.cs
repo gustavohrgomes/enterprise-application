@@ -6,15 +6,20 @@ public class Cpf
 {
     public const int CpfMaxLength = 11;
 
-    public Cpf(string numero)
+    private Cpf(string numero)
     {
-        if (!Validar(numero)) throw new DomainException("CPF Inválido");
         Numero = numero;
     }
 
     protected Cpf() { }
 
     public string Numero { get; private set; }
+
+    public static Cpf Create(string numero)
+    {
+        if (!Validar(numero)) throw new DomainException("CPF Inválido");
+        return new Cpf(numero.ApenasNumeros());
+    }
 
     public static bool Validar(string cpf)
     {

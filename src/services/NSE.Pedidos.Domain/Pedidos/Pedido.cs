@@ -5,14 +5,15 @@ namespace NSE.Pedidos.Domain.Pedidos;
 
 public class Pedido : AggregateRoot
 {
-    public Pedido(
-        Guid clienteId, 
-        decimal valorTotal, 
-        List<PedidoItem> pedidoItems, 
-        bool voucherUtilizado = false, 
-        decimal desconto = 0, 
-        Guid? voucherId = null)
+    public Pedido(Guid id,
+                  Guid clienteId, 
+                  decimal valorTotal, 
+                  List<PedidoItem> pedidoItems, 
+                  bool voucherUtilizado = false, 
+                  decimal desconto = 0, 
+                  Guid? voucherId = null)
     {
+        Id = id;
         ClienteId = clienteId;
         ValorTotal = valorTotal;
         _pedidoItems = pedidoItems;

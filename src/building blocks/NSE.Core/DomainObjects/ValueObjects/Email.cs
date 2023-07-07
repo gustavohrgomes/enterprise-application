@@ -7,15 +7,20 @@ public class Email
     public const int EnderecoMaxLength = 254;
     public const int EnderecoMinLength = 5;
 
-    public Email(string endereco)
+    private Email(string endereco)
     {
-        if (!Validar(endereco)) throw new DomainException("E-mail inválido");
         Endereco = endereco;
     }
 
-    public Email() { }
+    protected Email() { }
 
     public string Endereco { get; private set; }
+    
+    public static Email Create(string endereco)
+    {
+        if (!Validar(endereco)) throw new DomainException("E-mail inválido");
+        return new Email(endereco);
+    }
 
     public static bool Validar(string email)
     {
