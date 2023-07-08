@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  sql-server:
+    image: gustavohrgomes/nerdstore-sql-server:latest
+    container_name: nerdstore-sql-server-development
+    build:
+      context: ../sql
+      dockerfile: ./Dockerfile
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Senha123!"
+      ACCEPT_EULA: "Y"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbit-nerdstore-development
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  nerdstore-seq:
+    image: datalust/seq:latest
+    container_name: nerdstore-seq-development
+    ports:
+        - 5341:80
+    environment:
+        ACCEPT_EULA: "Y"
