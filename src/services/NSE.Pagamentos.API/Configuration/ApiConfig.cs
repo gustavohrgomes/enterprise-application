@@ -54,6 +54,8 @@ public static class ApiConfig
 
         app.UseAuthConfiguration();
         
+        app.UseResponseCompression();
+        
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
         app.UseEndpoints(endpoints =>
