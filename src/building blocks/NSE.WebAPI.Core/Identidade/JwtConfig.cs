@@ -10,7 +10,7 @@ namespace NSE.WebAPI.Core.Identidade;
 
 public static class JwtConfig
 {
-    public static void AddJwtConfiguration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddJwtConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication(opt =>
         {
@@ -23,6 +23,8 @@ public static class JwtConfig
             bearerOptions.SaveToken = true;
             bearerOptions.SetJwksOptions(new JwkOptions(configuration.GetValue<string>("Autenticacao:JwksUrl")));
         });
+
+        return services;
     }
 
     public static void UseAuthConfiguration(this IApplicationBuilder app)

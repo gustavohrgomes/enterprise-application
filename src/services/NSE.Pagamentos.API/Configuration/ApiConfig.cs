@@ -58,9 +58,6 @@ public static class ApiConfig
         
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.MapControllers();
     }
 }

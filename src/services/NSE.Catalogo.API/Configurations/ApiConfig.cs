@@ -9,7 +9,7 @@ namespace NSE.Catalogo.API.Configurations;
 
 public static class ApiConfig
 {
-    public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddExceptionHandlingConfiguration();
         services.AddCompressionConfiguration();
@@ -33,9 +33,11 @@ public static class ApiConfig
                         .AllowAnyHeader()
                         .AllowAnyMethod());
         });
+
+        return services;
     }
 
-    public static void UseApiConfiguration(this WebApplication app)
+    public static WebApplication UseApiConfiguration(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
@@ -55,10 +57,8 @@ public static class ApiConfig
         
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
-
+        app.MapControllers();
+        
+        return app;
     }
 }

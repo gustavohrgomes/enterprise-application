@@ -4,7 +4,7 @@ namespace NSE.Catalogo.API.Configurations;
 
 public static class SwaggerConfig
 {
-    public static void AddSwaggerConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
 
@@ -33,7 +33,8 @@ public static class SwaggerConfig
                 { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, Array.Empty<string>() }
             });
         });
-           
+
+        return services;
     }
 
     public static void UseSwaggerDocumentation(this WebApplication app)

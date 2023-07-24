@@ -5,7 +5,6 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var hostEnvironment = builder.Environment;
-var services = builder.Services;
 
 builder.Configuration
     .SetBasePath(hostEnvironment.ContentRootPath)
@@ -20,11 +19,12 @@ if (hostEnvironment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
-services.AddApiConfiguration(builder.Configuration);
-services.AddJwtConfiguration(builder.Configuration);
-services.AddSwaggerConfiguration();
-services.RegisterServices();
-services.AddMessageBusConfiguration(builder.Configuration);
+builder.Services
+    .AddApiConfiguration(builder.Configuration)
+    .AddJwtConfiguration(builder.Configuration)
+    .AddSwaggerConfiguration()
+    .RegisterServices()
+    .AddMessageBusConfiguration(builder.Configuration);
 
 var app = builder.Build();
 

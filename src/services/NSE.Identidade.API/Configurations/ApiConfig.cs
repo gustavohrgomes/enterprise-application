@@ -60,11 +60,8 @@ public static class ApiConfig
         app.UseResponseCompression();
         
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
-        
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+
+        app.MapControllers();
 
         app.UseJwksDiscovery();
     }
