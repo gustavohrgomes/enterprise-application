@@ -87,6 +87,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Carrinho.API.Tests.Inte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NSE.Carrinho.API.Tests.Unit", "tests\services\NSE.Carrinho.API.Tests.Unit\NSE.Carrinho.API.Tests.Unit.csproj", "{83BAAD63-3984-4441-84B7-96AAFF8BF655}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{00D61854-277A-4A8A-8DC1-200D29271487}"
+	ProjectSection(SolutionItems) = preProject
+		docker\docker-compose.development.yml = docker\docker-compose.development.yml
+		docker\nerdstore_producao.yml = docker\nerdstore_producao.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -198,6 +204,7 @@ Global
 		{7A73D2DE-F85D-4D37-8A62-9BF5D1ABA078} = {5299575B-362F-41C2-8A6E-38F28B274035}
 		{CE4C0000-A9DD-4DBD-8738-AAF235ABE9D8} = {7A73D2DE-F85D-4D37-8A62-9BF5D1ABA078}
 		{83BAAD63-3984-4441-84B7-96AAFF8BF655} = {7A73D2DE-F85D-4D37-8A62-9BF5D1ABA078}
+		{00D61854-277A-4A8A-8DC1-200D29271487} = {090B8924-C9F2-4777-B205-9824206D3A21}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E80D07EB-885F-43EE-A57C-CD225A45942B}

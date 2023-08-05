@@ -57,7 +57,9 @@ public static class ApiConfig
         app.UseCors("Total");
 
         app.UseAuthConfiguration();
-        
+
+        app.UseResponseCompression();
+
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
         app.MapControllers();
