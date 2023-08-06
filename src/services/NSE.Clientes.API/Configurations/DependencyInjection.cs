@@ -13,7 +13,7 @@ namespace NSE.Clientes.API.Configurations;
 
 public static class DependencyInjection
 {
-    public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<IAspNetUser, AspNetUser>();
@@ -22,5 +22,7 @@ public static class DependencyInjection
 
         services.AddScoped<IClienteRepository, ClienteRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork<ClientesContext>>();
+
+        return services;
     }
 }

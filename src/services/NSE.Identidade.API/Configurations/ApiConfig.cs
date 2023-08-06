@@ -13,7 +13,7 @@ namespace NSE.Identidade.API.Configurations;
 
 public static class ApiConfig
 {
-    public static void AddApiConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddApiConfiguration(this IServiceCollection services)
     {
         services.AddExceptionHandlingConfiguration();
         services.AddCompressionConfiguration();
@@ -34,6 +34,8 @@ public static class ApiConfig
                 return new BadRequestObjectResult(errorResponse);
             };
         });
+
+        return services;
     }
 
     public static void UseApiConfiguration(this WebApplication app)

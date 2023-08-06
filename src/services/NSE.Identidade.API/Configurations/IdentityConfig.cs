@@ -7,7 +7,7 @@ namespace NSE.Identidade.API.Configurations;
 
 public static class IdentityConfig
 {
-    public static void AddIdentityconfiguration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddIdentityconfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddJwksManager()
@@ -20,6 +20,8 @@ public static class IdentityConfig
             .AddErrorDescriber<IdentityMensagensPortugues>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+        return services;
     }
 }
 

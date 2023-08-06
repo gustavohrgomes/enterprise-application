@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NetDevPack.Security.Jwt.Core.Interfaces;
 using NSE.Core.Messages.IntegrationEvents;
 using NSE.Identidade.API.Models;
 using NSE.Identidade.API.Services;
-using NSE.MessageBus;
 using NSE.WebAPI.Core.Controllers;
 using NSE.WebAPI.Core.HttpResponses;
 
@@ -14,18 +13,16 @@ namespace NSE.Identidade.API.Controllers;
 public class AuthController : MainController
 {
     private readonly IAuthenticationService _authenticationService;
-    private readonly IMessageBus _bus;
     private readonly ILogger<AuthController> _logger;
+    private readonly IRequestClient<UsuarioRegistradoIntegrationEvent> _requestClient;
 
-    public AuthController(IConfiguration configuration,
-                          IMessageBus bus,
-                          IJwtService jwtService,
-                          IAuthenticationService authenticationService,
-                          ILogger<AuthController> logger)
+    public AuthController(IAuthenticationService authenticationService,
+                          ILogger<AuthController> logger,
+                          IRequestClient<UsuarioRegistradoIntegrationEvent> requestClient)
     {
-        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService)); ;
         _logger = logger;
+        _requestClient = requestClient;
     }
 
     [HttpPost("nova-conta")]
@@ -121,7 +118,11 @@ public class AuthController : MainController
 
         try
         {
-            return await _bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(usuarioRegistrado);
+            //return await _bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(usuarioRegistrado);
+
+            var response = await _requestClient.GetResponse<ResponseMessage>(usuarioRegistrado);
+
+            return response.Message;
         }
         catch (Exception ex)
         {

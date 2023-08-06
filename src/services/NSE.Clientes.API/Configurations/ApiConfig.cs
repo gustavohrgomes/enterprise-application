@@ -11,7 +11,7 @@ namespace NSE.Clientes.API.Configurations;
 
 public static class ApiConfig
 {
-    public static void AddApiconfiguration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApiconfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddExceptionHandlingConfiguration();
         services.AddCompressionConfiguration();
@@ -35,6 +35,8 @@ public static class ApiConfig
                         .AllowAnyMethod()
                         .AllowAnyOrigin());
         });
+
+        return services;
     }
 
     public static void UseApiConfiguration(this WebApplication app)
