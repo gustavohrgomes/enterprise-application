@@ -10,6 +10,10 @@ public static class IdentityConfig
     public static IServiceCollection AddIdentityconfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddMemoryCache()
+            .AddDataProtection();
+        
+        services
             .AddJwksManager()
             .PersistKeysToDatabaseStore<ApplicationDbContext>();
 

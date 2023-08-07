@@ -93,6 +93,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{00D618
 		docker\nerdstore_producao.yml = docker\nerdstore_producao.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{2FF97881-B761-4244-A5E6-1D588DDA270B}"
+	ProjectSection(SolutionItems) = preProject
+		sql\Dockerfile = sql\Dockerfile
+		sql\entrypoint.sh = sql\entrypoint.sh
+		sql\import-data.sh = sql\import-data.sh
+		sql\criacao-banco-docker-v1.sql = sql\criacao-banco-docker-v1.sql
+		sql\criacao-banco-docker-v2.sql = sql\criacao-banco-docker-v2.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -205,6 +214,7 @@ Global
 		{CE4C0000-A9DD-4DBD-8738-AAF235ABE9D8} = {7A73D2DE-F85D-4D37-8A62-9BF5D1ABA078}
 		{83BAAD63-3984-4441-84B7-96AAFF8BF655} = {7A73D2DE-F85D-4D37-8A62-9BF5D1ABA078}
 		{00D61854-277A-4A8A-8DC1-200D29271487} = {090B8924-C9F2-4777-B205-9824206D3A21}
+		{2FF97881-B761-4244-A5E6-1D588DDA270B} = {090B8924-C9F2-4777-B205-9824206D3A21}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E80D07EB-885F-43EE-A57C-CD225A45942B}

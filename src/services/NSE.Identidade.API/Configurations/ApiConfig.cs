@@ -5,7 +5,6 @@ using NSE.Identidade.API.Services;
 using NSE.WebAPI.Core.Configuration;
 using NSE.WebAPI.Core.Extensions;
 using NSE.WebAPI.Core.HttpResponses;
-using NSE.WebAPI.Core.Identidade;
 using NSE.WebAPI.Core.Middlewares;
 using NSE.WebAPI.Core.Usuario;
 
