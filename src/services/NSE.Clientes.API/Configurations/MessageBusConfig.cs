@@ -37,6 +37,11 @@ public static class MessageBusConfig
                     hostConfigurator.Username(username);
                     hostConfigurator.Password(password);
                 });
+                
+                rabbit.ReceiveEndpoint("usuario-registrado", config =>
+                {
+                    config.ConfigureConsumer<RegistroClienteConsumer>(ctx);
+                });
 
                 rabbit.ConfigureEndpoints(ctx);
             });
