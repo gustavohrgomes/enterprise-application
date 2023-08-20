@@ -8,14 +8,6 @@ namespace NSE.Clientes.API.Configurations;
 
 public static class MessageBusConfig
 {
-    public static IServiceCollection AddMessageBusConfiguration(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddMessageBus(configuration.GetMessageQueueConnection("MessageBus"))
-                .AddHostedService<RegistroClienteIntegrationHandler>();
-
-        return services;
-    }
-    
     public static IServiceCollection AddRabbitMQMessagingConfiguration(this IServiceCollection services,
         IConfiguration configuration)
     {

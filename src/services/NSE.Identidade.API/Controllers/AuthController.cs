@@ -114,7 +114,12 @@ public class AuthController : MainController
     {
         var usuario = await _authenticationService.UserManager.FindByEmailAsync(usuarioRegistro.Email);
 
-        var usuarioRegistrado = new UsuarioRegistradoIntegrationEvent(Guid.Parse(usuario.Id), usuarioRegistro.Nome, usuarioRegistro.Email, usuarioRegistro.Cpf);
+        var usuarioRegistrado = new UsuarioRegistradoIntegrationEvent(
+            Guid.Parse(usuario.Id), 
+            usuarioRegistro.Nome, 
+            usuarioRegistro.Email, 
+            usuarioRegistro.Cpf
+        );
 
         try
         {
