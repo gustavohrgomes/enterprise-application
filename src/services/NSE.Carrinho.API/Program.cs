@@ -20,11 +20,12 @@ if (hostEnvironment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
-services.AddApiConfiguration(builder.Configuration);
-services.AddJwtConfiguration(builder.Configuration);
-services.AddSwaggerConfiguration();
-services.RegisterServices();
-services.AddMessageBusConfiguration(builder.Configuration);
+services
+    .AddApiConfiguration(builder.Configuration)
+    .AddJwtConfiguration(builder.Configuration)
+    .AddRabbitMQMessagingConfiguration(builder.Configuration)
+    .AddSwaggerConfiguration()
+    .RegisterServices();
 
 var app = builder.Build();
 
