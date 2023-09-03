@@ -8,7 +8,7 @@ public static class DependencyInjectionExtensions
     {
         if (string.IsNullOrWhiteSpace(connection)) throw new ArgumentNullException();
 
-        services.AddSingleton<IMessageBus>(new MessageBus(connection));
+        // services.AddSingleton<IMessageBus>(new MessageBus(connection));
 
         return services;
     }

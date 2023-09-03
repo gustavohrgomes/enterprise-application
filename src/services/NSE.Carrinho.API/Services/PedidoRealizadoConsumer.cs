@@ -7,24 +7,21 @@ namespace NSE.Carrinho.API.Services;
 
 public class PedidoRealizadoConsumer : IConsumer<PedidoRealizadoIntegrationEvent>
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly CarrinhoContext _context;
 
-    public PedidoRealizadoConsumer(IServiceProvider serviceProvider)
+    public PedidoRealizadoConsumer(CarrinhoContext context)
     {
-        _serviceProvider = serviceProvider;
+        _context = context;
     }
 
     public async Task Consume(ConsumeContext<PedidoRealizadoIntegrationEvent> context)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CarrinhoContext>();
-
-        var carrinho = await dbContext.CarrinhoCliente.FirstOrDefaultAsync(c => c.ClienteId == context.Message.ClienteId);
+        var carrinho = await _context.CarrinhoCliente.FirstOrDefaultAsync(c => c.ClienteId == context.Message.ClienteId);
 
         if (carrinho is not null)
         {
-            dbContext.CarrinhoCliente.Remove(carrinho);
-            await dbContext.SaveChangesAsync();
+            _context.CarrinhoCliente.Remove(carrinho);
+            await _context.SaveChangesAsync();
         }
     }
 }

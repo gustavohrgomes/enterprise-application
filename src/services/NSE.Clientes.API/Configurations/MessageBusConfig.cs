@@ -1,8 +1,5 @@
 ﻿using MassTransit;
 using NSE.Clientes.API.Services;
-using NSE.Core.Messages.IntegrationEvents;
-using NSE.Core.Utils;
-using NSE.MessageBus;
 
 namespace NSE.Clientes.API.Configurations;
 

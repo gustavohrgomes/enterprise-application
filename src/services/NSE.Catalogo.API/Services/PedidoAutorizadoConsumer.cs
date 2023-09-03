@@ -7,16 +7,16 @@ using NSE.Core.Messages.IntegrationEvents;
 
 namespace NSE.Catalogo.API.Services;
 
-public class BaixarEstoqueIntegrationConsumer : IConsumer<PedidoAutorizadoIntegrationEvent>
+public class PedidoAutorizadoConsumer : IConsumer<PedidoAutorizadoIntegrationEvent>
 {
     private readonly IProdutoRepository _produtoRepository;
-    private readonly Logger<BaixarEstoqueIntegrationConsumer> _logger;
+    private readonly Logger<PedidoAutorizadoConsumer> _logger;
     private readonly IPublishEndpoint _bus;
     private readonly IUnitOfWork _unitOfWork;
 
-    public BaixarEstoqueIntegrationConsumer(
+    public PedidoAutorizadoConsumer(
         IProdutoRepository produtoRepository,
-        Logger<BaixarEstoqueIntegrationConsumer> logger, 
+        Logger<PedidoAutorizadoConsumer> logger, 
         IPublishEndpoint bus, 
         IUnitOfWork unitOfWork)
     {

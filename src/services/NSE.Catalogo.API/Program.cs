@@ -24,7 +24,7 @@ builder.Services
     .AddJwtConfiguration(builder.Configuration)
     .AddSwaggerConfiguration()
     .RegisterServices()
-    .AddMessageBusConfiguration(builder.Configuration);
+    .AddRabbitMQMessagingConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
