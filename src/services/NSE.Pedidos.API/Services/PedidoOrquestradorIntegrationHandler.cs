@@ -1,4 +1,5 @@
-﻿using NSE.Core.Messages.Integration;
+﻿using MassTransit;
+using NSE.Core.Messages.Integration;
 using NSE.MessageBus;
 using NSE.Pedidos.API.Application.Queries;
 
@@ -10,8 +11,9 @@ public class PedidoOrquestradorIntegrationHandler : IHostedService, IDisposable
     private IServiceProvider _serviceProvider;
     private Timer _timer;
 
-    public PedidoOrquestradorIntegrationHandler(ILogger<PedidoOrquestradorIntegrationHandler> logger, 
-                                                IServiceProvider serviceProvider)
+    public PedidoOrquestradorIntegrationHandler(
+        ILogger<PedidoOrquestradorIntegrationHandler> logger, 
+        IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -36,14 +38,12 @@ public class PedidoOrquestradorIntegrationHandler : IHostedService, IDisposable
 
         if (pedido is null) return;
 
-        var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+        var bus = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
 
-        var pedidoAutorizado = new PedidoAutorizadoIntegrationEvent(
+        await bus.Publish(new PedidoAutorizadoIntegrationEvent(
             pedido.ClienteId,
             pedido.Id,
-            pedido.PedidoItems.ToDictionary(p => p.ProdutoId, p => p.Quantidade));
-
-        await bus.PublishAsync(pedidoAutorizado);
+            pedido.PedidoItems.ToDictionary(p => p.ProdutoId, p => p.Quantidade)));
 
         _logger.LogInformation($"Pedido ID: {pedido.Id} foi encaminhado para baixa no estoque.");
     }

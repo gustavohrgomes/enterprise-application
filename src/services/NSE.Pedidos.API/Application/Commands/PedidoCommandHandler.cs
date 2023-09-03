@@ -1,4 +1,4 @@
-﻿using FluentValidation.Results;
+﻿using MassTransit;
 using MediatR;
 using NSE.Core.Data;
 using NSE.Core.Messages;
@@ -9,6 +9,7 @@ using NSE.Pedidos.API.Application.Events;
 using NSE.Pedidos.Domain.Pedidos;
 using NSE.Pedidos.Domain.Specs;
 using NSE.Pedidos.Domain.Vouchers;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace NSE.Pedidos.API.Application.Commands;
 
@@ -16,20 +17,20 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
 {
     private readonly IPedidoRepository _pedidoRepository;
     private readonly IVoucherRepository _voucherRepository;
-    private readonly IMessageBus _bus;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IRequestClient<PedidoIniciadoIntegrationEvent> _requestClient;
 
     public PedidoCommandHandler(IVoucherRepository voucherRepository, 
-                                IPedidoRepository pedidoRepository, 
-                                IMessageBus bus, 
+                                IPedidoRepository pedidoRepository,
                                 IUnitOfWork unitOfWork,
-                                IPublisher publisher)
+                                IPublisher publisher, 
+                                IRequestClient<PedidoIniciadoIntegrationEvent> requestClient)
         : base(publisher)
     {
         _pedidoRepository = pedidoRepository ?? throw new ArgumentNullException(nameof(pedidoRepository));
         _voucherRepository = voucherRepository ?? throw new ArgumentNullException(nameof(voucherRepository));
-        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _requestClient = requestClient ?? throw new ArgumentNullException(nameof(requestClient));
     }
 
     public async Task<ValidationResult> Handle(AdicionarPedidoCommand message, CancellationToken cancellationToken)
@@ -149,14 +150,14 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
             CVV = message.CvvCartao
         };
 
-        var result = await _bus.RequestAsync<PedidoIniciadoIntegrationEvent, ResponseMessage>(pedidoIniciado);
+        var result = await _requestClient.GetResponse<ResponseMessage>(pedidoIniciado);
 
-        if (result.ValidationResult.IsValid) return true;
+        if (result.Message.ValidationResult.IsValid) return true;
 
         // Poderia ser escrito da seguinte maneira:
         // result.ValidationResult.Errors.ForEach(erro => AdicionarErro(erro.ErrorMessage));
 
-        foreach (var erro in result.ValidationResult.Errors)
+        foreach (var erro in result.Message.ValidationResult.Errors)
         {
             AdicionarErro(erro.ErrorMessage);
         }
