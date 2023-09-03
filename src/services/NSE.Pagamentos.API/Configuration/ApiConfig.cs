@@ -10,7 +10,7 @@ namespace NSE.Pagamentos.API.Configuration;
 
 public static class ApiConfig
 {
-    public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddExceptionHandlingConfiguration();
         services.AddCompressionConfiguration();
@@ -36,9 +36,11 @@ public static class ApiConfig
                         .AllowAnyMethod()
                         .AllowAnyHeader());
         });
+
+        return services;
     }
 
-    public static void UseApiConfiguration(this WebApplication app, IWebHostEnvironment env)
+    public static WebApplication UseApiConfiguration(this WebApplication app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
@@ -59,5 +61,7 @@ public static class ApiConfig
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
         app.MapControllers();
+
+        return app;
     }
 }

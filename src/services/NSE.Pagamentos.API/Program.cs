@@ -25,7 +25,7 @@ services.AddApiConfiguration(builder.Configuration);
 services.AddJwtConfiguration(builder.Configuration);
 services.AddSwaggerConfiguration();
 services.RegisterServices();
-services.AddMessageBusConfiguration(builder.Configuration);
+services.AddRabbitMQMessagingConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
