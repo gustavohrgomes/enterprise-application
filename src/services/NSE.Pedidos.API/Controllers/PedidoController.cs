@@ -28,7 +28,12 @@ public class PedidoController : MainController
     public async Task<IActionResult> AdicionarPedido(AdicionarPedidoCommand pedido)
     {
         pedido.ClienteId = _user.ObterUserId();
-        return HttpOk(await _mediator.EnviarComando(pedido));
+
+        var result = await _mediator.EnviarComando(pedido);
+
+        if (result.IsValid) return HttpOk();
+
+        return HttpBadRequest(result);
     }
 
     [HttpGet("pedido/ultimo")]

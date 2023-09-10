@@ -10,13 +10,13 @@ namespace NSE.Catalogo.API.Services;
 public class PedidoAutorizadoConsumer : IConsumer<PedidoAutorizadoIntegrationEvent>
 {
     private readonly IProdutoRepository _produtoRepository;
-    private readonly Logger<PedidoAutorizadoConsumer> _logger;
+    private readonly ILogger<PedidoAutorizadoConsumer> _logger;
     private readonly IPublishEndpoint _bus;
     private readonly IUnitOfWork _unitOfWork;
 
     public PedidoAutorizadoConsumer(
         IProdutoRepository produtoRepository,
-        Logger<PedidoAutorizadoConsumer> logger, 
+        ILogger<PedidoAutorizadoConsumer> logger, 
         IPublishEndpoint bus, 
         IUnitOfWork unitOfWork)
     {

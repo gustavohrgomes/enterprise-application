@@ -34,7 +34,7 @@ public class PedidoCommandHandler : CommandHandler, IRequestHandler<AdicionarPed
     }
 
     public async Task<ValidationResult> Handle(AdicionarPedidoCommand message, CancellationToken cancellationToken)
-    {        
+    {
         // Validação do comando
         if (!message.EhValido()) return message.ValidationResult;
 
