@@ -46,29 +46,29 @@ namespace NSE.WebApp.MVC.Controllers
         [Route("finalizar-pedido")]
         public async Task<IActionResult> FInalizarPedido(PedidoTransacaoViewModel pedidoTransacao)
         {
-            if (!ModelState.IsValid) return View("Pagamento", _comprasBffService.MapearParaPedido(await _comprasBffService.ObterCarrinho()));
+            if (!ModelState.IsValid)
+                return View("Pagamento", _comprasBffService.MapearParaPedido(await _comprasBffService.ObterCarrinho()));
 
             var retorno = await _comprasBffService.FinalizarPedido(pedidoTransacao);
 
-            if (ResponsePossuiErros(retorno))
-            {
-                var carrinho = await _comprasBffService.ObterCarrinho();
-                if (carrinho.Itens.Count == 0) return RedirectToAction("Index", "Carrinho");
+            if (!ResponsePossuiErros(retorno)) return RedirectToAction("PedidoConcluido");
 
-                var pedidoMapeado = _comprasBffService.MapearParaPedido(carrinho);
-                return View("Pagamento", pedidoMapeado);
-            }
+            var carrinho = await _comprasBffService.ObterCarrinho();
 
-            return RedirectToAction("PedidoConcluido");
+            if (carrinho.Itens.Count == 0) return RedirectToAction("Index", "Carrinho");
+
+            var pedidoMapeado = _comprasBffService.MapearParaPedido(carrinho);
+
+            return View("Pagamento", pedidoMapeado);
         }
 
         [HttpGet]
         [Route("pedido-concluido")]
-        public async Task<IActionResult> PedidoConcluido() 
+        public async Task<IActionResult> PedidoConcluido()
             => View("ConfirmacaoPedido", await _comprasBffService.ObterUltimoPedido());
 
         [HttpGet("meus-pedidos")]
-        public async Task<IActionResult> MeusPedidos() 
+        public async Task<IActionResult> MeusPedidos()
             => View(await _comprasBffService.ObterListaPorClienteId());
     }
 }

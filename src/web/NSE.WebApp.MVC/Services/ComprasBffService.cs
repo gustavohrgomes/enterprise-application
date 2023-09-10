@@ -104,9 +104,12 @@ public class ComprasBffService : Service, IComprasBffService
 
         var response = await _httpClient.PostAsync("/compras/pedido", pedidoTransacaoContent);
 
-        if (!await TratarResponseAsync(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+        var result = await TratarResponseAsync(response);
 
-        return Ok();
+        if (result) return Ok();
+        
+        var responseResult = await DeserializarObjetoResponse<ResponseResult>(response);
+        return responseResult;
     }
 
     public async Task<PedidoViewModel> ObterUltimoPedido()
