@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using NSE.Bff.Compras.Extensions;
 using NSE.Bff.Compras.Models;
 using NSE.Core.Communication;
@@ -31,9 +32,11 @@ public class PedidoService : Service, IPedidoService
 
         var response = await _httpClient.PostAsync("/pedido/", pedidoContent);
 
-        if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+        if (TratarErrosResponse(response)) return ResponseResult.Ok();
 
-        return Ok();
+        var responseResult = await DeserializarObjetoResponse<ResponseResult>(response);
+        
+        return ResponseResult.BadRequest(responseResult.Errors);
     }
 
     public async Task<PedidoDTO> ObterUltimoPedido()

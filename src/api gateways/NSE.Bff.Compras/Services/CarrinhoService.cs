@@ -42,13 +42,10 @@ public class CarrinhoService : Service, ICarrinhoService
 
         var response = await _httpClient.PostAsync("/carrinho/", itemContent);
 
-        if (!TratarErrosResponse(response))
-        {
-            var responseDeserializado =  await DeserializarObjetoResponse<HttpOkResponse<ResponseResult>>(response);
-            return responseDeserializado.Result;
-        }
+        if (TratarErrosResponse(response)) return ResponseResult.Ok();
 
-        return Ok();
+        var responseDeserializado =  await DeserializarObjetoResponse<HttpOkResponse<ResponseResult>>(response);
+        return responseDeserializado.Result;
     }
 
     public async Task<ResponseResult> AtualizarItemCarrinho(Guid produtoId, ItemCarrinhoDTO carrinho)
@@ -63,7 +60,7 @@ public class CarrinhoService : Service, ICarrinhoService
             return responseDeserializado.Result;
         }
 
-        return Ok();
+        return ResponseResult.Ok();
     }
 
     public async Task<ResponseResult> RemoverItemCarrinho(Guid produtoId)
@@ -76,7 +73,7 @@ public class CarrinhoService : Service, ICarrinhoService
             return responseDeserializado.Result;
         }
 
-        return Ok();
+        return ResponseResult.Ok();
     }
 
     public async Task<ResponseResult> AplicarVoucherCarrinho(VoucherDTO voucher)
@@ -91,6 +88,6 @@ public class CarrinhoService : Service, ICarrinhoService
             return responseDeserializado.Result;
         }
 
-        return Ok();
+        return ResponseResult.Ok();
     }
 }

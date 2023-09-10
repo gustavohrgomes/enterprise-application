@@ -39,7 +39,11 @@ public class PedidoController : MainController
 
         PopularDadosPedido(carrinho, endereco, pedido);
 
-        return HttpOk(await _pedidoService.FinalizarPedido(pedido));
+        var result = await _pedidoService.FinalizarPedido(pedido);
+
+        if (result.Errors.Any()) return HttpBadRequest(result.Errors.ToArray());
+        
+        return HttpOk(result);
     }
 
     [HttpGet("compras/pedido/ultimo")]
