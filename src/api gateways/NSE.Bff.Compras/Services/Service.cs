@@ -1,5 +1,4 @@
-﻿using NSE.Core.Communication;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
@@ -33,6 +32,4 @@ public abstract class Service
         response.EnsureSuccessStatusCode();
         return true;
     }
-
-    protected ResponseResult Ok() => new();
 }

@@ -1,4 +1,6 @@
-﻿namespace NSE.Core.Communication;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace NSE.Core.Communication;
 
 public class ResponseResult
 {
@@ -10,6 +12,11 @@ public class ResponseResult
     public string Title { get; set; }
     public int StatusCode { get; set; }
     public IEnumerable<string> Errors { get; set; }
+
+    public static ResponseResult Ok() => new() { StatusCode = StatusCodes.Status200OK };
+
+    public static ResponseResult BadRequest(IEnumerable<string> errors) =>
+        new() { StatusCode = StatusCodes.Status400BadRequest, Errors = errors };
 }
 
 public class ResponseResult<T> : ResponseResult
