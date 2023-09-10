@@ -37,3 +37,5 @@ if (app.Environment.IsDevelopment())
 app.UseApiConfiguration(builder.Environment);
 
 app.Run();
+
+public partial class Program { }
