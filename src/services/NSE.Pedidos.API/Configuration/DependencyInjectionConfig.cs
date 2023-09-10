@@ -1,6 +1,7 @@
 ﻿using NSE.Core.Communication;
 using NSE.Core.Data;
 using NSE.Pedidos.API.Application.Queries;
+using NSE.Pedidos.API.Services;
 using NSE.Pedidos.Domain.Pedidos;
 using NSE.Pedidos.Domain.Vouchers;
 using NSE.Pedidos.Infra.Data;
@@ -26,5 +27,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IPedidoRepository, PedidoRepository>();
         services.AddScoped<IVoucherRepository, VoucherRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork<PedidosContext>>();
+
+        services.AddHostedService<PedidoOrquestradorIntegrationHandler>();
     }
 }

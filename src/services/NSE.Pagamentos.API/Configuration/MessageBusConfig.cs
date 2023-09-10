@@ -29,9 +29,19 @@ public static class MessageBusConfig
                     hostConfigurator.Password(password);
                 });
                 
-                rabbit.ReceiveEndpoint("pedido-inciado", config =>
+                rabbit.ReceiveEndpoint("pedido-iniciado", config =>
                 {
                     config.ConfigureConsumer<PedidoIniciadoConsumer>(ctx);
+                });
+                
+                rabbit.ReceiveEndpoint("pedido-baixado", config =>
+                {
+                    config.ConfigureConsumer<PedidoBaixadoConsumer>(ctx);
+                });
+                
+                rabbit.ReceiveEndpoint("pedido-cancelado", config =>
+                {
+                    config.ConfigureConsumer<PedidoCanceladoConsumer>(ctx);
                 });
 
                 rabbit.ConfigureEndpoints(ctx);
