@@ -1,3 +1,4 @@
+using MediatR.NotificationPublishers;
 using NSE.Catalogo.API.Configurations;
 using NSE.Core.Logging;
 using NSE.WebAPI.Core.Identidade;
@@ -23,6 +24,11 @@ builder.Services
     .AddApiConfiguration(builder.Configuration)
     .AddJwtConfiguration(builder.Configuration)
     .AddSwaggerConfiguration()
+    .AddMediatR(config =>
+    {
+        config.RegisterServicesFromAssemblyContaining<Program>();
+        config.NotificationPublisherType = typeof(TaskWhenAllPublisher);
+    })
     .RegisterServices()
     .AddRabbitMQMessagingConfiguration(builder.Configuration);
 
@@ -38,3 +44,5 @@ app.UseSerilogRequestLogging();
 app.UseApiConfiguration();
 
 app.Run();
+
+public partial class Program { }

@@ -1,4 +1,5 @@
 using MediatR;
+using MediatR.NotificationPublishers;
 using NSE.Clientes.API.Configurations;
 using NSE.Core.Logging;
 using NSE.WebAPI.Core.Identidade;
@@ -24,8 +25,11 @@ builder.Services
     .AddApiconfiguration(builder.Configuration)
     .AddJwtConfiguration(builder.Configuration)
     .AddSwaggerConfiguration()
-    .AddMediatR(config
-        => config.RegisterServicesFromAssembly(typeof(Program).Assembly))
+    .AddMediatR(config =>
+    {
+        config.RegisterServicesFromAssemblyContaining<Program>();
+        config.NotificationPublisherType = typeof(TaskWhenAllPublisher);
+    })
     .AddRabbitMQMessagingConfiguration(builder.Configuration)
     .RegisterServices(builder.Configuration);
 

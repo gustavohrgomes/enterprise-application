@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using NSE.Core.Communication;
 using NSE.Core.DomainObjects;
 
 namespace NSE.Core.Data;
@@ -10,12 +8,12 @@ public class UnitOfWork<TDbContext> : IUnitOfWork
     where TDbContext : DbContext
 {
     private readonly TDbContext _context;
-    private readonly IPublisher _publisher;
+    private readonly IMediator _mediator;
 
-    public UnitOfWork(TDbContext context, IPublisher publisher)
+    public UnitOfWork(TDbContext context, IMediator mediator)
     {
         _context = context;
-        _publisher = publisher;
+        _mediator = mediator;
     }
 
     public async Task<bool> CommitAsync()
@@ -50,7 +48,7 @@ public class UnitOfWork<TDbContext> : IUnitOfWork
             await _context.Database.CommitTransactionAsync(cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            var dispatchingTasks = domainEvents.Select(x => _publisher.Publish(x, cancellationToken));
+            var dispatchingTasks = domainEvents.Select(x => _mediator.Publish(x, cancellationToken));
 
             await Task.WhenAll(dispatchingTasks);
 

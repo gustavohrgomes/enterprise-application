@@ -4,7 +4,7 @@ namespace NSE.Pagamentos.API.Configuration;
 
 public static class SwaggerConfig
 {
-    public static void AddSwaggerConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
@@ -42,6 +42,8 @@ public static class SwaggerConfig
             });
 
         });
+
+        return services;
     }
 
     public static void UseSwaggerConfiguration(this IApplicationBuilder app)

@@ -32,7 +32,7 @@ public class PedidoCanceladoConsumer : IConsumer<PedidoCanceladoIntegrationEvent
 
         _pedidoRepository.Atualizar(pedido);
 
-        if (!await _unitOfWork.CommitAsync())
+        if (!await _unitOfWork.ResilientCommitAsync())
             throw new DomainException($"Problemas ao cancelar o pedido {context.Message.PedidoId}");
 
         _logger.LogInformation("Pedido {0} cancelado com sucesso", context.Message.PedidoId);

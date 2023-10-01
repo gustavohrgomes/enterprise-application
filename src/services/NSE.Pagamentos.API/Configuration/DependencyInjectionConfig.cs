@@ -10,7 +10,7 @@ namespace NSE.Pagamentos.API.Configuration;
 
 public static class DependencyInjectionConfig
 {
-    public static void RegisterServices(this IServiceCollection services)
+    public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<IAspNetUser, AspNetUser>();
@@ -20,5 +20,7 @@ public static class DependencyInjectionConfig
 
         services.AddScoped<IPagamentoRepository, PagamentoRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork<PagamentosContext>>();
+
+        return services;
     }
 }

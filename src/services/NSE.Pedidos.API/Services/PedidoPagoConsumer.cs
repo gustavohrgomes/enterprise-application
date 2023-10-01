@@ -32,7 +32,7 @@ public class PedidoPagoConsumer : IConsumer<PedidoPagoIntegrationEvent>
 
         _pedidoRepository.Atualizar(pedido);
 
-        if (!await _unitOfWork.CommitAsync())
+        if (!await _unitOfWork.ResilientCommitAsync())
             throw new DomainException($"Problemas ao finalizar o pedido {context.Message.PedidoId}");
 
         _logger.LogInformation("Pedido {0} finalizado com sucesso", context.Message.PedidoId);

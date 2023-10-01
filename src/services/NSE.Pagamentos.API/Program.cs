@@ -1,3 +1,4 @@
+using MediatR.NotificationPublishers;
 using NSE.Core.Logging;
 using NSE.Pagamentos.API.Configuration;
 using NSE.WebAPI.Core.Identidade;
@@ -21,11 +22,17 @@ if (hostEnvironment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
-services.AddApiConfiguration(builder.Configuration);
-services.AddJwtConfiguration(builder.Configuration);
-services.AddSwaggerConfiguration();
-services.RegisterServices();
-services.AddRabbitMQMessagingConfiguration(builder.Configuration);
+services
+    .AddApiConfiguration(builder.Configuration)
+    .AddJwtConfiguration(builder.Configuration)
+    .AddSwaggerConfiguration()
+    .AddMediatR(config =>
+    {
+        config.RegisterServicesFromAssemblyContaining<Program>();
+        config.NotificationPublisherType = typeof(TaskWhenAllPublisher);
+    })
+    .RegisterServices()
+    .AddRabbitMQMessagingConfiguration(builder.Configuration);
 
 var app = builder.Build();
 

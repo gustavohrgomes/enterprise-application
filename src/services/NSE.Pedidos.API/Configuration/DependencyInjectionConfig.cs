@@ -12,7 +12,7 @@ namespace NSE.Pedidos.API.Configuration;
 
 public static class DependencyInjectionConfig
 {
-    public static void RegisterServices(this IServiceCollection services)
+    public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         // API
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -29,5 +29,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IUnitOfWork, UnitOfWork<PedidosContext>>();
 
         services.AddHostedService<PedidoOrquestradorIntegrationHandler>();
+
+        return services;
     }
 }
