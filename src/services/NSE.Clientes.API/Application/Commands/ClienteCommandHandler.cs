@@ -4,7 +4,6 @@ using NSE.Clientes.API.Application.Events;
 using NSE.Clientes.API.Models;
 using NSE.Core.Data;
 using NSE.Core.Messages;
-using NSE.Core.Utils;
 
 namespace NSE.Clientes.API.Application.Commands;
 
@@ -15,10 +14,8 @@ public class ClienteCommandHandler : CommandHandler,
     private readonly IClienteRepository _clienteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public ClienteCommandHandler(IClienteRepository clienteRepository, 
-                                 IPublisher publisher, 
+    public ClienteCommandHandler(IClienteRepository clienteRepository,
                                  IUnitOfWork unitOfWork)
-        : base(publisher)
     {
         _clienteRepository = clienteRepository ?? throw new ArgumentNullException(nameof(clienteRepository));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -34,7 +31,7 @@ public class ClienteCommandHandler : CommandHandler,
 
         if (clienteExistente is not null)
         {
-            AdicionarErro("CPF já cadastrado.");
+            AddProcessingError("CPF já cadastrado.");
             return ValidationResult;
         }
 
@@ -42,7 +39,9 @@ public class ClienteCommandHandler : CommandHandler,
 
         cliente.AddDomainEvent(new ClienteRegistradoEvent(message.Id, message.Nome, message.Email, message.Cpf));
 
-        return await PersistirDados(_unitOfWork);
+        await _unitOfWork.ResilientCommitAsync(cancellationToken);
+
+        return ValidationResult;
     }
 
     public async Task<ValidationResult> Handle(AdicionarEnderecoCommand message, CancellationToken cancellationToken)
@@ -53,6 +52,8 @@ public class ClienteCommandHandler : CommandHandler,
         
         _clienteRepository.AdicionarEndereco(endereco);
 
-        return await PersistirDados(_unitOfWork);
+        await _unitOfWork.ResilientCommitAsync(cancellationToken);
+
+        return ValidationResult;
     }
 }
