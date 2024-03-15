@@ -25,7 +25,7 @@ public abstract class CommandHandler
 
         var domainEvents = unitOfWork.ExtractDomainEventsFromAggregates();
 
-        var domainEventsToDispatch = domainEvents.Select(async (domainEvent) => _publisher.Publish(domainEvent));
+        var domainEventsToDispatch = domainEvents.Select(async (domainEvent) => await _publisher.Publish(domainEvent));
 
         await Task.WhenAll(domainEventsToDispatch);
 
