@@ -1,0 +1,18 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "nse.webapp.mvc": "StartDebugging",
+        "nse.bff.compras": "StartDebugging",
+        "nse.identidade.api": "StartDebugging",
+        "nse.carrinho.api": "StartDebugging",
+        "nse.catalogo.api": "StartDebugging",
+        "nse.clientes.api": "StartDebugging",
+        "nse.pagamentos.api": "StartDebugging",
+        "nse.pedidos.api": "StartDebugging"
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ version: '3.4'
 services:
   sql-server:
     image: gustavohrgomes/nerdstore-sql-server:latest
-    container_name: nerdstore-sql-server-development
+    container_name: nerdstore-sql-server
     build:
       context: ../sql
       dockerfile: ./Dockerfile
@@ -12,56 +12,35 @@ services:
     environment:
       SA_PASSWORD: "Senha123!"
       ACCEPT_EULA: "Y"
+    networks:
+      - nerdstore
+
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbit-nerdstore-development
+    container_name: rabbit-nerdstore
     ports:
       - "5672:5672"
       - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "nerdstore"
+      RABBITMQ_DEFAULT_PASS: "nerdstore"
+    networks:
+      - nerdstore
+    
 
   nerdstore-seq:
     image: datalust/seq:latest
-    container_name: nerdstore-seq-development
+    container_name: nerdstore-seq
     ports:
         - 5341:80
     environment:
         ACCEPT_EULA: "Y"
-
-  web-mvc:
-    image: gustavohrgomes/nerdstore-web-mvc-ecommerce:latest
-    container_name: nerdstore-web-mvc
-    build:
-      context: ../src
-      dockerfile: ./web/NSE.WebApp.MVC/Dockerfile
-    restart: always
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5070
-
-  api-bff-compras:
-    image: gustavohrgomes/nerdstore-api-bff-compras:latest
-    container_name: nerdstore-api-bff-compras
-    build:
-      context: ../src
-      dockerfile: ./api gateways/NSE.Bff.Compras/Dockerfile
-    restart: always
-    ports:
-      - "5076:5076"
-      - "7076:7076"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=https://+:7076;http://+:5076
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-cert.pfx
-    volumes:
-      - ./certs:/https:ro
-    depends_on:
-      - rabbitmq
+    networks:
+      - nerdstore
 
   nerdstore-server:
     image: gustavohrgomes/nerdstore-server:latest
-    container_name: nerdstore-server
     build:
       context: ./
       dockerfile: ./nginx/Dockerfile
@@ -69,5 +48,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    depends_on:
-      - web-mvc
+    networks:
+      - nerdstore
+
+networks:
+  nerdstore:
+    external: true

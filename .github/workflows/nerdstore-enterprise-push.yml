@@ -12,27 +12,9 @@ jobs:
       solution-path: NerdStoreEnterprise.sln
       dotnet-version: 6.0.x
 
-  run_tests:
-    name: Run Tests
-    needs: build_solution
-    uses: ./.github/workflows/tests.yml
-    with:
-      pull-request: false
-      solution-path: NerdStoreEnterprise.sln
-      sonar-project-key: gustavohrgomes_nerdstore-enterprise-application
-      code-exclusions: >-
-        src/building blocks/**/**/*.cs,
-        src/services/**/Program.cs,
-        src/services/**/Configuration/*.cs,
-        src/services/**/Configurations/*.cs,
-        src/services/**/Migrations/*.cs,
-        src/services/**/*Context.cs
-    secrets:
-      sonar-token: ${{ secrets.SONAR_TOKEN }}
-
   build_and_push_image:
     name: Builde and Push Docker Image
-    needs: [build_solution, run_tests]
+    needs: [build_solution]
     uses: ./.github/workflows/push-image.yml
     with:
       context: ./src

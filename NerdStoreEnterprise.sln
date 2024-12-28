@@ -95,12 +95,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{00D618
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{2FF97881-B761-4244-A5E6-1D588DDA270B}"
 	ProjectSection(SolutionItems) = preProject
+		sql\criacao-banco-docker-v1.sql = sql\criacao-banco-docker-v1.sql
+		sql\criacao-banco-docker-v2.sql = sql\criacao-banco-docker-v2.sql
 		sql\Dockerfile = sql\Dockerfile
 		sql\entrypoint.sh = sql\entrypoint.sh
 		sql\import-data.sh = sql\import-data.sh
-		sql\criacao-banco-docker-v1.sql = sql\criacao-banco-docker-v1.sql
-		sql\criacao-banco-docker-v2.sql = sql\criacao-banco-docker-v2.sql
 	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0F86A43B-4DC6-473C-AA61-49E571369810}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -172,6 +174,10 @@ Global
 		{83BAAD63-3984-4441-84B7-96AAFF8BF655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83BAAD63-3984-4441-84B7-96AAFF8BF655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83BAAD63-3984-4441-84B7-96AAFF8BF655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F86A43B-4DC6-473C-AA61-49E571369810}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F86A43B-4DC6-473C-AA61-49E571369810}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F86A43B-4DC6-473C-AA61-49E571369810}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F86A43B-4DC6-473C-AA61-49E571369810}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

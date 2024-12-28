@@ -1,0 +1,135 @@
+services:
+  web-mvc:
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://*:5070
+    # volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nerdstore
+    
+  api-bff-compras:
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:7076;http://+:5076
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-cert.pfx
+    ports:
+      - "5076:5076"
+      - "7076:7076"
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./docker/certs:/https:ro
+    networks:
+      - nerdstore
+
+  api-identidade:
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:7267;http://+:5267
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-cert.pfx
+    ports:
+      - "5267:5267"
+      - "7267:7267"
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./docker/certs:/https:ro
+    networks:
+      - nerdstore
+
+  api-carrinho:
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:7215;http://+:5215
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-cert.pfx
+    ports:
+      - "5215:5215"
+      - "7215:7215"
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ./docker/certs:/https:ro
+    networks:
+      - nerdstore
+
+  api-catalogo:
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:7083;http://+:5083
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-cert.pfx
+    ports:
+      - "5083:5083"
+      - "7083:7083"
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./docker/certs:/https:ro
+    networks:
+      - nerdstore
+
+  api-cliente:
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:7254;http://+:5254
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-cert.pfx
+    ports:
+      - "5254:5254"
+      - "7254:7254"
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./docker/certs:/https:ro
+    networks:
+      - nerdstore
+
+  api-pagamento:
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:7220;http://+:5220
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-cert.pfx
+    ports:
+      - "5220:5220"
+      - "7220:7220"
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./docker/certs:/https:ro
+    networks:
+      - nerdstore
+    
+  api-pedido:
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:7105;http://+:5105
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=nerdstore
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nerdstore-cert.pfx
+    ports:
+      - "5105:5105"
+      - "7105:7105"
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./docker/certs:/https:ro
+    networks:
+      - nerdstore
+
+
+networks:
+  nerdstore:
+    external: true

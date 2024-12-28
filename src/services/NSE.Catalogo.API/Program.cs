@@ -12,7 +12,7 @@ builder.Configuration
     .AddJsonFile($"appsetting.{hostEnvironment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
 
-builder.Host.UseSerilog((contextBuilder, loggerConfiguration) => loggerConfiguration.Configure(contextBuilder));
+//builder.Host.UseSerilog((contextBuilder, loggerConfiguration) => loggerConfiguration.Configure(contextBuilder));
 
 if (hostEnvironment.IsDevelopment())
 {
@@ -33,7 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerDocumentation();
 }
 
-app.UseSerilogRequestLogging();
+//app.UseSerilogRequestLogging();
 
 app.UseApiConfiguration();
 
