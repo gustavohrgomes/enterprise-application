@@ -18,25 +18,21 @@ public static class DependencyInjectionConfig
         services.AddHttpClient<ICatalogoService, CatalogoService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AllowSelfSignedCertificate()
-            .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
-            .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
+            .AddStandardResilienceHandler();
 
         services.AddHttpClient<ICarrinhoService, CarrinhoService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AllowSelfSignedCertificate()
-            .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
-            .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
+            .AddStandardResilienceHandler();
 
         services.AddHttpClient<IPedidoService, PedidoService>()
-                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                .AllowSelfSignedCertificate()
-                .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
-                .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AllowSelfSignedCertificate()
+            .AddStandardResilienceHandler();
 
         services.AddHttpClient<IClienteService, ClienteService>()
-                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                .AllowSelfSignedCertificate()
-                .AddPolicyHandler(PollyExtensions.GetRetryPolicy())
-                .AddPolicyHandler(PollyExtensions.GetCircuitBreakerPolicy());
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AllowSelfSignedCertificate()
+            .AddStandardResilienceHandler();
     }
 }

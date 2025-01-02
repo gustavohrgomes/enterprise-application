@@ -3,6 +3,9 @@ using NSE.WebApp.MVC.Configuration;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
+
 var services = builder.Services;
 var hostEnvironment = builder.Environment;
 
@@ -24,6 +27,8 @@ services.AddWebAppConfiguration();
 services.RegisterServices(builder.Configuration);
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.UseWebAppConfiguration();
 

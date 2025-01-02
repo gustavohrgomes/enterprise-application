@@ -95,6 +95,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSE.WebApp.MVC", "website\N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSE.Bff.Compras", "api-gateways\NSE.Bff.Compras\NSE.Bff.Compras.csproj", "{630BCB34-8E90-954D-1560-B78064677027}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSE.Aspire.AppHost", "aspire\NSE.Aspire.AppHost\NSE.Aspire.AppHost.csproj", "{8140ED8C-2CE1-400C-8C25-0B4BB5388CF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSE.ServiceDefaults", "building-blocks\NSE.ServiceDefaults\NSE.ServiceDefaults.csproj", "{DF6B74F5-452D-464A-A565-DBB7A6472B27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +161,14 @@ Global
 		{630BCB34-8E90-954D-1560-B78064677027}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{630BCB34-8E90-954D-1560-B78064677027}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{630BCB34-8E90-954D-1560-B78064677027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8140ED8C-2CE1-400C-8C25-0B4BB5388CF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8140ED8C-2CE1-400C-8C25-0B4BB5388CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8140ED8C-2CE1-400C-8C25-0B4BB5388CF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8140ED8C-2CE1-400C-8C25-0B4BB5388CF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF6B74F5-452D-464A-A565-DBB7A6472B27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF6B74F5-452D-464A-A565-DBB7A6472B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF6B74F5-452D-464A-A565-DBB7A6472B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF6B74F5-452D-464A-A565-DBB7A6472B27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

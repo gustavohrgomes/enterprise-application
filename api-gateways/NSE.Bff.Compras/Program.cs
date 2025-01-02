@@ -4,6 +4,9 @@ using NSE.WebAPI.Core.Identidade;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
+
 var services = builder.Services;
 var hostEnvironment = builder.Environment;
 
@@ -27,6 +30,8 @@ services.RegisterServices();
 services.AddMessageBusConfiguration(builder.Configuration);
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.UseSwaggerConfiguration();
 app.UseApiConfiguration(builder.Environment);
