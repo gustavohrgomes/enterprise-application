@@ -1,0 +1,18 @@
+<Project>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<!--<TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\building-blocks\NSE.Core\NSE.Core.csproj" />
+		<ProjectReference Include="..\..\building-blocks\NSE.WebAPI.Core\NSE.WebAPI.Core.csproj" />
+	</ItemGroup>
+</Project>

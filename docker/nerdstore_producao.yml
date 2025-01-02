@@ -27,8 +27,8 @@ services:
     image: gustavohrgomes/nerdstore-web-mvc-ecommerce:latest
     container_name: nerdstore-web-mvc
     build:
-      context: ../src
-      dockerfile: ./web/NSE.WebApp.MVC/Dockerfile
+      context: ../
+      dockerfile: ./website/NSE.WebApp.MVC/Dockerfile
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -43,8 +43,8 @@ services:
     image: gustavohrgomes/nerdstore-api-bff-compras:latest
     container_name: nerdstore-api-bff-compras
     build:
-      context: ../src
-      dockerfile: ./api gateways/NSE.Bff.Compras/Dockerfile
+      context: ../
+      dockerfile: ./api-gateways/NSE.Bff.Compras/Dockerfile
     restart: always
     ports:
       - "5076:5076"
@@ -68,8 +68,8 @@ services:
     container_name: nerdstore-api-identidade
     restart: always
     build:
-      context: ../src
-      dockerfile: ./services/NSE.Identidade.API/Dockerfile
+      context: ../
+      dockerfile: ./identidade/NSE.Identidade.API/Dockerfile
     ports:
       - "5267:5267"
       - "7267:7267"
@@ -85,8 +85,8 @@ services:
     image: gustavohrgomes/nerdstore-api-carrinho:latest
     container_name: nerdstore-api-carrinho
     build:
-      context: ../src
-      dockerfile: ./services/NSE.Carrinho.API/Dockerfile
+      context: ../
+      dockerfile: ./carrinho/NSE.Carrinho.API/Dockerfile
     restart: always
     ports:
       - "5215:5215"
@@ -108,8 +108,8 @@ services:
     container_name: nerdstore-api-catalogo
     restart: always
     build:
-      context: ../src
-      dockerfile: ./services/NSE.Catalogo.API/Dockerfile
+      context: ../
+      dockerfile: ./catalogo/NSE.Catalogo.API/Dockerfile
     ports:
       - "5083:5083"
       - "7083:7083"
@@ -128,8 +128,8 @@ services:
     image: gustavohrgomes/nerdstore-api-cliente:latest
     container_name: nerdstore-api-cliente
     build:
-      context: ../src
-      dockerfile: ./services/NSE.Clientes.API/Dockerfile
+      context: ../
+      dockerfile: ./clientes/NSE.Clientes.API/Dockerfile
     restart: always
     ports:
       - "5254:5254"
@@ -150,8 +150,8 @@ services:
     image: gustavohrgomes/nerdstore-api-pagamento:latest
     container_name: nerdstore-api-pagamento
     build:
-      context: ../src
-      dockerfile: ./services/NSE.Pagamentos.API/Dockerfile
+      context: ../
+      dockerfile: ./pagamentos/NSE.Pagamentos.API/Dockerfile
     restart: always
     ports:
       - "5220:5220"
@@ -173,8 +173,8 @@ services:
     image: gustavohrgomes/nerdstore-api-pedido:latest
     container_name: nerdstore-api-pedido
     build:
-      context: ../src
-      dockerfile: ./services/NSE.Pedidos.API/Dockerfile
+      context: ../
+      dockerfile: ./pedidos/NSE.Pedidos.API/Dockerfile
     restart: always
     ports:
       - "5105:5105"

@@ -3,54 +3,54 @@ services:
     image: ${DOCKER_REGISTRY-}nsewebappmvc
     container_name: nerdstore-web-mvc
     build:
-      context: ./src
-      dockerfile: ./web/NSE.WebApp.MVC/Dockerfile
+      context: .
+      dockerfile: ./website/NSE.WebApp.MVC/Dockerfile
 
   api-bff-compras:
     image: ${DOCKER_REGISTRY-}nsebffcompras
     container_name: nerdstore-api-bff-compras
     build:
-      context: ./src
-      dockerfile: ./api gateways/NSE.Bff.Compras/Dockerfile
+      context: .
+      dockerfile: ./api-gateways/NSE.Bff.Compras/Dockerfile
 
   api-identidade:
     image: ${DOCKER_REGISTRY-}nseidentidadeapi
     container_name: nerdstore-api-identidade
     build:
-      context: ./src
-      dockerfile: ./services/NSE.Identidade.API/Dockerfile
+      context: .
+      dockerfile: ./identidade/NSE.Identidade.API/Dockerfile
 
   api-carrinho:
     image: ${DOCKER_REGISTRY-}nsecarrinhoapi
     container_name: nerdstore-api-carrinho
     build:
-      context: ./src
-      dockerfile: ./services/NSE.Carrinho.API/Dockerfile
+      context: .
+      dockerfile: ./carrinho/NSE.Carrinho.API/Dockerfile
 
   api-catalogo:
     image: ${DOCKER_REGISTRY-}nsecatalogoapi
     container_name: nerdstore-api-catalogo
     build:
-      context: ./src
-      dockerfile: ./services/NSE.Catalogo.API/Dockerfile
+      context: .
+      dockerfile: ./catalogo/NSE.Catalogo.API/Dockerfile
 
   api-cliente:
     image: ${DOCKER_REGISTRY-}nseclientesapi
     container_name: nerdstore-api-cliente
     build:
-      context: ./src
-      dockerfile: ./services/NSE.Clientes.API/Dockerfile
+      context: .
+      dockerfile: ./clientes/NSE.Clientes.API/Dockerfile
 
   api-pagamento:
     image: ${DOCKER_REGISTRY-}nsepagamentosapi
     container_name: nerdstore-api-pagamento    
     build:
-      context: ./src
-      dockerfile: ./services/NSE.Pagamentos.API/Dockerfile
+      context: .
+      dockerfile: ./pagamentos/NSE.Pagamentos.API/Dockerfile
 
   api-pedido:
     image: ${DOCKER_REGISTRY-}nsepedidosapi
     container_name: nerdstore-api-pedido
     build:
-      context: ./src
-      dockerfile: ./services/NSE.Pedidos.API/Dockerfile
+      context: .
+      dockerfile: ./pedidos/NSE.Pedidos.API/Dockerfile
